@@ -1,4 +1,4 @@
-module cp.unah.mm545.distributed.text.file.system.client.main {
+module io.github.tobiasbriones.cp.rmifilesystem.client {
     requires javafx.graphics;
 
     opens io.github.tobiasbriones.cp.rmifilesystem;
