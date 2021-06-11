@@ -1,8 +1,23 @@
 package io.github.tobiasbriones.cp.rmifilesystem;
 
-public final class Main {
+import io.github.tobiasbriones.cp.rmifilesystem.ui.App;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-    public static void main(String[] args) {}
+public final class Main extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-    private Main() {}
+    private final App app;
+
+    public Main() {
+        super();
+        app = App.newInstance();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        app.start(primaryStage);
+    }
 }
