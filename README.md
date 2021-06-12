@@ -4,7 +4,7 @@ Implementation of a server/client application in Java RMI and JavaFX to manage c
 
 ## Required technologies
 
-- Java RMI or Python Jyro only.
+- Java RMI or Python PyRO only.
 - Anything that works for the client.
 - Linux containers.
 
