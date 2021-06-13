@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -24,9 +25,11 @@ import java.util.List;
 public interface FileSystemService extends Remote {
     List<File> getFileSystem() throws RemoteException;
 
-    String readTextFile(File file) throws RemoteException;
+    String readTextFile(File file) throws IOException;
 
-    void writeTextFile(File file, String content) throws RemoteException;
+    void writeDir(File file) throws IOException;
+
+    void writeTextFile(File file, String content) throws IOException;
 
     void addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 }
