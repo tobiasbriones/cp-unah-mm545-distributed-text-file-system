@@ -17,6 +17,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
+/**
+ * @author Tobias Briones
+ */
 final class AppView extends VBox implements App.View {
     private static final int PADDING = 16;
     private final Node menu;

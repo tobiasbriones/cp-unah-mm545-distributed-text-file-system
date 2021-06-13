@@ -17,6 +17,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.App;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * @author Tobias Briones
+ */
 public final class Main extends Application {
     public static void main(String[] args) {
         launch(args);

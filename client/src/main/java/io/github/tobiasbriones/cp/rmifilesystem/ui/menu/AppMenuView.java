@@ -19,6 +19,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
+/**
+ * @author Tobias Briones
+ */
 final class AppMenuView extends MenuBar implements AppMenu.View {
     private final Menu fileMenu;
     private final MenuItem fileNewItem;

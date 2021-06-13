@@ -13,6 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.core;
 
+/**
+ * @author Tobias Briones
+ */
 public interface MvpPresenter<O> extends Initializable {
     void setOutput(O value);
 }

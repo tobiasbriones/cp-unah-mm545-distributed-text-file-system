@@ -24,6 +24,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * @author Tobias Briones
+ */
 public final class App implements Initializable {
     private static final double MIN_WIDTH = 480.0d;
 

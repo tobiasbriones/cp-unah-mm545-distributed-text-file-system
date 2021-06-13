@@ -16,6 +16,9 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.header.Header;
 
+/**
+ * @author Tobias Briones
+ */
 final class AppPresenter extends AbstractMvpPresenter<Void> implements App.Presenter {
     private final App.View view;
     private final Header.Input headerInput;

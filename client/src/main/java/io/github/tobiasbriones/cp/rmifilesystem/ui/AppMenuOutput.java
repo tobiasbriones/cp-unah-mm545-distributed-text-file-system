@@ -17,6 +17,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.menu.AppMenu;
 
 import java.io.File;
 
+/**
+ * @author Tobias Briones
+ */
 final class AppMenuOutput implements AppMenu.Output {
     AppMenuOutput() {}
 

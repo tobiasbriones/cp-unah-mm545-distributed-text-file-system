@@ -13,6 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.core;
 
+/**
+ * @author Tobias Briones
+ */
 @FunctionalInterface
 public interface Initializable {
     void init();

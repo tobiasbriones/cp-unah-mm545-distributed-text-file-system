@@ -17,6 +17,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
+/**
+ * @author Tobias Briones
+ */
 final class FileItemView extends HBox {
     private final Label label;
 

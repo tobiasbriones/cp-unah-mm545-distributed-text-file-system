@@ -19,6 +19,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * @author Tobias Briones
+ */
 final class EditorView extends VBox implements Editor.View {
     private final TextArea contentArea;
     private final Button saveButton;

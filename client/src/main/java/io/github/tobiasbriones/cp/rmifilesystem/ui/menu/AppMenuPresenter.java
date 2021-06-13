@@ -16,6 +16,9 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.menu;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 import javafx.application.Platform;
 
+/**
+ * @author Tobias Briones
+ */
 final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implements AppMenu.Presenter {
     private final AppMenu.View view;
 

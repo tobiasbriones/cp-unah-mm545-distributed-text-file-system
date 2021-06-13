@@ -11,6 +11,9 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
+/**
+ * @author Tobias Briones
+ */
 module io.github.tobiasbriones.cp.rmifilesystem.client {
     requires javafx.graphics;
     requires javafx.controls;

@@ -15,6 +15,9 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
+/**
+ * @author Tobias Briones
+ */
 final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor.Presenter {
     private final Editor.View view;
 

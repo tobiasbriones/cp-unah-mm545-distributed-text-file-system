@@ -18,6 +18,9 @@ import javafx.scene.layout.VBox;
 
 import java.io.File;
 
+/**
+ * @author Tobias Briones
+ */
 final class FilesView extends VBox implements Files.View {
     private static final int MIN_WIDTH = 240;
     private static final int MAX_WIDTH = 360;

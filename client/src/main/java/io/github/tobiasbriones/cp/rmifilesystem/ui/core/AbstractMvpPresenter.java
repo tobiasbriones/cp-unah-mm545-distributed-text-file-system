@@ -15,6 +15,9 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.core;
 
 import java.util.Optional;
 
+/**
+ * @author Tobias Briones
+ */
 public abstract class AbstractMvpPresenter<O> implements MvpPresenter<O> {
     private O output;
 

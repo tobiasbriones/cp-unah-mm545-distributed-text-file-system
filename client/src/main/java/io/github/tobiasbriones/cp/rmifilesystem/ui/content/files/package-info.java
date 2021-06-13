@@ -11,4 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
+/**
+ * @author Tobias Briones
+ */
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.files;

@@ -20,6 +20,9 @@ import javafx.scene.Node;
 
 import java.io.File;
 
+/**
+ * @author Tobias Briones
+ */
 public final class AppMenu implements Initializable {
     public interface Output extends DefaultOutput {
         void onCreateNewFile(File file);

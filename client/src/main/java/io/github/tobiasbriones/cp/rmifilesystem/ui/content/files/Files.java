@@ -21,6 +21,9 @@ import javafx.scene.Node;
 import java.io.File;
 import java.util.List;
 
+/**
+ * @author Tobias Briones
+ */
 public final class Files implements Initializable {
     interface Controller {
         void onItemClick(File file);

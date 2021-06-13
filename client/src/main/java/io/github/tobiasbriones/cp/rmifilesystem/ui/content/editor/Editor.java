@@ -18,6 +18,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
 
+/**
+ * @author Tobias Briones
+ */
 public final class Editor implements Initializable {
     public interface Input {
         void setContent(String value);

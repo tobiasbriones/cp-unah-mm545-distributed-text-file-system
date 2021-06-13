@@ -17,6 +17,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
 import java.io.File;
 
+/**
+ * @author Tobias Briones
+ */
 final class FilesPresenter extends AbstractMvpPresenter<Void> implements Files.Presenter {
     private final Files.View view;
 

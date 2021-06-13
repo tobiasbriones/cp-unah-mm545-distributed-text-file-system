@@ -18,6 +18,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
 
+/**
+ * @author Tobias Briones
+ */
 public final class Header implements Initializable {
     public interface Input {
         void setUser(String value);

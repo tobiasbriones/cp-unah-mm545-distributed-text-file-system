@@ -18,6 +18,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+/**
+ * @author Tobias Briones
+ */
 final class ContentView extends HBox implements Content.View {
     private final Node filesView;
     private final Node editorView;

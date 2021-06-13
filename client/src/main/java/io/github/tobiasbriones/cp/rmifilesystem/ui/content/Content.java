@@ -22,6 +22,9 @@ import javafx.scene.Node;
 
 import java.io.File;
 
+/**
+ * @author Tobias Briones
+ */
 public final class Content implements Initializable {
     interface View extends MvpView<Void> {}
 

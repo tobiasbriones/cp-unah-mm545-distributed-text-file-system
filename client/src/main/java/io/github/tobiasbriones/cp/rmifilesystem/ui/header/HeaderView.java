@@ -17,6 +17,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
+/**
+ * @author Tobias Briones
+ */
 final class HeaderView extends HBox implements Header.View {
     private final Label userLabel;
 

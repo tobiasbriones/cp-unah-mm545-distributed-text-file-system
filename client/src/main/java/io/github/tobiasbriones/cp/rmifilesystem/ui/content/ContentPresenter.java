@@ -15,6 +15,9 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.content;
 
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
+/**
+ * @author Tobias Briones
+ */
 final class ContentPresenter extends AbstractMvpPresenter<Void> implements Content.Presenter {
     private final Content.View view;
 
