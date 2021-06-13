@@ -13,12 +13,43 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 /**
  * @author Tobias Briones
  */
 public final class Main {
+    private static final int PORT = 1099;
 
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+        final var main = new Main();
 
-    private Main() {}
+        main.start();
+    }
+
+    private FileSystemService server;
+
+    private Main() {
+        server = null;
+
+        try {
+            server = new AppFileSystemService();
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    private void start() {
+        try {
+            final Registry registry = LocateRegistry.createRegistry(PORT);
+            registry.rebind("FileSystemService", server);
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 }
