@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,17 +40,21 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     @Override
     public List<File> getFileSystem() {
         final var root = new File(ROOT);
-        return recursiveListFilesOf(root);
+        return recursiveListFilesOf(root).stream()
+                                         .map(AppFileSystemService::toRelativeFile)
+                                         .toList();
     }
 
     @Override
     public String readTextFile(File file) throws IOException {
-        return Files.readString(file.toPath());
+        return Files.readString(toAbsoluteFile(file).toPath());
     }
 
     @Override
     public void writeDir(File file) throws IOException {
-        if (!file.mkdirs()) {
+        final var absFile = toAbsoluteFile(file);
+
+        if (!absFile.mkdirs()) {
             final var msg = "Fail to create directory";
             throw new IOException(msg);
         }
@@ -59,12 +62,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
     @Override
     public void writeTextFile(File file, String content) throws IOException {
-        Files.writeString(file.toPath(), content);
+        Files.writeString(toAbsoluteFile(file).toPath(), content);
     }
 
     @Override
     public void addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
         clients.add(l);
+    }
+
+    private static File toAbsoluteFile(File file) {
+        return new File(ROOT, String.valueOf(file.toPath()));
     }
 
     private static List<File> recursiveListFilesOf(File root) {
@@ -83,5 +90,15 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
             }
         }
         return files;
+    }
+
+    private static File toRelativeFile(File file) {
+        final var path = file.getAbsolutePath();
+
+        if (!path.startsWith(ROOT)) {
+            return new File("");
+        }
+        final var relPath = path.substring(ROOT.length() + 1);
+        return new File(relPath);
     }
 }

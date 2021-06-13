@@ -57,12 +57,11 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Read the default file structure")
     void readFs() throws RemoteException {
-        final var root = new File(AppFileSystemService.ROOT);
-        final var dir1 = new File(root, DIR_1_NAME);
         final var fs = service.getFileSystem();
+        final var dir1 = new File(DIR_1_NAME);
         final var expected = List.of(
-            new File(root, DIR_1_NAME),
-            new File(root, TEXT_FILE_1_NAME),
+            new File(DIR_1_NAME),
+            new File(TEXT_FILE_1_NAME),
             new File(dir1, TEXT_FILE_2_NAME)
         );
 
@@ -73,8 +72,7 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Read a specific text file")
     void readFile() throws IOException {
-        final var root = new File(AppFileSystemService.ROOT);
-        final var file = new File(root, TEXT_FILE_1_NAME);
+        final var file = new File(TEXT_FILE_1_NAME);
         final var content = service.readTextFile(file);
 
         assertNotNull(content, "Expect the file content is not null");
@@ -84,13 +82,14 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Create a new directory")
     void writeDir() throws IOException {
-        final var root = new File(AppFileSystemService.ROOT);
-        final var dir = new File(root, "new-dir");
+        final var dir = new File("new-dir");
 
         service.writeDir(dir);
+        final var root = new File(AppFileSystemService.ROOT);
+        final var newDir = new File(root, "new-dir");
 
         assertTrue(
-            dir.exists(),
+            newDir.exists(),
             "Expect the service created the new directory"
         );
     }
@@ -98,8 +97,7 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Write to a specific text file")
     void writeFile() throws IOException {
-        final var root = new File(AppFileSystemService.ROOT);
-        final var file = new File(root, TEXT_FILE_1_NAME);
+        final var file = new File(TEXT_FILE_1_NAME);
         final var content = "New file content";
 
         service.writeTextFile(file, content);
