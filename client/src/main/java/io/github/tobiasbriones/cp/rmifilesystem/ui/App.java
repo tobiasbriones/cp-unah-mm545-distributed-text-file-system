@@ -1,5 +1,6 @@
 package io.github.tobiasbriones.cp.rmifilesystem.ui;
 
+import io.github.tobiasbriones.cp.rmifilesystem.ui.content.Content;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
@@ -19,19 +20,22 @@ public final class App implements Initializable {
 
     record ChildrenConfig(
         AppMenu menu,
-        Header header
+        Header header,
+        Content content
     ) {
         ViewConfig newViewConfig() {
             return new ViewConfig(
                 menu.getView(),
-                header.getView()
+                header.getView(),
+                content.getView()
             );
         }
     }
 
     record ViewConfig(
         Node menuView,
-        Node headerView
+        Node headerView,
+        Node contentView
     ) {}
 
     public static App newInstance() {
@@ -39,7 +43,8 @@ public final class App implements Initializable {
         final var header = new Header();
         final var childrenConfig = new ChildrenConfig(
             menu,
-            header
+            header,
+            Content.newInstance()
         );
         return new App(childrenConfig);
     }
@@ -49,12 +54,14 @@ public final class App implements Initializable {
     private final AppMenu menu;
     private final AppMenuOutput menuOutput;
     private final Header header;
+    private final Content content;
 
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
         menu = childrenConfig.menu();
         menuOutput = new AppMenuOutput();
         header = childrenConfig.header();
+        content = childrenConfig.content();
         presenter = new AppPresenter(view, header.getInput());
     }
 
@@ -76,5 +83,6 @@ public final class App implements Initializable {
         presenter.init();
         menu.init();
         header.init();
+        content.init();
     }
 }

@@ -8,11 +8,13 @@ final class AppView extends VBox implements App.View {
     private static final int PADDING = 16;
     private final Node menu;
     private final Node header;
+    private final Node content;
 
     AppView(App.ViewConfig config) {
         super();
         menu = config.menuView();
         header = config.headerView();
+        content = config.contentView();
     }
 
     @Override
@@ -26,7 +28,8 @@ final class AppView extends VBox implements App.View {
 
         container.setPadding(new Insets(PADDING));
         container.getChildren().addAll(
-            header
+            header,
+            content
         );
         getChildren().addAll(
             menu,
