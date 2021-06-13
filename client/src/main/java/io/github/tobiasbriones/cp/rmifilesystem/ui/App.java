@@ -3,6 +3,7 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
+import io.github.tobiasbriones.cp.rmifilesystem.ui.header.Header;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.menu.AppMenu;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -17,23 +18,28 @@ public final class App implements Initializable {
     interface View extends MvpView<Void> {}
 
     record ChildrenConfig(
-        AppMenu menu
+        AppMenu menu,
+        Header header
     ) {
         ViewConfig newViewConfig() {
             return new ViewConfig(
-                menu.getView()
+                menu.getView(),
+                header.getView()
             );
         }
     }
 
     record ViewConfig(
-        Node menuView
+        Node menuView,
+        Node headerView
     ) {}
 
     public static App newInstance() {
         final var menu = new AppMenu();
+        final var header = new Header();
         final var childrenConfig = new ChildrenConfig(
-            menu
+            menu,
+            header
         );
         return new App(childrenConfig);
     }
@@ -42,12 +48,14 @@ public final class App implements Initializable {
     private final Presenter presenter;
     private final AppMenu menu;
     private final AppMenuOutput menuOutput;
+    private final Header header;
 
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
-        presenter = new AppPresenter(view);
         menu = childrenConfig.menu();
         menuOutput = new AppMenuOutput();
+        header = childrenConfig.header();
+        presenter = new AppPresenter(view, header.getInput());
     }
 
     public void start(Stage stage) {
@@ -56,6 +64,7 @@ public final class App implements Initializable {
 
         menu.setOutput(menuOutput);
         init();
+
         stage.setTitle(title);
         stage.setScene(scene);
         stage.setMinWidth(MIN_WIDTH);
@@ -66,5 +75,6 @@ public final class App implements Initializable {
     public void init() {
         presenter.init();
         menu.init();
+        header.init();
     }
 }
