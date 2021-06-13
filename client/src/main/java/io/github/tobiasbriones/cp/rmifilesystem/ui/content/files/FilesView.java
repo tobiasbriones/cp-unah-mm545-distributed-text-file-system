@@ -3,10 +3,16 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.content.files;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
+
 final class FilesView extends VBox implements Files.View {
+    private static final int MIN_WIDTH = 240;
+    private static final int MAX_WIDTH = 360;
+    private Files.Controller controller;
 
     FilesView() {
         super();
+        controller = null;
     }
 
     @Override
@@ -16,6 +22,30 @@ final class FilesView extends VBox implements Files.View {
 
     @Override
     public void createView() {
-        // TODO
+        setMinWidth(MIN_WIDTH);
+        setMaxWidth(MAX_WIDTH);
+    }
+
+    @Override
+    public void setController(Files.Controller value) {
+        controller = value;
+    }
+
+    @Override
+    public void addItem(File file) {
+        final var item = new FileItemView();
+
+        item.setName(file.getName());
+        getChildren().add(item);
+
+        if (controller != null) {
+            item.setOnMouseClicked(event -> controller.onItemClick(file));
+        }
+    }
+
+    @Override
+    public void clear() {
+        getChildren().clear();
+        // Might need to unregister the events
     }
 }

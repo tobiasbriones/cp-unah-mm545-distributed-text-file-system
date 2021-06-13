@@ -3,6 +3,7 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.content;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 final class ContentView extends HBox implements Content.View {
     private final Node filesView;
@@ -21,6 +22,8 @@ final class ContentView extends HBox implements Content.View {
 
     @Override
     public void createView() {
+        HBox.setHgrow(filesView, Priority.ALWAYS);
+        HBox.setHgrow(editorView, Priority.ALWAYS);
         getChildren().addAll(
             filesView,
             editorView
