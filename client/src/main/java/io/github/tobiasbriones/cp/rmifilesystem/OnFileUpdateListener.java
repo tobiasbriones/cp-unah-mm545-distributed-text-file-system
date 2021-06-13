@@ -11,14 +11,14 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
+package io.github.tobiasbriones.cp.rmifilesystem;
+
+import java.io.File;
+
 /**
  * @author Tobias Briones
  */
-module io.github.tobiasbriones.cp.rmifilesystem.client {
-    requires javafx.graphics;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires java.rmi;
-
-    opens io.github.tobiasbriones.cp.rmifilesystem;
+@FunctionalInterface
+public interface OnFileUpdateListener {
+    void onFileChanged(File file);
 }
