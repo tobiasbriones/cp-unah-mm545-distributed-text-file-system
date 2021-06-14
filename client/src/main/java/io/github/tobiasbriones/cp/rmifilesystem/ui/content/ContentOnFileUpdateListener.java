@@ -22,6 +22,11 @@ import java.io.Serial;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+/**
+ * Receives the file changes from the RMI server broadcast.
+ *
+ * @author Tobias Briones
+ */
 final class ContentOnFileUpdateListener extends UnicastRemoteObject implements OnFileUpdateListener {
     @Serial
     private static final long serialVersionUID = 7206688225773330503L;
