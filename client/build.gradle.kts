@@ -11,14 +11,19 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
+val platform = "win"
+
 plugins {
     java
     id("application")
-    id("org.openjfx.javafxplugin") version "0.0.9"
 }
 
 group = "io.github.tobiasbriones.cp"
 version = "1.0-SNAPSHOT"
+
+application {
+    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.Launcher")
+}
 
 repositories {
     mavenCentral()
@@ -27,11 +32,11 @@ repositories {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-}
 
-javafx {
-    version = "15.0.1"
-    modules = listOf("javafx.controls", "javafx.fxml")
+    implementation("org.openjfx:javafx-base:15.0.1:${platform}")
+    implementation("org.openjfx:javafx-graphics:15.0.1:${platform}")
+    implementation("org.openjfx:javafx-controls:15.0.1:${platform}")
+    implementation("org.openjfx:javafx-fxml:15.0.1:${platform}")
 }
 
 tasks.getByName<Test>("test") {

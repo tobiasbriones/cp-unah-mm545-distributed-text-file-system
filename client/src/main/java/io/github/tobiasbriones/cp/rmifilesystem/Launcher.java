@@ -11,15 +11,12 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-/**
- * @author Tobias Briones
- */
-module io.github.tobiasbriones.cp.rmifilesystem.client {
-    requires javafx.base;
-    requires javafx.graphics;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires java.rmi;
+package io.github.tobiasbriones.cp.rmifilesystem;
 
-    opens io.github.tobiasbriones.cp.rmifilesystem to javafx.fxml;
+public final class Launcher {
+    public static void main(String[] args) {
+        Main.main(args);
+    }
+
+    public Launcher() {}
 }
