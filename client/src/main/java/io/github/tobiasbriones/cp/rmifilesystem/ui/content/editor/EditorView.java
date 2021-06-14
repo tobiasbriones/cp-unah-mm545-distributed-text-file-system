@@ -13,6 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -23,6 +25,7 @@ import javafx.scene.layout.VBox;
  * @author Tobias Briones
  */
 final class EditorView extends VBox implements Editor.View {
+    private static final int SAVE_BUTTON_WIDTH = 240;
     private final TextArea contentArea;
     private final Button saveButton;
 
@@ -39,11 +42,18 @@ final class EditorView extends VBox implements Editor.View {
 
     @Override
     public void createView() {
+        final var actionPane = new HBox();
+
         saveButton.setText("Save");
+        saveButton.setPrefWidth(SAVE_BUTTON_WIDTH);
+
+        actionPane.getChildren().addAll(saveButton);
+        actionPane.setAlignment(Pos.CENTER_RIGHT);
+        actionPane.setPadding(new Insets(8, 0, 8, 0));
 
         getChildren().addAll(
             contentArea,
-            new HBox(saveButton)
+            actionPane
         );
     }
 
