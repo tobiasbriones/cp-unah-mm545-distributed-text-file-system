@@ -13,10 +13,15 @@
 
 plugins {
     java
+    id("application")
 }
 
 group = "io.github.tobiasbriones.cp"
 version = "1.0-SNAPSHOT"
+
+application {
+    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.Main")
+}
 
 repositories {
     mavenCentral()

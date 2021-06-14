@@ -27,14 +27,8 @@ import java.util.Optional;
  */
 public final class AppLocalFiles {
     private static final String REG_FILE_NAME = ".reg";
-
-    // Root for running the tests
     private static final String RELATIVE_ROOT = "fs";
-
-    // Root for running the app
-    private static final String APP_RELATIVE_ROOT = "client" + File.separator + "fs";
-
-    private static final String ROOT = System.getProperty("user.dir") + File.separator + APP_RELATIVE_ROOT;
+    private static final String ROOT = System.getProperty("user.dir") + File.separator + RELATIVE_ROOT;
 
     public static List<File> readFs() throws IOException {
         final var reg = readRegFile();
@@ -101,7 +95,7 @@ public final class AppLocalFiles {
 
     private static String readRegFile() throws IOException {
         final var file = new File(ROOT, REG_FILE_NAME);
-
+        System.out.println(file);
         if (!file.exists()) {
             file.createNewFile();
         }
