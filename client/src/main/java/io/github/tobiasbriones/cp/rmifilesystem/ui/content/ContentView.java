@@ -22,6 +22,7 @@ import javafx.scene.layout.Priority;
  * @author Tobias Briones
  */
 final class ContentView extends HBox implements Content.View {
+    private static final int SPACING = 16;
     private final Node filesView;
     private final Node editorView;
 
@@ -40,6 +41,7 @@ final class ContentView extends HBox implements Content.View {
     public void createView() {
         HBox.setHgrow(filesView, Priority.ALWAYS);
         HBox.setHgrow(editorView, Priority.ALWAYS);
+        setSpacing(SPACING);
         getChildren().addAll(
             filesView,
             editorView

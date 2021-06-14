@@ -14,6 +14,11 @@
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.files;
 
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
@@ -24,11 +29,17 @@ import java.io.File;
 final class FilesView extends VBox implements Files.View {
     private static final int MIN_WIDTH = 240;
     private static final int MAX_WIDTH = 360;
+    private final TextField newFileField;
+    private final Button newFileButton;
+    private final VBox filesPane;
     private Files.Controller controller;
 
     FilesView() {
         super();
+        newFileField = new TextField();
+        newFileButton = new Button();
         controller = null;
+        filesPane = new VBox();
     }
 
     @Override
@@ -38,8 +49,27 @@ final class FilesView extends VBox implements Files.View {
 
     @Override
     public void createView() {
+        final var newFilePane = new VBox();
+
+        newFileField.setPromptText("Create a new file or directory");
+        newFileButton.setText("Create");
+        newFileButton.setMaxWidth(MAX_WIDTH);
+
+        newFilePane.getChildren().addAll(
+            new Label("Files"),
+            newFileField,
+            newFileButton
+        );
+        newFilePane.setSpacing(8);
+        HBox.setHgrow(newFilePane, Priority.ALWAYS);
+
+        getChildren().addAll(
+            newFilePane,
+            filesPane
+        );
         setMinWidth(MIN_WIDTH);
         setMaxWidth(MAX_WIDTH);
+        setSpacing(8);
     }
 
     @Override
@@ -52,7 +82,7 @@ final class FilesView extends VBox implements Files.View {
         final var item = new FileItemView();
 
         item.setName(file.toString());
-        getChildren().add(item);
+        filesPane.getChildren().add(item);
 
         if (controller != null) {
             item.setOnMouseClicked(event -> controller.onItemClick(file));
@@ -61,7 +91,7 @@ final class FilesView extends VBox implements Files.View {
 
     @Override
     public void clear() {
-        getChildren().clear();
+        filesPane.getChildren().clear();
         // Might need to unregister the events
     }
 }

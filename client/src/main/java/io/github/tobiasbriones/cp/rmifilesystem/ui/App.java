@@ -34,6 +34,7 @@ import java.rmi.RemoteException;
  */
 public final class App implements Initializable {
     private static final double MIN_WIDTH = 480.0d;
+    private static final double MIN_HEIGHT = 600.0d;
 
     interface Presenter extends MvpPresenter<Void> {}
 
@@ -100,6 +101,7 @@ public final class App implements Initializable {
         stage.setTitle(title);
         stage.setScene(scene);
         stage.setMinWidth(MIN_WIDTH);
+        stage.setMinHeight(MIN_HEIGHT);
         stage.show();
     }
 
