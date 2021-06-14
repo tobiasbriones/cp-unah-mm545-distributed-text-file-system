@@ -17,6 +17,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
+/**
+ * @author Tobias Briones
+ */
 public final class FileSystemServices {
     private static final String SERVICE_NAME = "FileSystemService";
 
