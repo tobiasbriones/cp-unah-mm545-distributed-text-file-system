@@ -28,13 +28,23 @@ import java.util.List;
 public final class AppFileSystemService extends UnicastRemoteObject implements FileSystemService {
     @Serial
     private static final long serialVersionUID = 7826374551124313303L;
+
+    // The root depends on where the program is run!.
+
+    // Root for running the tests
     private static final String RELATIVE_ROOT = "fs";
-    static final String ROOT = System.getProperty("user.dir") + File.separator + RELATIVE_ROOT;
+
+    // Root for running the app
+    private static final String APP_RELATIVE_ROOT = "server" + File.separator + "fs";
+
+    static final String ROOT = System.getProperty("user.dir") + File.separator + APP_RELATIVE_ROOT;
     private final List<OnFileUpdateListener> clients;
 
     public AppFileSystemService() throws RemoteException {
         super();
         clients = new ArrayList<>(10);
+
+        System.out.println("Running on: " + ROOT);
     }
 
     @Override
