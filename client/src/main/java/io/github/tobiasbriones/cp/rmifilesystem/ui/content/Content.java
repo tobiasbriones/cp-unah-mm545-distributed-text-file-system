@@ -21,9 +21,6 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
 
-import java.io.File;
-import java.rmi.RemoteException;
-
 /**
  * @author Tobias Briones
  */
@@ -32,9 +29,17 @@ public final class Content implements Initializable {
 
     interface Presenter extends MvpPresenter<Void> {}
 
+    public static Content newInstance() {
+        final var config = new ChildrenConfig(
+            Files.newInstance(),
+            Editor.newInstance()
+        );
+        return new Content(config);
+    }
+
     record ChildrenConfig(
-       Files files,
-       Editor editor
+        Files files,
+        Editor editor
     ) {
         ViewConfig newViewConfig() {
             return new ViewConfig(
@@ -48,15 +53,6 @@ public final class Content implements Initializable {
         Node filesView,
         Node editorView
     ) {}
-
-    public static Content newInstance() {
-        final var config = new ChildrenConfig(
-            Files.newInstance(),
-            Editor.newInstance()
-        );
-        return new Content(config);
-    }
-
     private final View view;
     private final Presenter presenter;
     private final Files files;
@@ -82,8 +78,13 @@ public final class Content implements Initializable {
 
     @Override
     public void init() {
+        setOutputs();
         presenter.init();
         files.init();
         editor.init();
+    }
+
+    private void setOutputs() {
+        files.setOutput(new FilesOutput(service, editor.getInput()));
     }
 }

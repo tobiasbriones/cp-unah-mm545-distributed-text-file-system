@@ -50,6 +50,10 @@ public final class Editor implements Initializable {
         return view.getView();
     }
 
+    public Input getInput() {
+        return view;
+    }
+
     @Override
     public void init() {
         presenter.init();

@@ -22,7 +22,7 @@ import java.rmi.RemoteException;
 /**
  * @author Tobias Briones
  */
-final class FilesPresenter extends AbstractMvpPresenter<Void> implements Files.Presenter {
+final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements Files.Presenter {
     private final Files.View view;
     private FileSystemService service;
 
@@ -41,7 +41,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Void> implements Files.P
 
     @Override
     public void onItemClick(File file) {
-        System.out.println(file);
+        getOutput().ifPresent(output -> output.onOpenFile(file));
     }
 
     @Override
