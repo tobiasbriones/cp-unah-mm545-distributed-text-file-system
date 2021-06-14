@@ -68,16 +68,29 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
             final var msg = "Fail to create directory";
             throw new IOException(msg);
         }
+        broadcastUpdate(file);
     }
 
     @Override
     public void writeTextFile(File file, String content) throws IOException {
         Files.writeString(toAbsoluteFile(file).toPath(), content);
+        broadcastUpdate(file);
     }
 
     @Override
     public void addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
         clients.add(l);
+    }
+
+    private void broadcastUpdate(File file) {
+        for (var client : clients) {
+            try {
+                client.onFileChanged(file);
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static File toAbsoluteFile(File file) {

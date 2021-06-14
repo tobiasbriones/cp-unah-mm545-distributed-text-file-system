@@ -14,11 +14,13 @@
 package io.github.tobiasbriones.cp.rmifilesystem;
 
 import java.io.File;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * @author Tobias Briones
  */
 @FunctionalInterface
-public interface OnFileUpdateListener {
-    void onFileChanged(File file);
+public interface OnFileUpdateListener extends Remote {
+    void onFileChanged(File file) throws RemoteException;
 }
