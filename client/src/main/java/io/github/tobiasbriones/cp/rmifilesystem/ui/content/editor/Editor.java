@@ -13,26 +13,35 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
+
+import java.io.File;
 
 /**
  * @author Tobias Briones
  */
 public final class Editor implements Initializable {
     public interface Input {
-        void setContent(String value);
+        void setWorkingFile(File file, String content);
     }
 
     interface Controller {
-        void onSave();
+        void onSaveButtonClick();
     }
 
-    interface View extends MvpView<Controller>, Input {}
+    interface View extends MvpView<Controller> {
+        String getContent();
 
-    interface Presenter extends MvpPresenter<Void>, Controller {}
+        void setContent(String value);
+    }
+
+    interface Presenter extends MvpPresenter<Void>, Controller, Input {
+        void setService(FileSystemService value);
+    }
 
     public static Editor newInstance() {
         return new Editor();
@@ -51,7 +60,11 @@ public final class Editor implements Initializable {
     }
 
     public Input getInput() {
-        return view;
+        return presenter;
+    }
+
+    public void setService(FileSystemService value) {
+        presenter.setService(value);
     }
 
     @Override

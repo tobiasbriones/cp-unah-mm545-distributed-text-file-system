@@ -48,6 +48,16 @@ final class EditorView extends VBox implements Editor.View {
     }
 
     @Override
+    public void bindEvents(Editor.Controller controller) {
+        saveButton.setOnMouseClicked(event -> controller.onSaveButtonClick());
+    }
+
+    @Override
+    public String getContent() {
+        return contentArea.getText();
+    }
+
+    @Override
     public void setContent(String value) {
         contentArea.setText(value);
     }

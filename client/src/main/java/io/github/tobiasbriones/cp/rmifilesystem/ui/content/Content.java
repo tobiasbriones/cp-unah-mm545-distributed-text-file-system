@@ -53,6 +53,7 @@ public final class Content implements Initializable {
         Node filesView,
         Node editorView
     ) {}
+
     private final View view;
     private final Presenter presenter;
     private final Files files;
@@ -74,6 +75,7 @@ public final class Content implements Initializable {
     public void setService(FileSystemService value) {
         service = value;
         files.setService(value);
+        editor.setService(value);
     }
 
     @Override

@@ -32,7 +32,7 @@ final class FilesOutput implements Files.Output {
     @Override
     public void onOpenFile(File file) {
         final var content = loadFile(file);
-        editorInput.setContent(content);
+        editorInput.setWorkingFile(file, content);
     }
 
     private String loadFile(File file) {
