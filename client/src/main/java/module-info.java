@@ -12,7 +12,7 @@
  */
 
 /**
- * @author Tobias Briones
+ *
  */
 module io.github.tobiasbriones.cp.rmifilesystem.client {
     requires javafx.base;
@@ -21,5 +21,6 @@ module io.github.tobiasbriones.cp.rmifilesystem.client {
     requires javafx.fxml;
     requires java.rmi;
 
-    opens io.github.tobiasbriones.cp.rmifilesystem to javafx.fxml;
+    opens io.github.tobiasbriones.cp.rmifilesystem
+        to javafx.graphics, java.rmi;
 }

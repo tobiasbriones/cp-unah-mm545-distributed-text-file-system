@@ -22,6 +22,7 @@ group = "io.github.tobiasbriones.cp"
 version = "1.0-SNAPSHOT"
 
 application {
+    mainModule.set("io.github.tobiasbriones.cp.rmifilesystem.client")
     mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.Launcher")
 }
 
