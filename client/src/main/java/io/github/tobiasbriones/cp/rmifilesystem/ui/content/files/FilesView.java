@@ -75,6 +75,12 @@ final class FilesView extends VBox implements Files.View {
     @Override
     public void setController(Files.Controller value) {
         controller = value;
+        newFileButton.setOnMouseClicked(event -> controller.onCreateButtonClick());
+    }
+
+    @Override
+    public String getCreateInputText() {
+        return newFileField.getText();
     }
 
     @Override

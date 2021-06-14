@@ -17,6 +17,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 /**
@@ -40,6 +41,22 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     @Override
+    public void onCreateButtonClick() {
+        final var fileName = view.getCreateInputText();
+
+        if (!fileName.isBlank()) {
+            final var file = new File(fileName);
+
+            if (fileName.endsWith(".txt")) {
+                createNewFile(file);
+            }
+            else {
+                createNewDir(file);
+            }
+        }
+    }
+
+    @Override
     public void onItemClick(File file) {
         getOutput().ifPresent(output -> output.onOpenFile(file));
     }
@@ -58,6 +75,30 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
             view.addItems(fs);
         }
         catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createNewFile(File file) {
+        if (service == null) {
+            return;
+        }
+        try {
+            service.writeTextFile(file, "");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createNewDir(File file) {
+        if (service == null) {
+            return;
+        }
+        try {
+            service.writeDir(file);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

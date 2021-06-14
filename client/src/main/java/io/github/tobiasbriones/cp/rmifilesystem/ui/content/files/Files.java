@@ -31,11 +31,15 @@ public final class Files implements Initializable {
     }
 
     interface Controller {
+        void onCreateButtonClick();
+
         void onItemClick(File file);
     }
 
     interface View extends MvpView<Controller> {
         void setController(Controller value);
+
+        String getCreateInputText();
 
         void addItem(File file);
 
