@@ -13,6 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemServices;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.Content;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
@@ -23,6 +25,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 /**
  * @author Tobias Briones
@@ -71,6 +76,7 @@ public final class App implements Initializable {
     private final AppMenuOutput menuOutput;
     private final Header header;
     private final Content content;
+    private FileSystemService service;
 
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
@@ -79,13 +85,16 @@ public final class App implements Initializable {
         header = childrenConfig.header();
         content = childrenConfig.content();
         presenter = new AppPresenter(view, header.getInput());
+        service = null;
     }
 
     public void start(Stage stage) {
         final var scene = new Scene((Parent) view);
         final var title = "JavaRMI Text File System";
 
+        loadService();
         menu.setOutput(menuOutput);
+        content.setService(service);
         init();
 
         stage.setTitle(title);
@@ -100,5 +109,14 @@ public final class App implements Initializable {
         menu.init();
         header.init();
         content.init();
+    }
+
+    private void loadService() {
+        try {
+            service = FileSystemServices.obtainService();
+        }
+        catch (RemoteException | NotBoundException e) {
+            e.printStackTrace();
+        }
     }
 }

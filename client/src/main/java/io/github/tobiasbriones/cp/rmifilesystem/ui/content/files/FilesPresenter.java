@@ -13,32 +13,52 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.files;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
 import java.io.File;
+import java.rmi.RemoteException;
 
 /**
  * @author Tobias Briones
  */
 final class FilesPresenter extends AbstractMvpPresenter<Void> implements Files.Presenter {
     private final Files.View view;
+    private FileSystemService service;
 
     FilesPresenter(Files.View view) {
         super();
         this.view = view;
+        service = null;
     }
 
     @Override
     public void init() {
         view.setController(this);
         view.createView();
-
-        view.addItem(new File("item1"));
-        view.addItem(new File("item2"));
+        loadFs();
     }
 
     @Override
     public void onItemClick(File file) {
         System.out.println(file);
+    }
+
+    @Override
+    public void setService(FileSystemService value) {
+        service = value;
+    }
+
+    private void loadFs() {
+        if (service == null) {
+            return;
+        }
+        try {
+            final var fs = service.getFileSystem();
+            view.addItems(fs);
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }

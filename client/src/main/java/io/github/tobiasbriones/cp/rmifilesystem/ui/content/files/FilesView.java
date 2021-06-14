@@ -51,7 +51,7 @@ final class FilesView extends VBox implements Files.View {
     public void addItem(File file) {
         final var item = new FileItemView();
 
-        item.setName(file.getName());
+        item.setName(file.toString());
         getChildren().add(item);
 
         if (controller != null) {

@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.files.Files;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
@@ -21,6 +22,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
 
 import java.io.File;
+import java.rmi.RemoteException;
 
 /**
  * @author Tobias Briones
@@ -59,16 +61,23 @@ public final class Content implements Initializable {
     private final Presenter presenter;
     private final Files files;
     private final Editor editor;
+    private FileSystemService service;
 
     private Content(ChildrenConfig config) {
         view = new ContentView(config.newViewConfig());
         presenter = new ContentPresenter(view);
         files = config.files();
         editor = config.editor();
+        service = null;
     }
 
     public Node getView() {
         return view.getView();
+    }
+
+    public void setService(FileSystemService value) {
+        service = value;
+        files.setService(value);
     }
 
     @Override

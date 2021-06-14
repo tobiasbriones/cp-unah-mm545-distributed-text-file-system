@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.files;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
@@ -41,7 +42,9 @@ public final class Files implements Initializable {
         }
     }
 
-    interface Presenter extends MvpPresenter<Void>, Controller {}
+    interface Presenter extends MvpPresenter<Void>, Controller {
+        void setService(FileSystemService value);
+    }
 
     public static Files newInstance() {
         return new Files();
@@ -57,6 +60,10 @@ public final class Files implements Initializable {
 
     public Node getView() {
         return view.getView();
+    }
+
+    public void setService(FileSystemService value) {
+        presenter.setService(value);
     }
 
     @Override
