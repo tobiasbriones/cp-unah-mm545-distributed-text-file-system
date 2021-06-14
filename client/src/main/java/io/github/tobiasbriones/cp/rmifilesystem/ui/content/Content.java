@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content;
 
 import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.files.Files;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.Initializable;
@@ -21,6 +22,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 /**
@@ -79,6 +81,7 @@ public final class Content implements Initializable {
         files.setService(value);
         editor.setService(value);
         bindServiceListener();
+        updateFs(service);
     }
 
     @Override
@@ -96,10 +99,21 @@ public final class Content implements Initializable {
     private void bindServiceListener() {
         try {
             service.addOnFileUpdateListener(
-                new ContentOnFileUpdateListener(files, editor)
+                new ContentOnFileUpdateListener(service, files, editor)
             );
         }
         catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void updateFs(FileSystemService service) {
+        try {
+            final var fs = service.getFileSystem();
+
+            AppLocalFiles.updateFs(fs);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

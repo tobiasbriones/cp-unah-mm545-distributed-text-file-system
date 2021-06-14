@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.files;
 
 import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
 import java.io.File;
@@ -37,7 +38,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     public void init() {
         view.setController(this);
         view.createView();
-        loadFs();
+        update();
     }
 
     @Override
@@ -58,6 +59,9 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public void onItemClick(File file) {
+        if (!file.toString().endsWith(".txt")) {
+            return;
+        }
         getOutput().ifPresent(output -> output.onOpenFile(file));
     }
 
@@ -66,15 +70,14 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         service = value;
     }
 
-    private void loadFs() {
-        if (service == null) {
-            return;
-        }
+    @Override
+    public void update() {
         try {
-            final var fs = service.getFileSystem();
+            final var fs = AppLocalFiles.readFs();
+            view.clear();
             view.addItems(fs);
         }
-        catch (RemoteException e) {
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

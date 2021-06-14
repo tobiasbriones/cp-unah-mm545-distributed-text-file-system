@@ -13,9 +13,11 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.OnFileUpdateListener;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.files.Files;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.io.Serial;
@@ -30,17 +32,27 @@ import java.rmi.server.UnicastRemoteObject;
 final class ContentOnFileUpdateListener extends UnicastRemoteObject implements OnFileUpdateListener {
     @Serial
     private static final long serialVersionUID = 7206688225773330503L;
+    private final FileSystemService service;
     private final Files files;
     private final Editor editor;
 
-    ContentOnFileUpdateListener(Files files, Editor editor) throws RemoteException {
+    ContentOnFileUpdateListener(
+        FileSystemService service,
+        Files files,
+        Editor editor
+    ) throws RemoteException {
         super();
+        this.service = service;
         this.files = files;
         this.editor = editor;
     }
 
     @Override
     public void onFileChanged(File file) throws RemoteException {
-        System.out.println(file);
+        Platform.runLater(() -> {
+            Content.updateFs(service);
+            files.getInput().update();
+            editor.getInput().update();
+        });
     }
 }

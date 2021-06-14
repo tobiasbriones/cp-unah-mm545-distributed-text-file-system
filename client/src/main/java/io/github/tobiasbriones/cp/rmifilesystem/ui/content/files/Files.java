@@ -26,6 +26,10 @@ import java.util.List;
  * @author Tobias Briones
  */
 public final class Files implements Initializable {
+    public interface Input {
+        void update();
+    }
+
     public interface Output {
         void onOpenFile(File file);
     }
@@ -50,7 +54,7 @@ public final class Files implements Initializable {
         }
     }
 
-    interface Presenter extends MvpPresenter<Output>, Controller {
+    interface Presenter extends MvpPresenter<Output>, Controller, Input {
         void setService(FileSystemService value);
     }
 
@@ -68,6 +72,10 @@ public final class Files implements Initializable {
 
     public Node getView() {
         return view.getView();
+    }
+
+    public Input getInput() {
+        return presenter;
     }
 
     public void setService(FileSystemService value) {

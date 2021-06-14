@@ -27,6 +27,8 @@ import java.io.File;
 public final class Editor implements Initializable {
     public interface Input {
         void setWorkingFile(File file, String content);
+
+        void update();
     }
 
     interface Controller {

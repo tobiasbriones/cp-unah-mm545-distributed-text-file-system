@@ -14,6 +14,8 @@
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.io.AppLocalFiles;
+import io.github.tobiasbriones.cp.rmifilesystem.ui.App;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 
 import java.io.File;
@@ -58,6 +60,22 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     public void setWorkingFile(File file, String content) {
         currentFile = file;
         view.setContent(content);
+    }
+
+    @Override
+    public void update() {
+        if (currentFile == null) {
+            return;
+        }
+        try {
+            final var content = service.readTextFile(currentFile);
+
+            AppLocalFiles.storeFile(currentFile, content);
+            view.setContent(content);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveContent(String content) {

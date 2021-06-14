@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.ui.content;
 
 import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.content.files.Files;
 
@@ -37,11 +38,17 @@ final class FilesOutput implements Files.Output {
 
     private String loadFile(File file) {
         try {
-            return service.readTextFile(file);
+            updateFile(file);
+            return AppLocalFiles.readFile(file);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private void updateFile(File file) throws IOException {
+        final var content = service.readTextFile(file);
+        AppLocalFiles.storeFile(file, content);
     }
 }
