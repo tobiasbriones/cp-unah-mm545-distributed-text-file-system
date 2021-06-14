@@ -21,6 +21,8 @@ import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.MvpView;
 import javafx.scene.Node;
 
+import java.rmi.RemoteException;
+
 /**
  * @author Tobias Briones
  */
@@ -76,6 +78,7 @@ public final class Content implements Initializable {
         service = value;
         files.setService(value);
         editor.setService(value);
+        bindServiceListener();
     }
 
     @Override
@@ -88,5 +91,16 @@ public final class Content implements Initializable {
 
     private void setOutputs() {
         files.setOutput(new FilesOutput(service, editor.getInput()));
+    }
+
+    private void bindServiceListener() {
+        try {
+            service.addOnFileUpdateListener(
+                new ContentOnFileUpdateListener(files, editor)
+            );
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 }
