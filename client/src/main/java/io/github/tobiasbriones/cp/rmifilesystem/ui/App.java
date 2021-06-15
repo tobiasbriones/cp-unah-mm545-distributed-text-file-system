@@ -94,6 +94,7 @@ public final class App implements Initializable {
         final var title = "JavaRMI Text File System";
 
         loadService();
+        menuOutput.setService(service);
         menu.setOutput(menuOutput);
         content.setService(service);
         init();

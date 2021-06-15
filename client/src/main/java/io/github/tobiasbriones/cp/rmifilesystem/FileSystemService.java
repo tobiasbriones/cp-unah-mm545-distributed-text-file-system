@@ -25,6 +25,8 @@ import java.util.List;
 public interface FileSystemService extends Remote {
     List<File> getFileSystem() throws RemoteException;
 
+    List<File> getInvalidFiles(String clientName) throws IOException;
+
     String readTextFile(File file) throws IOException;
 
     void writeDir(File file) throws IOException;

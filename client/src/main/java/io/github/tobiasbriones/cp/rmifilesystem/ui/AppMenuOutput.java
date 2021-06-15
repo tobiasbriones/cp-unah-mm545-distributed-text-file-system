@@ -13,19 +13,27 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui;
 
+import io.github.tobiasbriones.cp.rmifilesystem.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.header.Header;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.menu.AppMenu;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Tobias Briones
  */
 final class AppMenuOutput implements AppMenu.Output {
     private final Header.Input headerInput;
+    private FileSystemService service;
 
     AppMenuOutput(Header.Input headerInput) {
         this.headerInput = headerInput;
+        this.service = null;
+    }
+
+    void setService(FileSystemService value) {
+        service = value;
     }
 
     @Override
@@ -41,6 +49,15 @@ final class AppMenuOutput implements AppMenu.Output {
     @Override
     public void onLogin(String clientName) {
         headerInput.setUser(clientName);
+
+        try {
+            var ifs=service.getInvalidFiles(clientName);
+
+            System.out.println(ifs);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

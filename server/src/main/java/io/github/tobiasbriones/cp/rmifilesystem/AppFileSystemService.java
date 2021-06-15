@@ -48,6 +48,11 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
+    public List<File> getInvalidFiles(String clientName) throws IOException {
+        return Clients.loadInvalidFiles(clientName);
+    }
+
+    @Override
     public String readTextFile(File file) throws IOException {
         return Files.readString(toAbsoluteFile(file).toPath());
     }
