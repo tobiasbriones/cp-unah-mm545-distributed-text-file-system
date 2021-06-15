@@ -26,7 +26,7 @@ import java.util.Optional;
  * @author Tobias Briones
  */
 public final class AppLocalFiles {
-    private static final String REG_FILE_NAME = ".reg";
+    private static final String REG_FILE_NAME = ".fsreg";
     private static final String RELATIVE_ROOT = "fs";
     private static final String ROOT = System.getProperty("user.dir") + File.separator + RELATIVE_ROOT;
 
