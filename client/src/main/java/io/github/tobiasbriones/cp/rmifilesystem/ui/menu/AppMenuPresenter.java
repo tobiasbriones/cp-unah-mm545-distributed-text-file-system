@@ -15,6 +15,13 @@ package io.github.tobiasbriones.cp.rmifilesystem.ui.menu;
 
 import io.github.tobiasbriones.cp.rmifilesystem.ui.core.AbstractMvpPresenter;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 /**
  * @author Tobias Briones
@@ -45,7 +52,16 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
 
     @Override
     public void onLogin() {
-        getOutput().ifPresent(AppMenu.DefaultOutput::onLogin);
+        if (getOutput().isEmpty()) {
+            return;
+        }
+        final var dialog = new TextInputDialog("main");
+
+        dialog.setHeaderText("Login as");
+        dialog.showAndWait();
+
+        final var clientName = dialog.getEditor().getText();
+        getOutput().ifPresent(output -> output.onLogin(clientName));
     }
 
     @Override

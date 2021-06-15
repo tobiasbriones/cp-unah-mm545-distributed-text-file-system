@@ -82,7 +82,7 @@ public final class App implements Initializable {
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
         menu = childrenConfig.menu();
-        menuOutput = new AppMenuOutput();
+        menuOutput = new AppMenuOutput(childrenConfig.header().getInput());
         header = childrenConfig.header();
         content = childrenConfig.content();
         presenter = new AppPresenter(view, header.getInput());

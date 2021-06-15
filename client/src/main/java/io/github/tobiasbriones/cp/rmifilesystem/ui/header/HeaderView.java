@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui.header;
 
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -35,7 +36,13 @@ final class HeaderView extends HBox implements Header.View {
 
     @Override
     public void createView() {
+        final var titleLabel = new Label();
+
+        titleLabel.setText("User: ");
+        titleLabel.setStyle("-fx-font-weight: bold;");
+        setPadding(new Insets(8, 0, 8, 0));
         getChildren().addAll(
+            titleLabel,
             userLabel
         );
     }

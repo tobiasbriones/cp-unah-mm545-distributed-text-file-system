@@ -28,20 +28,22 @@ public final class AppMenu implements Initializable {
         void onCreateNewFile(File file);
 
         void onCreateNewDirectory(File dirFile);
+
+        void onLogin(String clientName);
     }
 
     interface DefaultOutput {
         void onSave();
 
         void onClose();
-
-        void onLogin();
     }
 
     interface Controller extends DefaultOutput {
         void onNewFile();
 
         void onNewDirectory();
+
+        void onLogin();
 
         void onQuit();
 

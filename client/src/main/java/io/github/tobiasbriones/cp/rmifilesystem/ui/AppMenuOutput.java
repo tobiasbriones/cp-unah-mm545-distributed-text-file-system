@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.ui;
 
+import io.github.tobiasbriones.cp.rmifilesystem.ui.header.Header;
 import io.github.tobiasbriones.cp.rmifilesystem.ui.menu.AppMenu;
 
 import java.io.File;
@@ -21,7 +22,11 @@ import java.io.File;
  * @author Tobias Briones
  */
 final class AppMenuOutput implements AppMenu.Output {
-    AppMenuOutput() {}
+    private final Header.Input headerInput;
+
+    AppMenuOutput(Header.Input headerInput) {
+        this.headerInput = headerInput;
+    }
 
     @Override
     public void onCreateNewFile(File file) {
@@ -34,17 +39,17 @@ final class AppMenuOutput implements AppMenu.Output {
     }
 
     @Override
+    public void onLogin(String clientName) {
+        headerInput.setUser(clientName);
+    }
+
+    @Override
     public void onSave() {
         // TODO
     }
 
     @Override
     public void onClose() {
-        // TODO
-    }
-
-    @Override
-    public void onLogin() {
         // TODO
     }
 }
