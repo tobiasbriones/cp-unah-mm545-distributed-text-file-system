@@ -29,6 +29,8 @@ public interface FileSystemService extends Remote {
 
     String readTextFile(File file) throws IOException;
 
+    String readTextFile(File file, String clientName) throws IOException;
+
     void writeDir(File file) throws IOException;
 
     void writeTextFile(File file, String content) throws IOException;

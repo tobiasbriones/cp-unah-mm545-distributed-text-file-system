@@ -44,6 +44,52 @@ public final class Clients {
         ).map(File::new).toList();
     }
 
+    public static void setValid(File file, String clientName) throws IOException {
+
+        System.out.println("Setting valid: "+file.toString());
+        System.out.println(clientName);
+        final var root = new File(ROOT);
+        final var client = new File(root, clientName + ".invalid.txt");
+
+        if (!client.exists()) {
+            return;
+        }
+        final var content = Files.readString(client.toPath());
+
+        final var newContent = Arrays.stream(content.split(System.lineSeparator()))
+                                     .filter(s -> !s.equals(file.toString()))
+                                     .reduce((s1, s2) -> s1 + System.lineSeparator() + s2);
+
+        if (newContent.isPresent()) {
+            Files.writeString(client.toPath(), newContent.get());
+        }
+    }
+
+    public static void setInvalid(File file) {
+        if (!file.toString().endsWith(".txt")) {
+            return;
+        }
+        final var root = new File(ROOT);
+        final var list = root.listFiles();
+
+        if (list != null) {
+            Arrays.stream(list)
+                  .filter(f -> f.toString().endsWith(".invalid.txt"))
+                  .forEach(f -> addInvalidFile(file, f));
+        }
+    }
+
+    private static void addInvalidFile(File file, File client) {
+        try {
+            final var currentContent = Files.readString(client.toPath());
+            final var newContent = currentContent + System.lineSeparator() + file.toString();
+            Files.writeString(client.toPath(), newContent);
+        }
+        catch (IOException e) {
+            e.printStackTrace(); // :D
+        }
+    }
+
     private static String toClientInvalidFileName(String clientName) {
         return clientName + ".invalid.txt";
     }

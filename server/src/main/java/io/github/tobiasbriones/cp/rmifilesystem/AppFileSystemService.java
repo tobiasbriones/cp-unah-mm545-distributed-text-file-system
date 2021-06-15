@@ -58,6 +58,12 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
+    public String readTextFile(File file, String clientName) throws IOException {
+        Clients.setValid(file, clientName);
+        return Files.readString(toAbsoluteFile(file).toPath());
+    }
+
+    @Override
     public void writeDir(File file) throws IOException {
         final var absFile = toAbsoluteFile(file);
 
@@ -80,6 +86,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private void broadcastUpdate(File file) {
+        Clients.setInvalid(file);
+
         for (var client : clients) {
             try {
                 client.onFileChanged(file);
