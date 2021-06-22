@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "io.github.tobiasbriones.cp"
-version = "0.1.0"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()

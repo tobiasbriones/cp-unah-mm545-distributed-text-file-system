@@ -11,16 +11,4 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem;
-
-import java.io.File;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
-/**
- * @author Tobias Briones
- */
-@FunctionalInterface
-public interface OnFileUpdateListener extends Remote {
-    void onFileChanged(File file) throws RemoteException;
-}
+package io.github.tobiasbriones.cp.rmifilesystem.model;

@@ -14,4 +14,8 @@
 /**
  * @author Tobias Briones
  */
-package io.github.tobiasbriones.cp.rmifilesystem;
+module io.github.tobiasbriones.cp.rmifilesystem.model {
+    requires java.rmi;
+
+    exports io.github.tobiasbriones.cp.rmifilesystem.model;
+}
