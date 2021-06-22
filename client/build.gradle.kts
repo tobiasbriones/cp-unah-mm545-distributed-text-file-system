@@ -23,7 +23,7 @@ version = "1.0-SNAPSHOT"
 
 application {
     mainModule.set("io.github.tobiasbriones.cp.rmifilesystem.client")
-    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.Launcher")
+    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.client.Launcher")
 }
 
 repositories {
@@ -38,6 +38,8 @@ dependencies {
     implementation("org.openjfx:javafx-graphics:15.0.1:${platform}")
     implementation("org.openjfx:javafx-controls:15.0.1:${platform}")
     implementation("org.openjfx:javafx-fxml:15.0.1:${platform}")
+
+    implementation(project(":model"))
 }
 
 tasks.getByName<Test>("test") {

@@ -12,3 +12,7 @@
  */
 
 rootProject.name = "client"
+
+include("model", "server")
+
+project(":model").projectDir = file("../model")

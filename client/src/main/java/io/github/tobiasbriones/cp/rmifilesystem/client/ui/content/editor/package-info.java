@@ -12,16 +12,6 @@
  */
 
 /**
- *
+ * @author Tobias Briones
  */
-module io.github.tobiasbriones.cp.rmifilesystem.client {
-    requires java.rmi;
-    requires javafx.base;
-    requires javafx.graphics;
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires io.github.tobiasbriones.cp.rmifilesystem.model;
-
-    opens io.github.tobiasbriones.cp.rmifilesystem.client
-        to javafx.graphics, java.rmi;
-}
+package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor;
