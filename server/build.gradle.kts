@@ -20,7 +20,7 @@ group = "io.github.tobiasbriones.cp"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.Main")
+    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.server.Main")
 }
 
 repositories {
@@ -32,6 +32,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     implementation("org.hamcrest:hamcrest:2.2")
+    implementation(project(":model"))
 }
 
 tasks.getByName<Test>("test") {

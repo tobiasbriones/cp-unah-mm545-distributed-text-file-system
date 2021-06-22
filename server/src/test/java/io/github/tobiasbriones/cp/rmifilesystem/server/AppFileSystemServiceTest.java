@@ -11,8 +11,10 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem;
+package io.github.tobiasbriones.cp.rmifilesystem.server;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.server.AppFileSystemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

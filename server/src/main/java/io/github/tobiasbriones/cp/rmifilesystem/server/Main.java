@@ -11,7 +11,9 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem;
+package io.github.tobiasbriones.cp.rmifilesystem.server;
+
+import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

@@ -11,8 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-rootProject.name = "server"
-
-include("model")
-
-project(":model").projectDir = file("../model")
+/**
+ * @author Tobias Briones
+ */
+package io.github.tobiasbriones.cp.rmifilesystem.server;

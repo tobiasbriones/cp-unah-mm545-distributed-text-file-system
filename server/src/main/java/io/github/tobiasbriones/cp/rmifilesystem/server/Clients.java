@@ -11,7 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem;
+package io.github.tobiasbriones.cp.rmifilesystem.server;
 
 import java.io.File;
 import java.io.IOException;
