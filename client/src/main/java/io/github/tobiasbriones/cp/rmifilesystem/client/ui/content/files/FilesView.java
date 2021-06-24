@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -87,7 +88,7 @@ final class FilesView extends VBox implements Files.View {
     public void addItem(File file) {
         final var item = new FileItemView();
 
-        item.setName(file.toString());
+        item.set(new ClientFile(file));
         filesPane.getChildren().add(item);
 
         if (controller != null) {
