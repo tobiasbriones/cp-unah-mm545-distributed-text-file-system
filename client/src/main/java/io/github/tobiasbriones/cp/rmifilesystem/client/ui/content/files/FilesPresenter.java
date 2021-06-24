@@ -13,8 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
 import java.io.File;

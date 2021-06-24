@@ -40,6 +40,7 @@ dependencies {
     implementation("org.openjfx:javafx-fxml:15.0.1:${platform}")
 
     implementation(project(":model"))
+    implementation(project(":mvp"))
 }
 
 tasks.getByName<Test>("test") {

@@ -13,14 +13,14 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.client.FileSystemServices;
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.Initializable;
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.MvpPresenter;
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.MvpView;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.Content;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.header.Header;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.menu.AppMenu;
+import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -39,6 +39,17 @@ public final class App implements Initializable {
     interface Presenter extends MvpPresenter<Void> {}
 
     interface View extends MvpView<Void> {}
+
+    public static App newInstance() {
+        final var menu = new AppMenu();
+        final var header = new Header();
+        final var childrenConfig = new ChildrenConfig(
+            menu,
+            header,
+            Content.newInstance()
+        );
+        return new App(childrenConfig);
+    }
 
     record ChildrenConfig(
         AppMenu menu,
@@ -60,17 +71,6 @@ public final class App implements Initializable {
         Node contentView
     ) {}
 
-    public static App newInstance() {
-        final var menu = new AppMenu();
-        final var header = new Header();
-        final var childrenConfig = new ChildrenConfig(
-            menu,
-            header,
-            Content.newInstance()
-        );
-        return new App(childrenConfig);
-    }
-
     private final View view;
     private final Presenter presenter;
     private final AppMenu menu;
@@ -89,6 +89,14 @@ public final class App implements Initializable {
         service = null;
     }
 
+    @Override
+    public void init() {
+        presenter.init();
+        menu.init();
+        header.init();
+        content.init();
+    }
+
     public void start(Stage stage) {
         final var scene = new Scene((Parent) view);
         final var title = "JavaRMI Text File System";
@@ -104,14 +112,6 @@ public final class App implements Initializable {
         stage.setMinWidth(MIN_WIDTH);
         stage.setMinHeight(MIN_HEIGHT);
         stage.show();
-    }
-
-    @Override
-    public void init() {
-        presenter.init();
-        menu.init();
-        header.init();
-        content.init();
     }
 
     private void loadService() {

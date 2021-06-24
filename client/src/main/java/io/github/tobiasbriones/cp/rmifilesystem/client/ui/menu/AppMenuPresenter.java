@@ -13,9 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.menu;
 
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.AbstractMvpPresenter;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import javafx.application.Platform;
-import javafx.scene.control.*;
+import javafx.scene.control.TextInputDialog;
 
 /**
  * @author Tobias Briones
@@ -45,6 +45,16 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
     }
 
     @Override
+    public void onNewFile() {
+        // TODO
+    }
+
+    @Override
+    public void onNewDirectory() {
+        // TODO
+    }
+
+    @Override
     public void onLogin() {
         if (getOutput().isEmpty()) {
             return;
@@ -56,16 +66,6 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
 
         final var clientName = dialog.getEditor().getText();
         getOutput().ifPresent(output -> output.onLogin(clientName));
-    }
-
-    @Override
-    public void onNewFile() {
-        // TODO
-    }
-
-    @Override
-    public void onNewDirectory() {
-        // TODO
     }
 
     @Override

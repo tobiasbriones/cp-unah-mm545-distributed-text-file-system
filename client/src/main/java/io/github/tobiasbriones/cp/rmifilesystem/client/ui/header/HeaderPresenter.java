@@ -13,7 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.header;
 
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.AbstractMvpPresenter;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 
 /**
  * @author Tobias Briones

@@ -13,9 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.Initializable;
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.MvpPresenter;
-import io.github.tobiasbriones.cp.rmifilesystem.client.ui.core.MvpView;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import javafx.scene.Node;
 

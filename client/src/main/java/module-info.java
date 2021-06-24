@@ -21,6 +21,7 @@ module io.github.tobiasbriones.cp.rmifilesystem.client {
     requires javafx.controls;
     requires javafx.fxml;
     requires io.github.tobiasbriones.cp.rmifilesystem.model;
+    requires io.github.tobiasbriones.cp.rmifilesystem.mvp;
 
     opens io.github.tobiasbriones.cp.rmifilesystem.client
         to javafx.graphics, java.rmi;
