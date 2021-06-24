@@ -19,7 +19,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -66,6 +69,9 @@ final class FileItemView extends HBox {
         setSpacing(8);
         getChildren().addAll(iconView, label);
         setAlignment(Pos.CENTER_LEFT);
+
+        setOnMouseEntered(event -> setStyle("-fx-background-color: #E0E0E0"));
+        setOnMouseExited(event -> setStyle("-fx-background-color: none"));
     }
 
     private Optional<Image> loadIcon(String iconName) {
