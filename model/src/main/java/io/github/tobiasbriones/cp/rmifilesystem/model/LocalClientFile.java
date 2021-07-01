@@ -14,44 +14,65 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Path;
 
 /**
  * @author Tobias Briones
  */
 public class LocalClientFile extends ClientFile {
+    public static LocalClientFile fromClientFile(ClientFile clientFile, String rootPath) {
+        final var file = new File(clientFile.getRelativePath());
+        return new LocalClientFile(file, rootPath);
+    }
+
     private File rootFile;
     private File localFile;
 
     public LocalClientFile(File file) {
+        this(file, "");
+    }
+
+    public LocalClientFile(File file, String rootPath) {
+        this(file, new File(rootPath));
+    }
+
+    public LocalClientFile(File file, File rootFile) {
         super(file);
-        rootFile = new File("");
-        localFile = new File("");
+        setRootFile(rootFile);
     }
 
-    public File getRootFile() {
-        return rootFile;
-    }
-
-    public void setRootFile(File value) {
+    public final void setRootFile(File value) {
         rootFile = value;
-        localFile = new File(rootFile, getFile().toString());
-    }
-
-    public File getLocalFile() {
-        return localFile;
+        localFile = new File(rootFile, getRelativePath());
     }
 
     @Override
-    public boolean isFile() {
+    public final boolean isFile() {
         return localFile.isFile();
     }
 
     @Override
-    public boolean isDirectory() {
+    public final boolean isDirectory() {
         return localFile.isDirectory();
     }
 
-    public boolean exists() {
+    @Override
+    public String toString() {
+        return localFile.toString();
+    }
+
+    public final boolean exists() {
         return localFile.exists();
+    }
+
+    public final Path toPath() {
+        return localFile.toPath();
+    }
+
+    public final InputStream newFileInputStream() throws FileNotFoundException {
+        return new FileInputStream(localFile);
     }
 }

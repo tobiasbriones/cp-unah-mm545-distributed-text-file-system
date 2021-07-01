@@ -18,22 +18,23 @@ import java.io.File;
 /**
  * @author Tobias Briones
  */
-public class ClientFile {
+public abstract class ClientFile {
     private final File file;
 
-    public ClientFile(File file) {
+    protected ClientFile(File file) {
         this.file = file;
     }
 
-    public File getFile() {
-        return file;
+    public final String getRelativePath() {
+        return file.toString();
     }
 
-    public boolean isFile() {
-        return file.isFile();
-    }
+    public abstract boolean isFile();
 
-    public boolean isDirectory() {
-        return file.isDirectory();
+    public abstract boolean isDirectory();
+
+    @Override
+    public String toString() {
+        return file.toString();
     }
 }
