@@ -79,4 +79,8 @@ public class LocalClientFile extends ClientFile {
     public final InputStream newFileInputStream() throws FileNotFoundException {
         return new FileInputStream(localFile);
     }
+
+    public final boolean mkdirs() {
+        return localFile.mkdirs();
+    }
 }
