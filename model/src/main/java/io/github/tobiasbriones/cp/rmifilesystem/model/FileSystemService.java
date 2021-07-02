@@ -22,9 +22,9 @@ import java.util.List;
  * @author Tobias Briones
  */
 public interface FileSystemService extends Remote {
-    List<ClientFile> getFileSystem() throws RemoteException;
+    List<RemoteClientFile> getFileSystem() throws RemoteException;
 
-    List<ClientFile> getInvalidFiles(String clientName) throws IOException;
+    List<RemoteClientFile> getInvalidFiles(String clientName) throws IOException;
 
     String readTextFile(ClientFile file) throws IOException;
 

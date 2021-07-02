@@ -72,6 +72,10 @@ public class LocalClientFile extends ClientFile {
         return localFile.toPath();
     }
 
+    public final RemoteClientFile toRemoteClientFile() {
+        return RemoteClientFile.fromClientFile(this);
+    }
+
     public final InputStream newFileInputStream() throws FileNotFoundException {
         return new FileInputStream(localFile);
     }

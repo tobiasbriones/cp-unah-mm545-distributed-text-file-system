@@ -19,6 +19,11 @@ import java.io.File;
  * @author Tobias Briones
  */
 public class RemoteClientFile extends ClientFile {
+    public static RemoteClientFile fromClientFile(ClientFile clientFile) {
+        final var file = new File(clientFile.getRelativePath());
+        return new RemoteClientFile(file);
+    }
+
     // TODO Add remote context
     public RemoteClientFile(File file) {
         super(file);

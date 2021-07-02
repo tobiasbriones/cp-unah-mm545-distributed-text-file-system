@@ -21,5 +21,5 @@ import java.rmi.RemoteException;
  */
 @FunctionalInterface
 public interface OnFileUpdateListener extends Remote {
-    void onFileChanged(ClientFile file) throws RemoteException;
+    void onFileChanged(RemoteClientFile file) throws RemoteException;
 }
