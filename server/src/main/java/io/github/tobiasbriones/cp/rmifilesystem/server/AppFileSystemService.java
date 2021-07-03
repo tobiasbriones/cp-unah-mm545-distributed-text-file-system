@@ -13,8 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
+import io.github.tobiasbriones.cp.rmifilesystem.model.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +32,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     private static final long serialVersionUID = 7826374551124313303L;
     private static final String RELATIVE_ROOT = "fs";
     static final String ROOT = System.getProperty("user.dir") + File.separator + RELATIVE_ROOT;
-    private final List<OnFileUpdateListener> clients;
 
+    private final List<OnFileUpdateListener> clients;
     public AppFileSystemService() throws RemoteException {
         super();
         clients = new ArrayList<>(10);
@@ -43,52 +42,50 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public List<File> getFileSystem() {
+    public List<RemoteClientFile> getFileSystem() {
         final var root = new File(ROOT);
         return recursiveListFilesOf(root).stream()
                                          .map(AppFileSystemService::toRelativeFile)
+                                         .map(RemoteClientFile::new)
                                          .toList();
     }
 
     @Override
-    public List<File> getInvalidFiles(String clientName) throws IOException {
+    public List<RemoteClientFile> getInvalidFiles(String clientName) throws IOException {
         return Clients.loadInvalidFiles(clientName);
     }
 
     @Override
-    public String readTextFile(File file) throws IOException {
-        return Files.readString(toAbsoluteFile(file).toPath());
+    public String readTextFile(ClientFile file) throws IOException {
+        return Files.readString(toLocalClientFile(file).toPath());
     }
 
     @Override
-    public String readTextFile(File file, String clientName) throws IOException {
+    public String readTextFile(ClientFile file, String clientName) throws IOException {
         Clients.setValid(file, clientName);
-        return Files.readString(toAbsoluteFile(file).toPath());
+        return Files.readString(toLocalClientFile(file).toPath());
     }
 
     @Override
-    public void writeDir(File file) throws IOException {
-        final var absFile = toAbsoluteFile(file);
+    public void writeDir(ClientFile file) throws IOException {
+        final var localFile = toLocalClientFile(file);
 
-        if (!absFile.mkdirs()) {
-            final var msg = "Fail to create directory";
-            throw new IOException(msg);
-        }
-        broadcastUpdate(file);
+        mkdirs(localFile);
+        broadcastUpdate(RemoteClientFile.fromClientFile(file));
     }
 
     @Override
-    public void writeTextFile(File file, String content) throws IOException {
-        Files.writeString(toAbsoluteFile(file).toPath(), content);
-        broadcastUpdate(file);
+    public void writeTextFile(ClientFile file, String content) throws IOException {
+        Files.writeString(LocalClientFile.fromClientFile(file, ROOT).toPath(), content);
+        broadcastUpdate(RemoteClientFile.fromClientFile(file));
     }
 
     @Override
-    public void addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
-        clients.add(l);
+    public boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
+        return clients.add(l);
     }
 
-    private void broadcastUpdate(File file) {
+    private void broadcastUpdate(RemoteClientFile file) {
         Clients.setInvalid(file);
 
         for (var client : clients) {
@@ -101,8 +98,25 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         }
     }
 
-    private static File toAbsoluteFile(File file) {
-        return new File(ROOT, String.valueOf(file.toPath()));
+    private static LocalClientFile toLocalClientFile(ClientFile file) {
+        return LocalClientFile.fromClientFile(file, ROOT);
+    }
+
+    private static File toRelativeFile(File file) {
+        final var path = file.getAbsolutePath();
+
+        if (!path.startsWith(ROOT)) {
+            return new File("");
+        }
+        final var relPath = path.substring(ROOT.length() + 1);
+        return new File(relPath);
+    }
+
+    private static void mkdirs(LocalClientFile file) throws IOException {
+        if (!file.mkdirs()) {
+            final var msg = "Fail to create directory";
+            throw new IOException(msg);
+        }
     }
 
     private static List<File> recursiveListFilesOf(File root) {
@@ -121,15 +135,5 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
             }
         }
         return files;
-    }
-
-    private static File toRelativeFile(File file) {
-        final var path = file.getAbsolutePath();
-
-        if (!path.startsWith(ROOT)) {
-            return new File("");
-        }
-        final var relPath = path.substring(ROOT.length() + 1);
-        return new File(relPath);
     }
 }

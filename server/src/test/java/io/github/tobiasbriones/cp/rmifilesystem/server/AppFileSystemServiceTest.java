@@ -13,7 +13,10 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.model.LocalClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.RemoteClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.server.AppFileSystemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,23 +62,28 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Read the default file structure")
     void readFs() throws RemoteException {
-        final var fs = service.getFileSystem();
+        final List<RemoteClientFile> fs = service.getFileSystem();
+
+        assertNotNull(fs, "Expect the file system is not null");
+
+        final List<String> fsPaths = fs.stream().map(ClientFile::getRelativePath).toList();
         final var dir1 = new File(DIR_1_NAME);
-        final var expected = List.of(
+        final var expectedFiles = List.of(
             new File(DIR_1_NAME),
             new File(TEXT_FILE_1_NAME),
             new File(dir1, TEXT_FILE_2_NAME)
         );
+        final var expected = expectedFiles.stream().map(File::toString).toList();
 
-        assertNotNull(fs, "Expect the file system is not null");
-        assertThat(fs, containsInAnyOrder(expected.toArray()));
+        assertThat(fsPaths, containsInAnyOrder(expected.toArray()));
     }
 
     @Test
     @DisplayName("Read a specific text file")
     void readFile() throws IOException {
         final var file = new File(TEXT_FILE_1_NAME);
-        final var content = service.readTextFile(file);
+        final var clientFile = new LocalClientFile(file);
+        final var content = service.readTextFile(clientFile);
 
         assertNotNull(content, "Expect the file content is not null");
         assertThat(content, is(TEXT_FILE_1_CONTENT));
@@ -85,8 +93,9 @@ class AppFileSystemServiceTest {
     @DisplayName("Create a new directory")
     void writeDir() throws IOException {
         final var dir = new File("new-dir");
+        final var clientDir = new LocalClientFile(dir);
 
-        service.writeDir(dir);
+        service.writeDir(clientDir);
         final var root = new File(AppFileSystemService.ROOT);
         final var newDir = new File(root, "new-dir");
 
@@ -100,10 +109,11 @@ class AppFileSystemServiceTest {
     @DisplayName("Write to a specific text file")
     void writeFile() throws IOException {
         final var file = new File(TEXT_FILE_1_NAME);
+        final var clientFile = new LocalClientFile(file);
         final var content = "New file content";
 
-        service.writeTextFile(file, content);
-        final var newContent = service.readTextFile(file);
+        service.writeTextFile(clientFile, content);
+        final var newContent = service.readTextFile(clientFile);
 
         assertNotNull(
             newContent,

@@ -13,6 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.RemoteClientFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +29,7 @@ public final class Clients {
     private static final String ROOT_CLIENTS_DIR = "clients";
     private static final String ROOT = System.getProperty("user.dir") + File.separator + ROOT_CLIENTS_DIR;
 
-    public static List<File> loadInvalidFiles(String clientName) throws IOException {
+    public static List<RemoteClientFile> loadInvalidFiles(String clientName) throws IOException {
         final var root = new File(ROOT);
         final var clientFile = new File(root, toClientInvalidFileName(clientName));
 
@@ -41,12 +44,12 @@ public final class Clients {
         return Arrays.stream(
             Files.readString(clientFile.toPath())
                  .split(System.lineSeparator())
-        ).map(File::new).toList();
+        ).map(File::new).map(RemoteClientFile::new).toList();
     }
 
-    public static void setValid(File file, String clientName) throws IOException {
+    public static void setValid(ClientFile file, String clientName) throws IOException {
 
-        System.out.println("Setting valid: "+file.toString());
+        System.out.println("Setting valid: " + file.toString());
         System.out.println(clientName);
         final var root = new File(ROOT);
         final var client = new File(root, clientName + ".invalid.txt");
@@ -65,7 +68,7 @@ public final class Clients {
         }
     }
 
-    public static void setInvalid(File file) {
+    public static void setInvalid(ClientFile file) {
         if (!file.toString().endsWith(".txt")) {
             return;
         }
@@ -79,7 +82,7 @@ public final class Clients {
         }
     }
 
-    private static void addInvalidFile(File file, File client) {
+    private static void addInvalidFile(ClientFile file, File client) {
         try {
             final var currentContent = Files.readString(client.toPath());
             final var newContent = currentContent + System.lineSeparator() + file.toString();
