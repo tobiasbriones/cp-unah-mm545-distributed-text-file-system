@@ -14,11 +14,15 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
 import java.io.File;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * @author Tobias Briones
  */
-public abstract class ClientFile {
+public abstract class ClientFile implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 6982279004706214659L;
     private final File file;
 
     protected ClientFile(File file) {

@@ -14,11 +14,15 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
 import java.io.File;
+import java.io.Serial;
 
 /**
  * @author Tobias Briones
  */
 public class RemoteClientFile extends ClientFile {
+    @Serial
+    private static final long serialVersionUID = -1537763654528505233L;
+
     public static RemoteClientFile fromClientFile(ClientFile clientFile) {
         final var file = new File(clientFile.getRelativePath());
         return new RemoteClientFile(file);

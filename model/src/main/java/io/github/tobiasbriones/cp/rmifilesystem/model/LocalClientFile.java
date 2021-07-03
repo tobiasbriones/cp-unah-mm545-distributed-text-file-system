@@ -13,16 +13,16 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Path;
 
 /**
  * @author Tobias Briones
  */
 public class LocalClientFile extends ClientFile {
+    @Serial
+    private static final long serialVersionUID = -7184265387670681L;
+
     public static LocalClientFile fromClientFile(ClientFile clientFile, String rootPath) {
         final var file = new File(clientFile.getRelativePath());
         return new LocalClientFile(file, rootPath);
