@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -31,13 +32,13 @@ public final class Files implements Initializable {
     }
 
     public interface Output {
-        void onOpenFile(File file);
+        void onOpenFile(ClientFile file);
     }
 
     interface Controller {
         void onCreateButtonClick();
 
-        void onItemClick(File file);
+        void onItemClick(ClientFile file);
     }
 
     interface View extends MvpView<Controller> {
@@ -45,11 +46,11 @@ public final class Files implements Initializable {
 
         String getCreateInputText();
 
-        void addItem(File file);
+        void addItem(ClientFile file);
 
         void clear();
 
-        default void addItems(List<? extends File> files) {
+        default void addItems(List<? extends ClientFile> files) {
             files.forEach(this::addItem);
         }
     }

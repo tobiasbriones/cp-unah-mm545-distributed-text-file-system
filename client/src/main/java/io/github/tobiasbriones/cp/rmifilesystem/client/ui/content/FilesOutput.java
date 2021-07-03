@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor.Editor;
@@ -31,12 +32,12 @@ final class FilesOutput implements Files.Output {
     }
 
     @Override
-    public void onOpenFile(File file) {
+    public void onOpenFile(ClientFile file) {
         final var content = loadFile(file);
         editorInput.setWorkingFile(file, content);
     }
 
-    private String loadFile(File file) {
+    private String loadFile(ClientFile file) {
         try {
             updateFile(file);
             return AppLocalFiles.readFile(file);
@@ -47,7 +48,7 @@ final class FilesOutput implements Files.Output {
         return "";
     }
 
-    private void updateFile(File file) throws IOException {
+    private void updateFile(ClientFile file) throws IOException {
         final var content = service.readTextFile(file);
         AppLocalFiles.storeFile(file, content);
     }

@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -26,7 +27,7 @@ import java.io.File;
  */
 public final class Editor implements Initializable {
     public interface Input {
-        void setWorkingFile(File file, String content);
+        void setWorkingFile(ClientFile file, String content);
 
         void update();
     }

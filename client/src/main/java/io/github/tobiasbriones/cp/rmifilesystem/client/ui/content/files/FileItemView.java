@@ -24,6 +24,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -55,10 +56,8 @@ final class FileItemView extends HBox {
 
     void set(ClientFile file) {
         final Function<String, Boolean> isTextFile = name -> name.endsWith(".txt");
-        final var name = file.getFile().getName();
-        final var iconName = isTextFile.apply(
-            file.getFile().getName()
-        ) ? TEXT_FILE_ICON_NAME : FOLDER_ICON_NAME;
+        final var name = new File(file.getRelativePath()).getName();
+        final var iconName = isTextFile.apply(name) ? TEXT_FILE_ICON_NAME : FOLDER_ICON_NAME;
 
         setName(name);
         setIcon(iconName);

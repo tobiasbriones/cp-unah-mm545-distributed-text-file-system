@@ -14,6 +14,8 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.LocalClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
@@ -45,7 +47,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         final var fileName = view.getCreateInputText();
 
         if (!fileName.isBlank()) {
-            final var file = new File(fileName);
+            final var file = new LocalClientFile(new File(fileName));
 
             if (fileName.endsWith(".txt")) {
                 createNewFile(file);
@@ -57,8 +59,8 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     @Override
-    public void onItemClick(File file) {
-        if (!file.toString().endsWith(".txt")) {
+    public void onItemClick(ClientFile file) {
+        if (!file.getRelativePath().endsWith(".txt")) {
             return;
         }
         getOutput().ifPresent(output -> output.onOpenFile(file));
@@ -81,7 +83,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         }
     }
 
-    private void createNewFile(File file) {
+    private void createNewFile(ClientFile file) {
         if (service == null) {
             return;
         }
@@ -93,7 +95,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         }
     }
 
-    private void createNewDir(File file) {
+    private void createNewDir(ClientFile file) {
         if (service == null) {
             return;
         }

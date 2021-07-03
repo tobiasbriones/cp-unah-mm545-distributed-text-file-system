@@ -85,10 +85,10 @@ final class FilesView extends VBox implements Files.View {
     }
 
     @Override
-    public void addItem(File file) {
+    public void addItem(ClientFile file) {
         final var item = new FileItemView();
 
-        item.set(new ClientFile(file));
+        item.set(file);
         filesPane.getChildren().add(item);
 
         if (controller != null) {

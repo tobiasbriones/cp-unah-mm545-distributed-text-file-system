@@ -17,6 +17,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files.Files;
+import io.github.tobiasbriones.cp.rmifilesystem.model.RemoteClientFile;
 import javafx.application.Platform;
 
 import java.io.File;
@@ -48,7 +49,7 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
     }
 
     @Override
-    public void onFileChanged(File file) throws RemoteException {
+    public void onFileChanged(RemoteClientFile file) throws RemoteException {
         Platform.runLater(() -> {
             Content.updateFs(service);
             files.getInput().update();

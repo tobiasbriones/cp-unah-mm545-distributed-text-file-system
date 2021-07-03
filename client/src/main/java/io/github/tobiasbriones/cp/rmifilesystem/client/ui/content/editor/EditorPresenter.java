@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
+import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
@@ -26,7 +27,7 @@ import java.io.IOException;
 final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor.Presenter {
     private final Editor.View view;
     private FileSystemService service;
-    private File currentFile;
+    private ClientFile currentFile;
 
     EditorPresenter(Editor.View view) {
         super();
@@ -56,7 +57,7 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     }
 
     @Override
-    public void setWorkingFile(File file, String content) {
+    public void setWorkingFile(ClientFile file, String content) {
         currentFile = file;
         view.setContent(content);
     }
