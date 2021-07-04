@@ -16,6 +16,7 @@ package io.github.tobiasbriones.cp.rmifilesystem.model;
 import java.io.File;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.function.Function;
 
 /**
  * @author Tobias Briones
@@ -23,6 +24,7 @@ import java.io.Serializable;
 public abstract class ClientFile implements Serializable {
     @Serial
     private static final long serialVersionUID = 6982279004706214659L;
+    private static final String FILE_EXTENSION_DOT = ".";
     private final File file;
 
     protected ClientFile(File file) {
@@ -31,6 +33,18 @@ public abstract class ClientFile implements Serializable {
 
     public final String getRelativePath() {
         return file.toString();
+    }
+
+    public String getExtension() {
+        final Function<String, Boolean> existsChecker = name -> name.contains(FILE_EXTENSION_DOT);
+        final Function<String, Integer> indexGetter = name -> name.lastIndexOf(FILE_EXTENSION_DOT) + 1;
+        final Function<String, String> extensionGetter = name -> name.substring(indexGetter.apply(name));
+        final String name = getName();
+        return existsChecker.apply(name) ? extensionGetter.apply(name) : "";
+    }
+
+    public final String getName() {
+        return file.getName();
     }
 
     public abstract boolean isFile();
