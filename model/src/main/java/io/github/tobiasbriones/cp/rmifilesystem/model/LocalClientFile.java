@@ -31,6 +31,10 @@ public class LocalClientFile extends ClientFile {
     private File rootFile;
     private File localFile;
 
+    public LocalClientFile(String pathname) {
+        this(new File(pathname));
+    }
+
     public LocalClientFile(File file) {
         this(file, "");
     }
