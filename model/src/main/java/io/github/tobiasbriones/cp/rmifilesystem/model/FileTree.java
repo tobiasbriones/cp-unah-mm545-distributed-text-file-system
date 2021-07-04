@@ -13,17 +13,33 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * @author Tobias Briones
  */
 public final class FileTree<T extends ClientFile> implements Iterable<FileTree.Node<T>> {
+    public static <T extends ClientFile> FileTree<T> newInstance(
+        File root,
+        Function<? super File, T> pipe
+    ) {
+        final var tree = new FileTree<>(pipe.apply(root));
+        final var files = root.listFiles();
+
+        if (files == null) {
+            return tree;
+        }
+        addChildren(tree.getRoot(), root, pipe);
+        return tree;
+    }
+
     private final Node<T> root;
 
     public FileTree(T rootFile) {
@@ -42,6 +58,23 @@ public final class FileTree<T extends ClientFile> implements Iterable<FileTree.N
     @Override
     public String toString() {
         return "root=" + root;
+    }
+
+    private static <T extends ClientFile> void addChildren(
+        Node<T> node,
+        File root,
+        Function<? super File, T> pipe
+    ) {
+        final var files = root.listFiles();
+
+        if (files != null) {
+            for (var file : files) {
+                final var child = new Node<>(pipe.apply(file));
+
+                node.addChild(child);
+                addChildren(child, file, pipe);
+            }
+        }
     }
 
     public static final class Node<T extends ClientFile> implements Iterable<Node<T>> {
@@ -124,17 +157,3 @@ public final class FileTree<T extends ClientFile> implements Iterable<FileTree.N
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
