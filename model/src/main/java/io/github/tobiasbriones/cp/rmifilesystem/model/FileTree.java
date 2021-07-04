@@ -91,6 +91,10 @@ public final class FileTree<T extends ClientFile> implements Iterable<FileTree.N
             return file.getName();
         }
 
+        public String getRelativePath() {
+            return file.getRelativePath();
+        }
+
         @Override
         public String toString() {
             @FunctionalInterface
