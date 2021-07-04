@@ -67,13 +67,14 @@ public final class FileTree<T extends ClientFile> implements Iterable<FileTree.N
     ) {
         final var files = root.listFiles();
 
-        if (files != null) {
-            for (var file : files) {
-                final var child = new Node<>(pipe.apply(file));
+        if (files == null) {
+            return;
+        }
+        for (var file : files) {
+            final var child = new Node<>(pipe.apply(file));
 
-                node.addChild(child);
-                addChildren(child, file, pipe);
-            }
+            node.addChild(child);
+            addChildren(child, file, pipe);
         }
     }
 
