@@ -16,22 +16,8 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 /**
  * @author Tobias Briones
  */
-public sealed interface CommonFile permits Directory {
-    /**
-     * Standardize to use this character to define the system path separator
-     * character at the domain model level (just for CommonFile objects) but not
-     * for anything else. This is useful for this application to persist the
-     * file path as string and forget whether the file separator is "/", "\",
-     * ":" or ";".
-     */
-    char SEPARATOR_CHAR = '/';
-
-    /**
-     * See {@link CommonFile#SEPARATOR_CHAR}.
-     */
-    String SEPARATOR = String.valueOf(SEPARATOR_CHAR);
-
-    String path();
+public sealed interface CommonFile permits Directory, File {
+    CommonPath path();
 
     String name();
 }
