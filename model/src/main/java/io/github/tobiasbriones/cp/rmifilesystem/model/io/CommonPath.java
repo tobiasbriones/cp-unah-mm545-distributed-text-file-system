@@ -60,4 +60,8 @@ public record CommonPath(String value) {
             throw new InvalidPathException(value);
         }
     }
+
+    public String[] split() {
+        return value.split(SEPARATOR);
+    }
 }

@@ -19,5 +19,8 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 public sealed interface CommonFile permits Directory, File {
     CommonPath path();
 
-    String name();
+    default String name() {
+        final String[] tokens = path().split();
+        return tokens[tokens.length - 1];
+    }
 }
