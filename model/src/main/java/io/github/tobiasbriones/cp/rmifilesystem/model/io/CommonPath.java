@@ -14,6 +14,8 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -34,7 +36,7 @@ public record CommonPath(String value) {
      */
     public static final String SEPARATOR;
 
-    public static final String ROOT_PATH = "";
+    public static final String ROOT_PATH;
 
     /**
      * Defines the accepted CommonFile path regex.
@@ -45,12 +47,13 @@ public record CommonPath(String value) {
     static {
         SEPARATOR_CHAR = '/';
         SEPARATOR = String.valueOf(SEPARATOR_CHAR);
+        ROOT_PATH = "";
         VALID_PATH_REGEX = "\\w+/*\\.*-*";
         PATH_PATTERN = Pattern.compile(VALID_PATH_REGEX, Pattern.CASE_INSENSITIVE);
     }
 
-    public static Optional<CommonPath> of() {
-        return of(ROOT_PATH);
+    public static CommonPath of() {
+        return new CommonPath(ROOT_PATH);
     }
 
     public static Optional<CommonPath> of(String value) {
@@ -65,6 +68,17 @@ public record CommonPath(String value) {
         if (!isValid(value)) {
             throw new InvalidPathException(value);
         }
+    }
+
+    public CommonPath getParent() {
+        final Predicate<String> hasParent = path -> path.contains(SEPARATOR);
+        final Function<String, String> parentSubstring = path ->
+            path.substring(0, path.lastIndexOf(SEPARATOR_CHAR) - 1);
+        return Optional.of(value)
+                       .filter(hasParent)
+                       .map(parentSubstring)
+                       .map(CommonPath::new)
+                       .orElse(of());
     }
 
     public String[] split() {
