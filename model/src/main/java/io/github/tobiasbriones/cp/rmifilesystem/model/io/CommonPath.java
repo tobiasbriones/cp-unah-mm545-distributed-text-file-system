@@ -34,6 +34,8 @@ public record CommonPath(String value) {
      */
     public static final String SEPARATOR;
 
+    public static final String ROOT_PATH = "";
+
     /**
      * Defines the accepted CommonFile path regex.
      */
@@ -45,6 +47,10 @@ public record CommonPath(String value) {
         SEPARATOR = String.valueOf(SEPARATOR_CHAR);
         VALID_PATH_REGEX = "\\w+/*\\.*-*";
         PATH_PATTERN = Pattern.compile(VALID_PATH_REGEX, Pattern.CASE_INSENSITIVE);
+    }
+
+    public static Optional<CommonPath> of() {
+        return of(ROOT_PATH);
     }
 
     public static Optional<CommonPath> of(String value) {
