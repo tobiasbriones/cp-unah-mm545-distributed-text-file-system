@@ -32,6 +32,10 @@ public sealed interface Node<T extends CommonFile> permits DirectoryNode, FileNo
         return commonFile() instanceof File;
     }
 
+    default String toRecursiveString() {
+        return Nodes.getString(this, "");
+    }
+
     default JavaFile toJavaFile() {
         return JavaFile.from(commonFile());
     }
