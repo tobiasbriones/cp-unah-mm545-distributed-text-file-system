@@ -130,4 +130,19 @@ class DirectoryNodeTest {
         assertTrue(node.hasChild(c1.commonFile()), "Node has directory child after adding it");
         assertTrue(node.hasChild(c2.commonFile()), "Node has file child after adding it");
     }
+
+    @Test
+    void testCircularParent() {
+
+    }
+
+    @Test
+    void testInvalidChild() {
+
+    }
+
+    @Test
+    void testSampleFs() {
+
+    }
 }
