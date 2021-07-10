@@ -13,34 +13,23 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+class DirectoryNodeTest {
+    private DirectoryNode node;
 
-class NodeTest {
-    private Node node;
-
-    NodeTest() {
+    DirectoryNodeTest() {
         node = null;
     }
 
     @BeforeEach
     void setUp() {
-        node = new Node(Directory.of());
+        node = new DirectoryNode();
     }
 
     @Test
     void isRoot() {
-    }
-
-    @Test
-    void isDirectory() {
-    }
-
-    @Test
-    void isFile() {
     }
 
     @Test
@@ -56,15 +45,11 @@ class NodeTest {
     }
 
     @Test
+    void addChildren() {
+    }
+
+    @Test
     void addChild() {
-    }
-
-    @Test
-    void commonFile() {
-    }
-
-    @Test
-    void toJavaFile() {
     }
 
     @Test
