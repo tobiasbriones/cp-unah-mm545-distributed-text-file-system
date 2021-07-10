@@ -24,6 +24,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DirectoryNodeTest {
@@ -133,16 +134,69 @@ class DirectoryNodeTest {
 
     @Test
     void testCircularParent() {
+        final var c1 = new DirectoryNode(new Directory(new CommonPath("fs")));
+        final var c2 = new DirectoryNode(new Directory(new CommonPath("dir1")));
 
+        // Build /fs/dir1
+        c1.setParent(node);
+        c2.setParent(c1);
+
+        assertThrows(CircularParentException.class, () -> node.setParent(c2));
+        assertThrows(CircularParentException.class, () -> node.setParent(c1));
+        assertThrows(CircularParentException.class, () -> c1.setParent(c2));
     }
 
     @Test
     void testInvalidChild() {
+        final var c1 = new DirectoryNode(new Directory(new CommonPath("fs")));
+        final var c2 = new DirectoryNode(new Directory(new CommonPath("dir1")));
 
+        // Build /fs/dir1
+        node.addChild(c1);
+        c1.addChild(c2);
+
+        assertThrows(InvalidChildException.class, () -> c2.addChild(node));
+        assertThrows(InvalidChildException.class, () -> c1.addChild(node));
+        assertThrows(InvalidChildException.class, () -> c2.addChild(c1));
     }
 
     @Test
     void testSampleFs() {
+        final DirectoryNode root = new DirectoryNode(new Directory(new CommonPath("root")));
+        final String expectedString = "root";
+        final String recursiveExpected = """
+                                         root
+                                           dir1
+                                             file-x.txt
+                                             dir11
+                                               nested.txt
+                                           dir2
+                                             file-y.txt
+                                           file1.txt
+                                           file2.txt
+                                         """;
 
+        // Two folders
+        final var dir1 = new DirectoryNode(new Directory(new CommonPath("dir1")));
+        final var dir2 = new DirectoryNode(new Directory(new CommonPath("dir2")));
+
+        dir1.addChild(new FileNode(new File.TextFile(new CommonPath("file-x.txt"))));
+        dir2.addChild(new FileNode(new File.TextFile(new CommonPath("file-y.txt"))));
+
+        // Nested folders
+        final var dir11 = new DirectoryNode(new Directory(new CommonPath("dir11")));
+        final var nestedFile = new FileNode(new File.TextFile(new CommonPath("nested.txt")));
+
+        dir11.addChild(nestedFile);
+        dir1.addChild(dir11);
+
+        // Root files
+        final var file1 = new FileNode(new File.TextFile(new CommonPath("file1.txt")));
+        final var file2 = new FileNode(new File.TextFile(new CommonPath("file2.txt")));
+
+        root.addChildren(dir1, dir2, file1, file2);
+
+        assertThat(root.toString(), is(expectedString));
+        assertThat(root.toRecursiveString(), is(recursiveExpected));
     }
 }
