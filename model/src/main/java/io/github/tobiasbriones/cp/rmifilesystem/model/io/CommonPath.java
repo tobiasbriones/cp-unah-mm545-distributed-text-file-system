@@ -48,7 +48,7 @@ public record CommonPath(String value) {
         SEPARATOR_CHAR = '/';
         SEPARATOR = String.valueOf(SEPARATOR_CHAR);
         ROOT_PATH = "";
-        VALID_PATH_REGEX = "\\w+/*\\.*-*";
+        VALID_PATH_REGEX = "^$|\\w+/*\\.*-*";
         PATH_PATTERN = Pattern.compile(VALID_PATH_REGEX, Pattern.CASE_INSENSITIVE);
     }
 
