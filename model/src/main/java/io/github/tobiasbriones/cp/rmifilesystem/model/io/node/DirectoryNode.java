@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * @author Tobias Briones
  */
-public final class DirectoryNode implements Node<Directory> {
+public final class DirectoryNode implements Node<Directory>, Iterable<Node<? extends CommonFile>> {
     private static final int INITIAL_CHILDREN_CAPACITY = 10;
     private final Directory directory;
     private final List<Node<? extends CommonFile>> children;
@@ -65,6 +65,20 @@ public final class DirectoryNode implements Node<Directory> {
     @Override
     public Directory commonFile() {
         return directory;
+    }
+
+    @Override
+    public Iterator<Node<? extends CommonFile>> iterator() {
+        return children.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return directory.name();
+    }
+
+    public boolean hasChildren() {
+        return !children.isEmpty();
     }
 
     public void addChild(Node<? extends CommonFile> child) {
