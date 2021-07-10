@@ -13,9 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
-
-import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node.*;
 
 /**
  * @author Tobias Briones
@@ -27,6 +26,29 @@ final class Nodes {
 
     static void requireValidChild(DirectoryNode node, Node<?> child) {
 
+    }
+
+    static String getString(Node<? extends CommonFile> node, String indentation) {
+        final CommonFile file = node.commonFile();
+
+        if (node instanceof DirectoryNode dir && dir.hasChildren()) {
+            final var sb = new StringBuilder(10);
+
+            sb.append(toString(file, indentation));
+            for (final var child : dir) {
+                final String str = getString(child, indentation + "  ");
+
+                sb.append(str);
+            }
+            return sb.toString();
+        }
+        return toString(file, indentation);
+    }
+
+    private static String toString(CommonFile file, String indentation) {
+        return """
+               %s%s
+               """.formatted(indentation, file.name());
     }
 
     private static boolean isValidChild(CommonPath path, CommonPath childPath) {
