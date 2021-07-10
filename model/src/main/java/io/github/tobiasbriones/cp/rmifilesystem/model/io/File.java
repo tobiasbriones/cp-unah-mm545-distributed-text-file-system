@@ -27,6 +27,10 @@ import java.util.regex.Pattern;
 public sealed interface File extends CommonFile {
     record TextFile(CommonPath path) implements File {
         public static final String EXTENSION = "txt";
+
+        public TextFile(String path) {
+            this(new CommonPath(path));
+        }
     }
 
     default Name fileName() {

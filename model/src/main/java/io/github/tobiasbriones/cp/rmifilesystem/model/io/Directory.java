@@ -21,6 +21,10 @@ public record Directory(CommonPath path) implements CommonFile {
         return new Directory(CommonPath.of());
     }
 
+    public Directory(String path) {
+        this(new CommonPath(path));
+    }
+
     public boolean isRoot() {
         return path.value().equals(CommonPath.ROOT_PATH);
     }
