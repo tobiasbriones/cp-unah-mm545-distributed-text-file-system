@@ -73,7 +73,7 @@ public record CommonPath(String value) {
     public CommonPath getParent() {
         final Predicate<String> hasParent = path -> path.contains(SEPARATOR);
         final Function<String, String> parentSubstring = path ->
-            path.substring(0, path.lastIndexOf(SEPARATOR_CHAR) - 1);
+            path.substring(0, path.lastIndexOf(SEPARATOR_CHAR));
         return Optional.of(value)
                        .filter(hasParent)
                        .map(parentSubstring)
