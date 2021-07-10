@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 
 import java.util.*;
@@ -65,6 +66,11 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
     @Override
     public Directory commonFile() {
         return directory;
+    }
+
+    @Override
+    public CommonPath commonPath() {
+        return directory.path();
     }
 
     @Override

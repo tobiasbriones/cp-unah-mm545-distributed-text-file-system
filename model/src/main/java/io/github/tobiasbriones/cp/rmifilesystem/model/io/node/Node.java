@@ -13,16 +13,15 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.JavaFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.*;
 
 /**
  * @author Tobias Briones
  */
 public sealed interface Node<T extends CommonFile> permits DirectoryNode, FileNode {
     T commonFile();
+
+    CommonPath commonPath();
 
     default boolean isDirectory() {
         return commonFile() instanceof Directory;

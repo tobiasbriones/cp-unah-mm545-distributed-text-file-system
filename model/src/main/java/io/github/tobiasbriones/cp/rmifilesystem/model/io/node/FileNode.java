@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 
 /**
@@ -26,7 +27,12 @@ public final class FileNode implements Node<File> {
     }
 
     @Override
-    public final File commonFile() {
+    public File commonFile() {
         return file;
+    }
+
+    @Override
+    public CommonPath commonPath() {
+        return file.path();
     }
 }
