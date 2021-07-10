@@ -16,4 +16,12 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 /**
  * @author Tobias Briones
  */
-public record Directory(String path) implements CommonFile {}
+public record Directory(CommonPath path) implements CommonFile {
+    public static Directory of() {
+        return new Directory(CommonPath.of());
+    }
+
+    public boolean isRoot() {
+        return path.value().equals(CommonPath.ROOT_PATH);
+    }
+}
