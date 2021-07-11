@@ -16,6 +16,8 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.JavaFile;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +32,9 @@ import java.util.function.Function;
  *
  * @author Tobias Briones
  */
-public final class FileSystem {
+public final class FileSystem implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -2650303079113294871L;
     private static final int INITIAL_FILES_CAPACITY = 25;
     private final DirectoryNode root;
     private final Map<File, Status> statuses;

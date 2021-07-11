@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * @author Tobias Briones
  */
-public record CommonPath(String value) {
+public record CommonPath(String value) implements Serializable {
     /**
      * Standardize to use this character to define the system path separator
      * character at the domain model level (just for CommonFile objects) but not

@@ -16,10 +16,15 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * @author Tobias Briones
  */
-public final class FileNode implements Node<File> {
+public final class FileNode implements Serializable, Node<File> {
+    @Serial
+    private static final long serialVersionUID = 927919524544928027L;
     private final File file;
 
     public FileNode(File file) {

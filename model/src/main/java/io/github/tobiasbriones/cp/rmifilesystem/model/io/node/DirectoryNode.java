@@ -17,13 +17,19 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
 
 /**
  * @author Tobias Briones
  */
-public final class DirectoryNode implements Node<Directory>, Iterable<Node<? extends CommonFile>> {
+public final class DirectoryNode implements Serializable,
+                                            Node<Directory>,
+                                            Iterable<Node<? extends CommonFile>> {
+    @Serial
+    private static final long serialVersionUID = 1041326646249311639L;
     private static final int INITIAL_CHILDREN_CAPACITY = 10;
     private final Directory directory;
     private final List<Node<? extends CommonFile>> children;
