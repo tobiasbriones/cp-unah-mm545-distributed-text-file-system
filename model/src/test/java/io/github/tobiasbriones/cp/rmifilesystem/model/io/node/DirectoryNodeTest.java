@@ -214,5 +214,8 @@ class DirectoryNodeTest {
 
         assertThat(root.toString(), is(expectedString));
         assertThat(root.toRecursiveString(), is(recursiveExpected));
+        assertThat(dir11.getParent(), is(Optional.of(dir1)));
+        assertThat(dir1.getParent(), is(Optional.of(root)));
+        assertThat(root.getParent(), is(Optional.empty()));
     }
 }
