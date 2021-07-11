@@ -25,7 +25,7 @@ import java.rmi.RemoteException;
  * @author Tobias Briones
  */
 public interface FileSystemService extends Remote {
-    FileSystem getFileSystem() throws RemoteException;
+    FileSystem getFileSystem() throws IOException;
 
     String readTextFile(File.TextFile file) throws IOException;
 
