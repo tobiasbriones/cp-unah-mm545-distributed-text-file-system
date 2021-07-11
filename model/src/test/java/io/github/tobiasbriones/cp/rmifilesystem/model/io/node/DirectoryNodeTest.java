@@ -20,12 +20,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the {@link DirectoryNode} class.
@@ -143,6 +143,30 @@ class DirectoryNodeTest {
         node.addChildren(c1, c2);
         assertTrue(node.hasChild(c1.commonFile()), "Node has directory child after adding it");
         assertTrue(node.hasChild(c2.commonFile()), "Node has file child after adding it");
+    }
+
+    @Test
+    @DisplayName("Test method: removeChild")
+    void removeChild() {
+        final BiFunction<DirectoryNode, DirectoryNode, Boolean> isChildRemoved = (dir, child)
+            -> !dir.hasChild(child.commonFile()) && child.getParent().equals(Optional.empty());
+
+        final var d1 = new DirectoryNode(new Directory("/fs"));
+        final var f1 = new FileNode(new File.TextFile("/file1.txt"));
+        final var d2 = new DirectoryNode(new Directory("/fs/dir1"));
+        final var f2 = new FileNode(new File.TextFile("/fs/dir1/file2.txt"));
+
+        node.addChildren(d1, f1);
+        d1.addChild(d2);
+        d2.addChild(f2);
+
+        assertTrue(node.removeChild(f1), "Claims to had removed file1.txt");
+        assertFalse(node.hasChild(f1.commonFile()), "file1.txt was actually removed");
+
+        assertTrue(d1.removeChild(d2), "Claims to had removed dir1");
+        assertTrue(isChildRemoved.apply(d1, d2), "dir1 was actually removed from /fs");
+
+        assertTrue(node.hasChild(d1.commonFile()), "Node has its other untouched children");
     }
 
     @Test
