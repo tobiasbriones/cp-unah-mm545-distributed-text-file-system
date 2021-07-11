@@ -25,6 +25,15 @@ import java.util.regex.Pattern;
  * @author Tobias Briones
  */
 public sealed interface File extends CommonFile {
+    static File of(CommonPath path) {
+        final String[] tokens = path.split();
+        final String fileNameValue = tokens[tokens.length - 1];
+        final Name fileName = new Name(fileNameValue);
+
+        // Check for the File type but only text files are supported right now...
+        return new TextFile(path);
+    }
+
     record TextFile(CommonPath path) implements File {
         public static final String EXTENSION = "txt";
 

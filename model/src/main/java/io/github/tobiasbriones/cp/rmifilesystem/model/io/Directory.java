@@ -23,6 +23,10 @@ public record Directory(CommonPath path) implements Serializable, CommonFile {
         return new Directory(CommonPath.of());
     }
 
+    public static Directory of(CommonPath path) {
+        return new Directory(path);
+    }
+
     public Directory(String path) {
         this(new CommonPath(path));
     }
