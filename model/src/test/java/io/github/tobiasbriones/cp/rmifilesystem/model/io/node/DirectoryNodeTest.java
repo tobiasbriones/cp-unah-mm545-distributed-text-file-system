@@ -195,9 +195,11 @@ class DirectoryNodeTest {
         // Two folders
         final var dir1 = new DirectoryNode(new Directory("root/dir1"));
         final var dir2 = new DirectoryNode(new Directory("root/dir2"));
+        final var fileX = new FileNode(new File.TextFile("root/dir1/file-x.txt"));
+        final var fileY = new FileNode(new File.TextFile("root/dir2/file-y.txt"));
 
-        dir1.addChild(new FileNode(new File.TextFile("root/dir1/file-x.txt")));
-        dir2.addChild(new FileNode(new File.TextFile("root/dir2/file-y.txt")));
+        dir1.addChild(fileX);
+        dir2.addChild(fileY);
 
         // Nested folders
         final var dir11 = new DirectoryNode(new Directory("root/dir1/dir11"));
@@ -214,8 +216,18 @@ class DirectoryNodeTest {
 
         assertThat(root.toString(), is(expectedString));
         assertThat(root.toRecursiveString(), is(recursiveExpected));
+
         assertThat(dir11.getParent(), is(Optional.of(dir1)));
         assertThat(dir1.getParent(), is(Optional.of(root)));
         assertThat(root.getParent(), is(Optional.empty()));
+
+        assertTrue(root.hasChild(dir1.commonFile()), "Root has dir1");
+        assertTrue(root.hasChild(dir2.commonFile()), "Root has dir2");
+        assertTrue(root.hasChild(file1.commonFile()), "Root has file1");
+        assertTrue(root.hasChild(file2.commonFile()), "Root has file2");
+        assertTrue(dir1.hasChild(dir11.commonFile()), "Dir1 has dir11");
+        assertTrue(dir1.hasChild(fileX.commonFile()), "Dir1 has file-x.txt");
+        assertTrue(dir11.hasChild(nestedFile.commonFile()), "Dir1 has nested.txt");
+        assertTrue(dir2.hasChild(fileY.commonFile()), "Dir2 has file-y.txt");
     }
 }
