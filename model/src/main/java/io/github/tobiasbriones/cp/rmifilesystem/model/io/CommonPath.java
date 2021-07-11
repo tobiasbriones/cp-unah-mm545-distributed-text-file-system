@@ -14,10 +14,12 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Tobias Briones
@@ -55,6 +57,13 @@ public record CommonPath(String value) implements Serializable {
 
     public static CommonPath of() {
         return new CommonPath(ROOT_PATH);
+    }
+
+    public static Optional<CommonPath> of(Iterable<? extends Path> pathValue) {
+        final String stringValue = StreamSupport.stream(pathValue.spliterator(), false)
+                                                .map(Path::toString)
+                                                .reduce("", (s1, s2) -> s1 + SEPARATOR + s2);
+        return of(stringValue);
     }
 
     public static Optional<CommonPath> of(String value) {
