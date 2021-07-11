@@ -19,6 +19,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Tobias Briones
@@ -49,6 +50,19 @@ final class Nodes {
             dir.setParentUnsafe(null);
         }
         return node.removeChildUnsafe(child);
+    }
+
+    static void traverse(
+        Iterable<? extends Node<?>> children,
+        Consumer<? super Node<?>> nodeConsumer
+    ) {
+        children.forEach(child -> {
+            nodeConsumer.accept(child);
+
+            if (child instanceof DirectoryNode dir) {
+                traverse(dir.getChildren(), nodeConsumer);
+            }
+        });
     }
 
     private static void requireValidChild(DirectoryNode node, Node<?> child) {

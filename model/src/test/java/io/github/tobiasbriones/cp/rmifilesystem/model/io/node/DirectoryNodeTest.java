@@ -19,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -253,5 +254,23 @@ class DirectoryNodeTest {
         assertTrue(dir1.hasChild(fileX.commonFile()), "Dir1 has file-x.txt");
         assertTrue(dir11.hasChild(nestedFile.commonFile()), "Dir1 has nested.txt");
         assertTrue(dir2.hasChild(fileY.commonFile()), "Dir2 has file-y.txt");
+
+        // Test recursive traversal
+        final String[] traverseExpected = {
+            "root",
+            "root/dir1",
+            "root/dir1/file-x.txt",
+            "root/dir1/dir11",
+            "root/dir1/dir11/nested.txt",
+            "root/dir2",
+            "root/dir2/file-y.txt",
+            "root/file1.txt",
+            "root/file2.txt"
+        };
+        final var traverseResult = new ArrayList<>(traverseExpected.length);
+
+        root.traverse(next -> traverseResult.add(next.toString()));
+
+        assertThat("The traversed nodes are expected", traverseResult.toArray(), is(traverseExpected));
     }
 }
