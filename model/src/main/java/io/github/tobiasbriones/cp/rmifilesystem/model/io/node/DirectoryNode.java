@@ -39,34 +39,6 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
         parent = null;
     }
 
-    public boolean isRoot() {
-        return directory.isRoot();
-    }
-
-    public Optional<DirectoryNode> getParent() {
-        return Optional.ofNullable(parent);
-    }
-
-    /**
-     * Sets this node's parent directory.
-     *
-     * @param value parent directory
-     *
-     * @throws InvalidChildException if the given parent for this node is
-     *                               circular
-     */
-    public void setParent(DirectoryNode value) {
-        Nodes.setParent(this, value);
-    }
-
-    public Collection<Node<? extends CommonFile>> getChildren() {
-        return Collections.unmodifiableList(children);
-    }
-
-    void setParentUnsafe(DirectoryNode node) {
-        parent = node;
-    }
-
     @Override
     public Directory commonFile() {
         return directory;
@@ -87,16 +59,32 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
         return directory.path().value();
     }
 
+    public boolean isRoot() {
+        return directory.isRoot();
+    }
+
+    public Optional<DirectoryNode> getParent() {
+        return Optional.ofNullable(parent);
+    }
+
+    /**
+     * Sets this node's parent directory.
+     *
+     * @param value parent directory
+     *
+     * @throws InvalidChildException if the given parent for this node is
+     *                               circular or invalid
+     */
+    public void setParent(DirectoryNode value) {
+        Nodes.setParent(this, value);
+    }
+
+    public Collection<Node<? extends CommonFile>> getChildren() {
+        return Collections.unmodifiableList(children);
+    }
+
     public boolean hasChildren() {
         return !children.isEmpty();
-    }
-
-    public void addChild(Node<? extends CommonFile> child) {
-        Nodes.addChild(this, child);
-    }
-
-    public void addChildren(Node<? extends CommonFile>... values) {
-        Nodes.addChildren(this, values);
     }
 
     public boolean hasChild(CommonFile file) {
@@ -105,13 +93,41 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
                        .anyMatch(child -> child.path().equals(file.path()));
     }
 
+    /**
+     * Adds the given child to this directory node.
+     *
+     * @param child child node to add to this directory node
+     *
+     * @throws InvalidChildException if the given child is invalid
+     */
+    public void addChild(Node<? extends CommonFile> child) {
+        Nodes.addChild(this, child);
+    }
+
+    /**
+     * Adds the given children to this directory node. If one of the children is
+     * invalid then nothing happens and always throws
+     * {@link InvalidChildException}.
+     *
+     * @param values children nodes to add to this directory node
+     *
+     * @throws InvalidChildException if one of the given children is invalid
+     */
+    public void addChildren(Node<? extends CommonFile>... values) {
+        Nodes.addChildren(this, values);
+    }
+
+    public boolean removeChild(Node<? extends CommonFile> child) {
+        return Nodes.removeChild(this, child);
+    }
+
     public void traverse(Consumer<? super Node<?>> nodeConsumer) {
         nodeConsumer.accept(this);
         Nodes.traverse(children, nodeConsumer);
     }
 
-    public boolean removeChild(Node<? extends CommonFile> child) {
-        return Nodes.removeChild(this, child);
+    void setParentUnsafe(DirectoryNode node) {
+        parent = node;
     }
 
     void addChildUnsafe(Node<?> child) {
