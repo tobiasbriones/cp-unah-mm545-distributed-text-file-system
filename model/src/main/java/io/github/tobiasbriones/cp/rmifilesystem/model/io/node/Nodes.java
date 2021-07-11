@@ -15,17 +15,43 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Tobias Briones
  */
 final class Nodes {
-    static void requireValidParent(DirectoryNode node, DirectoryNode parent) {
-
+    static void setParent(Node<Directory> node, DirectoryNode parent) {
+        addChild(parent, node);
     }
 
-    static void requireValidChild(DirectoryNode node, Node<?> child) {
+    static void addChild(DirectoryNode node, Node<?> child) {
+        requireValidChild(node, child);
+        addChildUnsafe(node, child);
+    }
 
+    static void addChildren(DirectoryNode node, Node<?>... children) {
+        final List<Node<? extends CommonFile>> list = Arrays.asList(children);
+
+        list.forEach(child -> requireValidChild(node, child));
+        list.forEach(child -> addChildUnsafe(node, child));
+    }
+
+    private static void requireValidChild(DirectoryNode node, Node<?> child) {
+        if (!isValidChild(node, child)) {
+            throw new InvalidChildException(node.commonFile(), child.commonFile());
+        }
+    }
+
+    private static void addChildUnsafe(DirectoryNode node, Node<?> child) {
+        node.addChildUnsafe(child);
+
+        if (child instanceof DirectoryNode dir) {
+            dir.setParentUnsafe(node);
+        }
     }
 
     static String getString(Node<? extends CommonFile> node, String indentation) {
@@ -51,7 +77,11 @@ final class Nodes {
                """.formatted(indentation, file.name());
     }
 
-    private static boolean isValidChild(CommonPath path, CommonPath childPath) {
+    private static boolean isValidChild(DirectoryNode node, Node<?> child) {
+        return !node.hasChild(child.commonFile()) && isValidChildPath(node.commonPath(), child.commonPath());
+    }
+
+    private static boolean isValidChildPath(CommonPath path, CommonPath childPath) {
         final String[] tokens = path.split();
         final String[] childTokens = childPath.split();
 
