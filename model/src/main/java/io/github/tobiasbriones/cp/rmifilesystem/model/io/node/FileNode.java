@@ -35,4 +35,9 @@ public final class FileNode implements Node<File> {
     public CommonPath commonPath() {
         return file.path();
     }
+
+    @Override
+    public String toString() {
+        return file.path().value();
+    }
 }

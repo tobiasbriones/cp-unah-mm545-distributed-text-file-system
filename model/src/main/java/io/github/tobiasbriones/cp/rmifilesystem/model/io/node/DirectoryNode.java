@@ -18,6 +18,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Tobias Briones
@@ -83,7 +84,7 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
 
     @Override
     public String toString() {
-        return directory.name();
+        return directory.path().value();
     }
 
     public boolean hasChildren() {
@@ -102,6 +103,11 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
         return children.stream()
                        .map(Node::commonFile)
                        .anyMatch(child -> child.path().equals(file.path()));
+    }
+
+    public void traverse(Consumer<? super Node<?>> nodeConsumer) {
+        nodeConsumer.accept(this);
+        Nodes.traverse(children, nodeConsumer);
     }
 
     public boolean removeChild(Node<? extends CommonFile> child) {
