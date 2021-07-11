@@ -16,6 +16,7 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -26,6 +27,12 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Tests the {@link DirectoryNode} class.
+ *
+ * @author Tobias Briones
+ */
+@DisplayName("Test the DirectoryNode class")
 class DirectoryNodeTest {
     private DirectoryNode node;
 
@@ -39,11 +46,13 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Test accessor method: isRoot")
     void isRoot() {
         assertThat(node.isRoot(), is(true));
     }
 
     @Test
+    @DisplayName("Test accessor method: getParent")
     void getParent() {
         final var dirNode = new DirectoryNode(new Directory("fs"));
 
@@ -61,6 +70,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Test mutator method: setParent")
     void setParent() {
         final var dirNode = new DirectoryNode(new Directory("/fs"));
 
@@ -80,6 +90,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Test accessor method: getChildren")
     void getChildren() {
         assertThat(
             "The default node has no children",
@@ -89,6 +100,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Test method: addChild")
     void addChild() {
         final var c1 = new DirectoryNode(new Directory("/fs"));
         final var c2 = new FileNode(new File.TextFile("/file1.txt"));
@@ -101,6 +113,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Test method: addChildren")
     void addChildren() {
         final var c1 = new DirectoryNode(new Directory("/fs"));
         final var c2 = new FileNode(new File.TextFile("/file1.txt"));
@@ -122,6 +135,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Test accessor method: hasChild")
     void hasChild() {
         final var c1 = new DirectoryNode(new Directory("/fs"));
         final var c2 = new FileNode(new File.TextFile("/file1.txt"));
@@ -132,6 +146,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Setup circular parents and expect them to be rejected")
     void testCircularParent() {
         final var c1 = new DirectoryNode(new Directory("/fs"));
         final var c2 = new DirectoryNode(new Directory("/fs/dir1"));
@@ -146,6 +161,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Setup invalid children and expect them to be rejected")
     void testInvalidChild() {
         final var c1 = new DirectoryNode(new Directory("/fs"));
         final var c2 = new DirectoryNode(new Directory("/fs/dir1"));
@@ -160,6 +176,7 @@ class DirectoryNodeTest {
     }
 
     @Test
+    @DisplayName("Build a simple file tree")
     void testSampleFs() {
         final DirectoryNode root = new DirectoryNode(new Directory("root"));
         final String expectedString = "root";
