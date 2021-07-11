@@ -51,16 +51,19 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
      *
      * @param value parent directory
      *
-     * @throws CircularParentException if the given parent for this node is
-     *                                 circular
+     * @throws InvalidChildException if the given parent for this node is
+     *                               circular
      */
     public void setParent(DirectoryNode value) {
-        Nodes.requireValidParent(this, value);
-        parent = value;
+        Nodes.setParent(this, value);
     }
 
     public Collection<Node<? extends CommonFile>> getChildren() {
         return Collections.unmodifiableList(children);
+    }
+
+    void setParentUnsafe(DirectoryNode node) {
+        parent = node;
     }
 
     @Override
@@ -88,20 +91,20 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
     }
 
     public void addChild(Node<? extends CommonFile> child) {
-        Nodes.requireValidChild(this, child);
-        children.add(child);
+        Nodes.addChild(this, child);
     }
 
     public void addChildren(Node<? extends CommonFile>... values) {
-        final List<Node<? extends CommonFile>> list = Arrays.asList(values);
-
-        list.forEach(child -> Nodes.requireValidChild(this, child));
-        children.addAll(list);
+        Nodes.addChildren(this, values);
     }
 
     public boolean hasChild(CommonFile file) {
         return children.stream()
                        .map(Node::commonFile)
                        .anyMatch(child -> child.path().equals(file.path()));
+    }
+
+    void addChildUnsafe(Node<?> child) {
+        children.add(child);
     }
 }

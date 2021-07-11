@@ -62,7 +62,7 @@ class DirectoryNodeTest {
 
     @Test
     void setParent() {
-        final var dirNode = new DirectoryNode(new Directory("fs"));
+        final var dirNode = new DirectoryNode(new Directory("/fs"));
 
         dirNode.setParent(node);
 
@@ -140,9 +140,9 @@ class DirectoryNodeTest {
         c1.setParent(node);
         c2.setParent(c1);
 
-        assertThrows(CircularParentException.class, () -> node.setParent(c2));
-        assertThrows(CircularParentException.class, () -> node.setParent(c1));
-        assertThrows(CircularParentException.class, () -> c1.setParent(c2));
+        assertThrows(InvalidChildException.class, () -> node.setParent(c2));
+        assertThrows(InvalidChildException.class, () -> node.setParent(c1));
+        assertThrows(InvalidChildException.class, () -> c1.setParent(c2));
     }
 
     @Test
