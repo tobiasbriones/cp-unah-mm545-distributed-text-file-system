@@ -13,26 +13,25 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
 
 /**
  * @author Tobias Briones
  */
 public interface FileSystemService extends Remote {
-    List<RemoteClientFile> getFileSystem() throws RemoteException;
+    FileSystem getFileSystem() throws RemoteException;
 
-    List<RemoteClientFile> getInvalidFiles(String clientName) throws IOException;
+    String readTextFile(File.TextFile file) throws IOException;
 
-    String readTextFile(ClientFile file) throws IOException;
+    void writeDir(Directory directory) throws IOException;
 
-    String readTextFile(ClientFile file, String clientName) throws IOException;
-
-    void writeDir(ClientFile file) throws IOException;
-
-    void writeTextFile(ClientFile file, String content) throws IOException;
+    void writeTextFile(File.TextFile file, String content) throws IOException;
 
     boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 }

@@ -13,6 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -21,5 +23,5 @@ import java.rmi.RemoteException;
  */
 @FunctionalInterface
 public interface OnFileUpdateListener extends Remote {
-    void onFileChanged(RemoteClientFile file) throws RemoteException;
+    void onFileChanged(FileSystem.Status status) throws RemoteException;
 }
