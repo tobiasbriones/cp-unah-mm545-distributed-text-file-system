@@ -40,6 +40,17 @@ final class Nodes {
         list.forEach(child -> addChildUnsafe(node, child));
     }
 
+    static boolean removeChild(DirectoryNode node, Node<? extends CommonFile> child) {
+        if (!node.hasChild(child.commonFile())) {
+            return false;
+        }
+
+        if (child instanceof DirectoryNode dir) {
+            dir.setParentUnsafe(null);
+        }
+        return node.removeChildUnsafe(child);
+    }
+
     private static void requireValidChild(DirectoryNode node, Node<?> child) {
         if (!isValidChild(node, child)) {
             throw new InvalidChildException(node.commonFile(), child.commonFile());

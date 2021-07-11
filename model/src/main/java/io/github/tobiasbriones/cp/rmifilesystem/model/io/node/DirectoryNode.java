@@ -104,7 +104,15 @@ public final class DirectoryNode implements Node<Directory>, Iterable<Node<? ext
                        .anyMatch(child -> child.path().equals(file.path()));
     }
 
+    public boolean removeChild(Node<? extends CommonFile> child) {
+        return Nodes.removeChild(this, child);
+    }
+
     void addChildUnsafe(Node<?> child) {
         children.add(child);
+    }
+
+    boolean removeChildUnsafe(Node<?> child) {
+        return children.remove(child);
     }
 }
