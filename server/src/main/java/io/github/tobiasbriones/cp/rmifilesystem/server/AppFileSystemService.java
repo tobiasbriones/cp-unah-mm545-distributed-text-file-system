@@ -14,15 +14,18 @@
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.*;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.*;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serial;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Tobias Briones
@@ -31,9 +34,40 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     @Serial
     private static final long serialVersionUID = 7826374551124313303L;
     private static final String RELATIVE_ROOT = "fs";
-    static final String ROOT = System.getProperty("user.dir") + File.separator + RELATIVE_ROOT;
+    static final String ROOT = System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
+
+    private record PathType(Path path, boolean isDirectory) {
+        static PathType of(Path path) {
+            return new PathType(path, Files.isDirectory(path));
+        }
+
+        Optional<CommonPathType> toRelativeCommonPathType(Path rootPath) {
+            final Path relativePath = rootPath.relativize(path);
+            return CommonPath.of(relativePath)
+                             .map(commonPath -> new CommonPathType(path, commonPath, isDirectory));
+        }
+    }
+
+    private record CommonPathType(Path path, CommonPath commonPath, boolean isDirectory) {
+        CommonFile toCommonFile() {
+            return isDirectory ? Directory.of(commonPath) : File.of(commonPath);
+        }
+    }
+
+    private static Path toPath() {
+        return toPath(CommonPath.of());
+    }
+
+    private static Path toPath(CommonPath path) {
+        return Path.of(toLocalFile(path).toURI());
+    }
+
+    private static JavaFile toLocalFile(CommonPath path) {
+        return new JavaFile(ROOT, path.value());
+    }
 
     private final List<OnFileUpdateListener> clients;
+
     public AppFileSystemService() throws RemoteException {
         super();
         clients = new ArrayList<>(10);
@@ -42,42 +76,37 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public List<RemoteClientFile> getFileSystem() {
-        final var root = new File(ROOT);
-        return recursiveListFilesOf(root).stream()
-                                         .map(AppFileSystemService::toRelativeFile)
-                                         .map(RemoteClientFile::new)
-                                         .toList();
+    public FileSystem getFileSystem() throws IOException {
+        try {
+            return new FileSystem(loadRoot());
+        }
+        catch (SecurityException e) {
+            throw new IOException(e);
+        }
     }
 
     @Override
-    public List<RemoteClientFile> getInvalidFiles(String clientName) throws IOException {
-        return Clients.loadInvalidFiles(clientName);
+    public String readTextFile(File.TextFile file) throws IOException {
+        final JavaFile localFile = toLocalFile(file.path());
+        return Files.readString(localFile.toPath());
     }
 
     @Override
-    public String readTextFile(ClientFile file) throws IOException {
-        return Files.readString(toLocalClientFile(file).toPath());
+    public void writeDir(Directory directory) throws IOException {
+        final JavaFile localFile = toLocalFile(directory.path());
+
+        if (!localFile.mkdirs()) {
+            final var msg = "Fail to make dirs";
+            throw new IOException(msg);
+        }
     }
 
     @Override
-    public String readTextFile(ClientFile file, String clientName) throws IOException {
-        Clients.setValid(file, clientName);
-        return Files.readString(toLocalClientFile(file).toPath());
-    }
+    public void writeTextFile(File.TextFile file, String content) throws IOException {
+        final JavaFile localFile = toLocalFile(file.path());
 
-    @Override
-    public void writeDir(ClientFile file) throws IOException {
-        final var localFile = toLocalClientFile(file);
-
-        mkdirs(localFile);
-        broadcastUpdate(RemoteClientFile.fromClientFile(file));
-    }
-
-    @Override
-    public void writeTextFile(ClientFile file, String content) throws IOException {
-        Files.writeString(LocalClientFile.fromClientFile(file, ROOT).toPath(), content);
-        broadcastUpdate(RemoteClientFile.fromClientFile(file));
+        Files.writeString(localFile.toPath(), content);
+        broadcastUpdate(file);
     }
 
     @Override
@@ -85,12 +114,10 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         return clients.add(l);
     }
 
-    private void broadcastUpdate(RemoteClientFile file) {
-        Clients.setInvalid(file);
-
-        for (var client : clients) {
+    private void broadcastUpdate(File file) {
+        for (final var client : clients) {
             try {
-                client.onFileChanged(file);
+                client.onFileChanged(new FileSystem.Status(file, true));
             }
             catch (RemoteException e) {
                 e.printStackTrace();
@@ -98,42 +125,43 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         }
     }
 
-    private static LocalClientFile toLocalClientFile(ClientFile file) {
-        return LocalClientFile.fromClientFile(file, ROOT);
+    private static DirectoryNode loadRoot() {
+        final Path rootPath = toPath();
+        final DirectoryNode node = DirectoryNode.of();
+
+        loadNode(node, rootPath, rootPath);
+        return node;
     }
 
-    private static File toRelativeFile(File file) {
-        final var path = file.getAbsolutePath();
+    private static void loadNode(DirectoryNode node, Path path, Path rootPath) {
+        final var directChildrenList = path.toFile().listFiles();
 
-        if (!path.startsWith(ROOT)) {
-            return new File("");
+        if (directChildrenList == null) {
+            return;
         }
-        final var relPath = path.substring(ROOT.length() + 1);
-        return new File(relPath);
-    }
 
-    private static void mkdirs(LocalClientFile file) throws IOException {
-        if (!file.mkdirs()) {
-            final var msg = "Fail to create directory";
-            throw new IOException(msg);
-        }
-    }
+        final List<CommonPathType> children = Arrays.stream(directChildrenList)
+                                                    .map(java.io.File::toPath)
+                                                    .map(PathType::of)
+                                                    .map(pathType -> pathType.toRelativeCommonPathType(rootPath))
+                                                    .filter(Optional::isPresent)
+                                                    .map(Optional::get)
+                                                    .toList();
 
-    private static List<File> recursiveListFilesOf(File root) {
-        final var list = root.listFiles();
+        for (final CommonPathType child : children) {
+            final CommonFile commonFile = child.toCommonFile();
+            final Path childPath = child.path();
 
-        if (list == null) {
-            return List.of();
-        }
-        final var files = new ArrayList<File>(5);
+            // Can use switch pattern matching for Java17 ep +
+            if (commonFile instanceof File f) {
+                node.addChild(new FileNode(f));
+            }
+            else if (commonFile instanceof Directory d) {
+                final var directoryChild = new DirectoryNode(d);
 
-        for (var file : list) {
-            files.add(file);
-
-            if (file.isDirectory()) {
-                files.addAll(recursiveListFilesOf(file));
+                node.addChild(directoryChild);
+                loadNode(directoryChild, childPath, rootPath);
             }
         }
-        return files;
     }
 }
