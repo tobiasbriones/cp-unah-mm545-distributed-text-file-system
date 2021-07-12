@@ -48,6 +48,10 @@ public final class FileSystem implements Serializable {
         localRoot = new JavaFile("");
     }
 
+    public DirectoryNode getRoot() {
+        return root;
+    }
+
     public JavaFile getLocalRoot() {
         return localRoot;
     }
