@@ -17,7 +17,6 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -138,6 +137,7 @@ final class FilesView extends VBox implements Files.View {
             super.updateItem(item, empty);
 
             if (empty) {
+                setStyle("");
                 setText("");
                 setGraphic(null);
             }
@@ -147,6 +147,14 @@ final class FilesView extends VBox implements Files.View {
                 setText(file);
                 setupContextMenu(item);
                 setupIconView(file);
+
+                if (file instanceof File f) {
+                    final boolean isInvalid = controller.getStatus(f).isInvalid();
+
+                    if (isInvalid) {
+                        setStyle("-fx-text-fill: #757575;");
+                    }
+                }
             }
         }
 

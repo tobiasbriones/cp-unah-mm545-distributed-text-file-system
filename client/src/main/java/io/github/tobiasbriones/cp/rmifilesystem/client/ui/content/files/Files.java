@@ -13,10 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -46,6 +45,8 @@ public final class Files implements Initializable {
         void onNewDirectoryAction(DirectoryNode node);
 
         void onDeleteAction(Node<?> node);
+
+        FileSystem.Status getStatus(File file); // place this here temporarily
     }
 
     interface View extends MvpView<Controller> {

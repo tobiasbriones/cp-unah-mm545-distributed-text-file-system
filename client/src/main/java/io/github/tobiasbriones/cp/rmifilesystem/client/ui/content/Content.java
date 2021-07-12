@@ -34,6 +34,10 @@ public final class Content implements Initializable {
 
     interface Presenter extends MvpPresenter<Void> {}
 
+    interface OnLocalFsChangeListener {
+        void update();
+    }
+
     public static Content newInstance() {
         final var config = new ChildrenConfig(
             Files.newInstance(),
@@ -63,6 +67,7 @@ public final class Content implements Initializable {
     private final Presenter presenter;
     private final Files files;
     private final Editor editor;
+    private final OnLocalFsChangeListener l;
     private FileSystemService service;
 
     private Content(ChildrenConfig config) {
@@ -70,6 +75,7 @@ public final class Content implements Initializable {
         presenter = new ContentPresenter(view);
         files = config.files();
         editor = config.editor();
+        l = this::update;
         service = null;
     }
 
@@ -82,7 +88,7 @@ public final class Content implements Initializable {
         files.setService(value);
         editor.setService(value);
         bindServiceListener();
-        updateFs(service);
+        updateLocalFs(service); // should be async
     }
 
     @Override
@@ -93,22 +99,25 @@ public final class Content implements Initializable {
         editor.init();
     }
 
+    private void update() {
+        files.getInput().update();
+        editor.getInput().update();
+    }
+
     private void setOutputs() {
         files.setOutput(new FilesOutput(service, editor.getInput()));
     }
 
     private void bindServiceListener() {
         try {
-            service.addOnFileUpdateListener(
-                new ContentOnFileUpdateListener(service, files, editor)
-            );
+            service.addOnFileUpdateListener(new ContentOnFileUpdateListener(l));
         }
         catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
-    static void updateFs(FileSystemService service) {
+    private static void updateLocalFs(FileSystemService service) {
         try {
             final FileSystem fs = service.getFileSystem();
 

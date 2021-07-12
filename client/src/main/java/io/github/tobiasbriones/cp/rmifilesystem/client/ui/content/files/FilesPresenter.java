@@ -16,6 +16,7 @@ package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
@@ -27,6 +28,7 @@ import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * @author Tobias Briones
@@ -34,11 +36,13 @@ import java.util.Optional;
 final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements Files.Presenter {
     private final Files.View view;
     private FileSystemService service;
+    private FileSystem fs;
 
     FilesPresenter(Files.View view) {
         super();
         this.view = view;
         service = null;
+        fs = null;
     }
 
     @Override
@@ -88,6 +92,16 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     @Override
+    public FileSystem.Status getStatus(File file) {
+        final Supplier<FileSystem.Status> defaultSupplier = () -> new FileSystem.Status(file, true);
+
+        if (fs == null) {
+            return defaultSupplier.get();
+        }
+        return fs.getStatus(file).orElse(defaultSupplier.get());
+    }
+
+    @Override
     public void setService(FileSystemService value) {
         service = value;
     }
@@ -95,7 +109,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     @Override
     public void update() {
         try {
-            final FileSystem fs = AppLocalFiles.readFs();
+            fs = AppLocalFiles.readFs();
 
             view.clear();
             view.setRoot(fs.getRoot());
