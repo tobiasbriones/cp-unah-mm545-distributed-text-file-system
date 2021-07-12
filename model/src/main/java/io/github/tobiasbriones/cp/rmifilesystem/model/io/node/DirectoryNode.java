@@ -28,9 +28,15 @@ import java.util.function.Consumer;
 public final class DirectoryNode implements Serializable,
                                             Node<Directory>,
                                             Iterable<Node<? extends CommonFile>> {
+
     @Serial
     private static final long serialVersionUID = 1041326646249311639L;
     private static final int INITIAL_CHILDREN_CAPACITY = 10;
+
+    public static DirectoryNode of() {
+        return new DirectoryNode();
+    }
+
     private final Directory directory;
     private final List<Node<? extends CommonFile>> children;
     private DirectoryNode parent; // this one should be an Optional<Directory> for future versions of Java
