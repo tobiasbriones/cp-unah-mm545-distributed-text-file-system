@@ -13,16 +13,17 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import io.github.tobiasbriones.cp.rmifilesystem.model.LocalClientFile;
-import io.github.tobiasbriones.cp.rmifilesystem.model.RemoteClientFile;
-import io.github.tobiasbriones.cp.rmifilesystem.server.AppFileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,37 +54,38 @@ class AppFileSystemServiceTest {
     @BeforeEach
     void setUp() throws RemoteException {
         service = new AppFileSystemService();
-        final var root = new File(AppFileSystemService.ROOT);
+        final var root = new java.io.File(AppFileSystemService.ROOT);
 
         prepareFsRoot(root);
         setUpDefaultFs(root);
     }
 
     @Test
-    @DisplayName("Read the default file structure")
-    void readFs() throws RemoteException {
-        final List<RemoteClientFile> fs = service.getFileSystem();
+    @DisplayName("Read the default file system")
+    void readFs() throws IOException {
+        final FileSystem fs = service.getFileSystem();
 
-        assertNotNull(fs, "Expect the file system is not null");
+        assertNotNull(fs, "Expects the file system to not be null");
 
-        final List<String> fsPaths = fs.stream().map(ClientFile::getRelativePath).toList();
-        final var dir1 = new File(DIR_1_NAME);
-        final var expectedFiles = List.of(
-            new File(DIR_1_NAME),
-            new File(TEXT_FILE_1_NAME),
-            new File(dir1, TEXT_FILE_2_NAME)
-        );
-        final var expected = expectedFiles.stream().map(File::toString).toList();
+        final DirectoryNode actual = fs.getRoot();
+        final var root = new DirectoryNode(Directory.of());
+        final var dir1 = new DirectoryNode(new Directory("/" + DIR_1_NAME));
+        final var file11 = new FileNode(new File.TextFile("/" + DIR_1_NAME + "/" + TEXT_FILE_1_NAME));
+        final var file1 = new FileNode(new File.TextFile("/" + TEXT_FILE_1_NAME));
 
-        assertThat(fsPaths, containsInAnyOrder(expected.toArray()));
+        root.addChildren(dir1, file1);
+        dir1.addChild(file11);
+
+        assertTrue(actual.hasChild(dir1.commonFile()));
+        assertTrue(actual.hasChild(file1.commonFile()));
+        assertTrue(dir1.hasChild(file11.commonFile()));
     }
 
     @Test
     @DisplayName("Read a specific text file")
     void readFile() throws IOException {
-        final var file = new File(TEXT_FILE_1_NAME);
-        final var clientFile = new LocalClientFile(file);
-        final var content = service.readTextFile(clientFile);
+        final var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
+        final var content = service.readTextFile(file);
 
         assertNotNull(content, "Expect the file content is not null");
         assertThat(content, is(TEXT_FILE_1_CONTENT));
@@ -92,28 +94,24 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Create a new directory")
     void writeDir() throws IOException {
-        final var dir = new File("new-dir");
-        final var clientDir = new LocalClientFile(dir);
+        final var dir = new Directory("/new-dir");
 
-        service.writeDir(clientDir);
-        final var root = new File(AppFileSystemService.ROOT);
-        final var newDir = new File(root, "new-dir");
+        service.writeDir(dir);
 
         assertTrue(
-            newDir.exists(),
-            "Expect the service created the new directory"
+            Files.exists(Path.of(AppFileSystemService.ROOT, "new-dir")),
+            "Expects the service created the new directory"
         );
     }
 
     @Test
     @DisplayName("Write to a specific text file")
     void writeFile() throws IOException {
-        final var file = new File(TEXT_FILE_1_NAME);
-        final var clientFile = new LocalClientFile(file);
+        final var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
         final var content = "New file content";
 
-        service.writeTextFile(clientFile, content);
-        final var newContent = service.readTextFile(clientFile);
+        service.writeTextFile(file, content);
+        final String newContent = service.readTextFile(file);
 
         assertNotNull(
             newContent,
@@ -122,12 +120,12 @@ class AppFileSystemServiceTest {
         assertThat(newContent, is(content));
     }
 
-    private static void prepareFsRoot(File root) {
+    private static void prepareFsRoot(java.io.File root) {
         if (root.exists()) {
             try (var stream = Files.walk(root.toPath())) {
                 stream.sorted(Comparator.reverseOrder())
                       .map(Path::toFile)
-                      .forEach(File::delete);
+                      .forEach(java.io.File::delete);
             }
             catch (IOException e) {
                 final var msg = "Fail to delete root directory before running tests: " + e;
@@ -150,10 +148,10 @@ class AppFileSystemServiceTest {
      *
      * @param root root file for the FS
      */
-    private static void setUpDefaultFs(File root) {
-        final var dir1 = new File(root, DIR_1_NAME);
-        final var file1 = new File(root, TEXT_FILE_1_NAME);
-        final var file2 = new File(dir1, TEXT_FILE_2_NAME);
+    private static void setUpDefaultFs(java.io.File root) {
+        final var dir1 = new java.io.File(root, DIR_1_NAME);
+        final var file1 = new java.io.File(root, TEXT_FILE_1_NAME);
+        final var file2 = new java.io.File(dir1, TEXT_FILE_2_NAME);
 
         if (!dir1.mkdir()) {
             final var msg = "Fail to create test directory: " + dir1;
