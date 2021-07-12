@@ -48,16 +48,7 @@ final class AppMenuOutput implements AppMenu.Output {
 
     @Override
     public void onLogin(String clientName) {
-        headerInput.setUser(clientName);
-
-        try {
-            var ifs = service.getInvalidFiles(clientName);
-
-            System.out.println(ifs);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        headerInput.setUser("Login unsupported yet!");
     }
 
     @Override

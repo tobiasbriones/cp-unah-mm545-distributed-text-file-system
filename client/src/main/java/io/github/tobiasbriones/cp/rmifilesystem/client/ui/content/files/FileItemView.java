@@ -13,76 +13,66 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TreeItem;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.Collection;
 
 /**
  * @author Tobias Briones
  */
-final class FileItemView extends HBox {
-    private static final String TEXT_FILE_ICON_NAME = "ic_text_file.png";
-    private static final String FOLDER_ICON_NAME = "ic_folder.png";
-    private final Label label;
-    private final ImageView iconView;
+final class FileItemView extends TreeItem<Node<?>> {
+    private boolean didLoadChildrenAlready;
+    private boolean isFirstTimeLeaf;
+    private boolean isLeaf;
 
-    FileItemView() {
-        super();
-        label = new Label();
-        iconView = new ImageView();
-
-        init();
+    FileItemView(Node<?> node) {
+        super(node);
+        didLoadChildrenAlready = true;
+        isFirstTimeLeaf = true;
     }
 
-    private void setName(String value) {
-        label.setText(value);
+    @Override
+    public boolean isLeaf() {
+        if (isFirstTimeLeaf) {
+            isFirstTimeLeaf = false;
+            isLeaf = getValue().isFile();
+        }
+        return getValue().isFile();
     }
 
-    private void setIcon(String value) {
-        loadIcon(value).ifPresent(iconView::setImage);
+    @Override
+    public ObservableList<TreeItem<Node<?>>> getChildren() {
+        if (didLoadChildrenAlready) {
+            didLoadChildrenAlready = false;
+            super.getChildren().setAll(loadChildren(this));
+        }
+        return super.getChildren();
     }
 
-    void set(ClientFile file) {
-        final Function<String, Boolean> isTextFile = name -> name.endsWith(".txt");
-        final var name = new File(file.getRelativePath()).getName();
-        final var iconName = isTextFile.apply(name) ? TEXT_FILE_ICON_NAME : FOLDER_ICON_NAME;
-
-        setName(name);
-        setIcon(iconName);
+    @Override
+    public String toString() {
+        return "FileItemView[] " + super.toString();
     }
 
-    private void init() {
-        setPadding(new Insets(8));
-        setSpacing(8);
-        getChildren().addAll(iconView, label);
-        setAlignment(Pos.CENTER_LEFT);
+    private static ObservableList<TreeItem<Node<?>>> loadChildren(TreeItem<? extends Node<?>> item) {
+        final Node<?> node = item.getValue();
 
-        setOnMouseEntered(event -> setStyle("-fx-background-color: #E0E0E0"));
-        setOnMouseExited(event -> setStyle("-fx-background-color: none"));
-    }
+        if (node instanceof DirectoryNode dir) {
+            final Collection<Node<?>> childrenNodes = dir.getChildren();
 
-    private Optional<Image> loadIcon(String iconName) {
-        Optional<Image> image = Optional.empty();
-        final var path = "/" + iconName;
+            if (!childrenNodes.isEmpty()) {
+                final ObservableList<TreeItem<Node<?>>> children = FXCollections.observableArrayList();
 
-        try (var is = getClass().getResourceAsStream(path)) {
-            if (is != null) {
-                image = Optional.of(new Image((is)));
+                for (Node<?> child : childrenNodes) {
+                    children.add(new FileItemView(child));
+                }
+                return children;
             }
         }
-        catch (IOException ignore) {}
-        return image;
+        return FXCollections.emptyObservableList();
     }
 }

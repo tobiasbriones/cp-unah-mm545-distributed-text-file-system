@@ -13,97 +13,92 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.io;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
-import io.github.tobiasbriones.cp.rmifilesystem.model.LocalClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.JavaFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Tobias Briones
  */
 public final class AppLocalFiles {
-    private static final String REG_FILE_NAME = ".fsreg";
+    private static final String FS_FILE_NAME = "fs.data";
     private static final String RELATIVE_ROOT = "fs";
-    private static final String ROOT = System.getProperty("user.dir") + File.separator + RELATIVE_ROOT;
+    private static final String ROOT = System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
 
-    public static List<LocalClientFile> readFs() throws IOException {
-        final var reg = readRegFile();
-        return Arrays.stream(reg.split(System.lineSeparator()))
-                     .map(File::new)
-                     .map(LocalClientFile::new)
-                     .toList();
+    public static FileSystem readFs() throws IOException {
+        check();
+        final var file = new java.io.File(ROOT, FS_FILE_NAME);
+
+        try (ObjectInput input = new ObjectInputStream(new FileInputStream(file))) {
+            return (FileSystem) input.readObject();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new FileSystem(DirectoryNode.of());
     }
 
-    public static void updateFs(Collection<? extends ClientFile> fs) throws IOException {
-        final Optional<String> str = fs.stream()
-                                       .map(ClientFile::getRelativePath)
-                                       .reduce((s1, s2) -> s1 + System.lineSeparator() + s2);
+    public static void saveFs(FileSystem system) throws IOException {
+        check();
+        final var file = new java.io.File(ROOT, FS_FILE_NAME);
 
-        if (str.isPresent()) {
-            final var path = Path.of(ROOT, REG_FILE_NAME);
-
-            Files.writeString(path, str.get());
+        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+            output.writeObject(system);
         }
     }
 
-    public static String readFile(ClientFile file) throws IOException {
-        final var absFile = new File(ROOT, file.getRelativePath());
+    public static Optional<String> readFile(File.TextFile file) throws IOException {
+        check();
+        final Path path = CommonPaths.toPath(ROOT, file.path());
 
-        if (!absFile.exists()) {
-            return "";
+        if (Files.exists(path)) {
+            return Optional.ofNullable(Files.readString(path));
         }
-        return Files.readString(absFile.toPath());
+        return Optional.empty();
     }
 
-    public static void storeFile(ClientFile file, CharSequence content) throws IOException {
-        final var absFile = new File(ROOT, file.getRelativePath());
+    public static void writeFile(File.TextFile file, CharSequence content) throws IOException {
+        check();
+        final Path path = CommonPaths.toPath(ROOT, file.path());
 
-        if (!absFile.getName().endsWith(".txt")) {
+        checkFile(path);
+        Files.writeString(path, content);
+    }
+
+    public static void writeDirectory(Directory directory) throws IOException {
+        check();
+        final Path path = CommonPaths.toPath(ROOT, directory.path());
+
+        if (Files.isDirectory(path)) {
             return;
         }
-        if (!absFile.exists() || absFile.isDirectory()) {
-            final var dir = absFile.getParentFile();
-
-            if (!dir.exists() || !dir.isDirectory()) {
-                if (!dir.mkdirs()) {
-                    final var msg = "Fail to create file parent dirs: " + absFile;
-                    throw new IOException(msg);
-                }
-            }
-            if (!absFile.createNewFile()) {
-                final var msg = "Fail to create file: " + absFile;
-                throw new IOException(msg);
-            }
-        }
-        Files.writeString(absFile.toPath(), content);
+        Files.createDirectories(path);
     }
 
-    public static void storeDirectory(ClientFile dir) throws IOException {
-        final var absDir = new File(ROOT, dir.getRelativePath());
+    private static void check() throws IOException {
+        checkDirs(Path.of(ROOT));
+    }
 
-        if (absDir.exists() && absDir.isDirectory()) {
-            return;
-        }
-        if (!absDir.mkdirs()) {
-            final var msg = "Fail to make directory: " + absDir;
-            throw new IOException(msg);
+    private static void checkFile(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            final Path parent = path.getParent();
+
+            checkDirs(parent);
+            Files.createFile(path);
         }
     }
 
-    private static String readRegFile() throws IOException {
-        final var file = new File(ROOT, REG_FILE_NAME);
-        System.out.println(file);
-        if (!file.exists()) {
-            file.createNewFile();
+    private static void checkDirs(Path path) throws IOException {
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            Files.createDirectories(path);
         }
-        return Files.readString(file.toPath());
     }
 
     private AppLocalFiles() {}

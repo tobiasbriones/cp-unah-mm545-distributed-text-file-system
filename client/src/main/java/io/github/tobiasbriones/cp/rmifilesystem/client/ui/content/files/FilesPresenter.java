@@ -14,13 +14,19 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
-import io.github.tobiasbriones.cp.rmifilesystem.model.LocalClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
-import java.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
+import javafx.scene.control.TextInputDialog;
+
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author Tobias Briones
@@ -39,31 +45,46 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     public void init() {
         view.setController(this);
         view.createView();
+
         update();
     }
 
     @Override
     public void onCreateButtonClick() {
-        final var fileName = view.getCreateInputText();
+        final String fileName = view.getCreateInputText();
+        final Optional<CommonPath> path = CommonPath.of(fileName);
 
-        if (!fileName.isBlank()) {
-            final var file = new LocalClientFile(new File(fileName));
-
-            if (fileName.endsWith(".txt")) {
-                createNewFile(file);
-            }
-            else {
-                createNewDir(file);
-            }
+        if (path.isEmpty()) {
+            return;
+        }
+        if (fileName.endsWith(".txt")) {
+            createNewFile(new TextFile(path.get()));
+        }
+        else {
+            createNewDir(new Directory(path.get()));
         }
     }
 
     @Override
-    public void onItemClick(ClientFile file) {
-        if (!file.getRelativePath().endsWith(".txt")) {
-            return;
-        }
+    public void onItemClick(TextFile file) {
         getOutput().ifPresent(output -> output.onOpenFile(file));
+    }
+
+    @Override
+    public void onNewFileAction(DirectoryNode node) {
+        final String newFileName = showInputDialog("Create new file");
+        System.out.println(newFileName);
+    }
+
+    @Override
+    public void onNewDirectoryAction(DirectoryNode node) {
+        final String newFileName = showInputDialog("Create new directory");
+        System.out.println(newFileName);
+    }
+
+    @Override
+    public void onDeleteAction(Node<?> node) {
+        System.out.println("Delete " + node);
     }
 
     @Override
@@ -74,16 +95,17 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     @Override
     public void update() {
         try {
-            final var fs = AppLocalFiles.readFs();
+            final FileSystem fs = AppLocalFiles.readFs();
+
             view.clear();
-            view.addItems(fs);
+            view.setRoot(fs.getRoot());
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void createNewFile(ClientFile file) {
+    private void createNewFile(TextFile file) {
         if (service == null) {
             return;
         }
@@ -95,15 +117,23 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         }
     }
 
-    private void createNewDir(ClientFile file) {
+    private void createNewDir(Directory directory) {
         if (service == null) {
             return;
         }
         try {
-            service.writeDir(file);
+            service.writeDir(directory);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String showInputDialog(String msg) {
+        final var dialog = new TextInputDialog("");
+
+        dialog.setHeaderText(msg);
+        dialog.showAndWait();
+        return dialog.getEditor().getText();
     }
 }

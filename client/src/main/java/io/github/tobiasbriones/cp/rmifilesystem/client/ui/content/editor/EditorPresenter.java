@@ -14,11 +14,10 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,7 +26,7 @@ import java.io.IOException;
 final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor.Presenter {
     private final Editor.View view;
     private FileSystemService service;
-    private ClientFile currentFile;
+    private File.TextFile currentFile;
 
     EditorPresenter(Editor.View view) {
         super();
@@ -52,12 +51,13 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
         if (service == null || currentFile == null) {
             return;
         }
-        final var content = view.getContent();
+        final String content = view.getContent();
+
         saveContent(content);
     }
 
     @Override
-    public void setWorkingFile(ClientFile file, String content) {
+    public void setWorkingFile(File.TextFile file, String content) {
         currentFile = file;
         view.setContent(content);
     }
@@ -68,9 +68,9 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
             return;
         }
         try {
-            final var content = service.readTextFile(currentFile);
+            final String content = service.readTextFile(currentFile);
 
-            AppLocalFiles.storeFile(currentFile, content);
+            AppLocalFiles.writeFile(currentFile, content);
             view.setContent(content);
         }
         catch (IOException e) {

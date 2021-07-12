@@ -13,13 +13,13 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files.Files;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import javafx.scene.text.Text;
 
-import java.io.File;
 import java.io.IOException;
 
 final class FilesOutput implements Files.Output {
@@ -32,15 +32,16 @@ final class FilesOutput implements Files.Output {
     }
 
     @Override
-    public void onOpenFile(ClientFile file) {
-        final var content = loadFile(file);
+    public void onOpenFile(File.TextFile file) {
+        final String content = loadFile(file);
+
         editorInput.setWorkingFile(file, content);
     }
 
-    private String loadFile(ClientFile file) {
+    private String loadFile(File.TextFile file) {
         try {
             updateFile(file);
-            return AppLocalFiles.readFile(file);
+            return AppLocalFiles.readFile(file).orElse("");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -48,8 +49,8 @@ final class FilesOutput implements Files.Output {
         return "";
     }
 
-    private void updateFile(ClientFile file) throws IOException {
-        final var content = service.readTextFile(file);
-        AppLocalFiles.storeFile(file, content);
+    private void updateFile(File.TextFile file) throws IOException {
+        final String content = service.readTextFile(file);
+        AppLocalFiles.writeFile(file, content);
     }
 }

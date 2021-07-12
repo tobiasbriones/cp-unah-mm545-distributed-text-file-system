@@ -13,15 +13,16 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import javafx.scene.Node;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
 
-import java.io.File;
-import java.util.List;
 
 /**
  * @author Tobias Briones
@@ -32,13 +33,19 @@ public final class Files implements Initializable {
     }
 
     public interface Output {
-        void onOpenFile(ClientFile file);
+        void onOpenFile(File.TextFile file);
     }
 
     interface Controller {
         void onCreateButtonClick();
 
-        void onItemClick(ClientFile file);
+        void onItemClick(File.TextFile file);
+
+        void onNewFileAction(DirectoryNode node);
+
+        void onNewDirectoryAction(DirectoryNode node);
+
+        void onDeleteAction(Node<?> node);
     }
 
     interface View extends MvpView<Controller> {
@@ -46,13 +53,9 @@ public final class Files implements Initializable {
 
         String getCreateInputText();
 
-        void addItem(ClientFile file);
+        void setRoot(DirectoryNode root);
 
         void clear();
-
-        default void addItems(List<? extends ClientFile> files) {
-            files.forEach(this::addItem);
-        }
     }
 
     interface Presenter extends MvpPresenter<Output>, Controller, Input {
@@ -71,7 +74,7 @@ public final class Files implements Initializable {
         presenter = new FilesPresenter(view);
     }
 
-    public Node getView() {
+    public javafx.scene.Node getView() {
         return view.getView();
     }
 

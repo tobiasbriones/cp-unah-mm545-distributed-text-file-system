@@ -13,16 +13,22 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.ClientFile;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * @author Tobias Briones
@@ -33,18 +39,20 @@ final class FilesView extends VBox implements Files.View {
     private final TextField newFileField;
     private final Button newFileButton;
     private final VBox filesPane;
+    private final TreeView<Node<?>> treeView;
     private Files.Controller controller;
 
     FilesView() {
         super();
         newFileField = new TextField();
         newFileButton = new Button();
-        controller = null;
         filesPane = new VBox();
+        treeView = new TreeView<>();
+        controller = null;
     }
 
     @Override
-    public Node getView() {
+    public javafx.scene.Node getView() {
         return this;
     }
 
@@ -64,6 +72,8 @@ final class FilesView extends VBox implements Files.View {
         newFilePane.setSpacing(8);
         HBox.setHgrow(newFilePane, Priority.ALWAYS);
 
+        filesPane.getChildren().add(treeView);
+
         getChildren().addAll(
             newFilePane,
             filesPane
@@ -77,6 +87,7 @@ final class FilesView extends VBox implements Files.View {
     public void setController(Files.Controller value) {
         controller = value;
         newFileButton.setOnMouseClicked(event -> controller.onCreateButtonClick());
+        treeView.setCellFactory(p -> new TreeCellFactory(controller));
     }
 
     @Override
@@ -85,20 +96,112 @@ final class FilesView extends VBox implements Files.View {
     }
 
     @Override
-    public void addItem(ClientFile file) {
-        final var item = new FileItemView();
+    public void setRoot(DirectoryNode root) {
+        final var rootItem = new FileItemView(root);
 
-        item.set(file);
-        filesPane.getChildren().add(item);
+        rootItem.setExpanded(true);
+        treeView.setRoot(rootItem);
+        final ChangeListener<? super TreeItem<Node<?>>> l =  (
+            observable, oldValue,
+            newValue
+        ) -> {
+            if (newValue != null) {
+                final Node<?> value = newValue.getValue();
 
-        if (controller != null) {
-            item.setOnMouseClicked(event -> controller.onItemClick(file));
-        }
+                if (value.commonFile() instanceof File.TextFile textFile) {
+                    controller.onItemClick(textFile);
+                    System.out.println("Selected Text : " + textFile);
+                }
+            }
+        };
+
+        treeView.getSelectionModel().selectedItemProperty().addListener(l);
     }
 
     @Override
     public void clear() {
-        filesPane.getChildren().clear();
-        // Might need to unregister the events
+        treeView.setRoot(null);
+    }
+
+    private static final class TreeCellFactory extends TreeCell<Node<?>> {
+        private static final String TEXT_FILE_ICON_NAME = "ic_text_file.png";
+        private static final String FOLDER_ICON_NAME = "ic_folder.png";
+        private final Files.Controller controller;
+
+        TreeCellFactory(Files.Controller controller) {
+            super();
+            this.controller = controller;
+        }
+
+        @Override
+        public void updateItem(Node<?> item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty) {
+                setText("");
+                setGraphic(null);
+            }
+            else {
+                final CommonFile file = item.commonFile();
+
+                setText(file);
+                setupContextMenu(item);
+                setupIconView(file);
+            }
+        }
+
+        void setText(CommonFile file) {
+            if (file instanceof File f) {
+                setText(f.fileName().value());
+            }
+            else {
+                setText(file.name());
+            }
+        }
+
+        void setupContextMenu(Node<?> item) {
+            final ContextMenu menu = new ContextMenu();
+            final var deleteItem = new MenuItem("Delete");
+
+            if(item instanceof DirectoryNode dir) {
+                final var newFileItem = new MenuItem("New file");
+                final var newDirItem = new MenuItem("New directory");
+
+                menu.getItems().addAll(newFileItem, newDirItem);
+
+                newFileItem.setOnAction(event -> controller.onNewFileAction(dir));
+                newDirItem.setOnAction(event -> controller.onNewDirectoryAction(dir));
+            }
+            menu.getItems().addAll(deleteItem);
+
+            deleteItem.setOnAction(event -> controller.onDeleteAction(item));
+            setContextMenu(menu);
+        }
+
+        void setupIconView(CommonFile file) {
+            final String iconName = (file instanceof File.TextFile) ? TEXT_FILE_ICON_NAME : FOLDER_ICON_NAME;
+
+            setupIconView(iconName);
+        }
+
+        void setupIconView(String value) {
+            final var iconView = new ImageView();
+
+            loadIcon(value).ifPresent(iconView::setImage);
+            setGraphic(iconView);
+        }
+
+        Optional<Image> loadIcon(String iconName) {
+            Optional<Image> image = Optional.empty();
+            final var path = "/" + iconName;
+
+            try (InputStream is = getClass().getResourceAsStream(path)) {
+                if (is != null) {
+                    image = Optional.of(new Image((is)));
+                }
+            }
+            catch (IOException ignore) {}
+            return image;
+        }
     }
 }

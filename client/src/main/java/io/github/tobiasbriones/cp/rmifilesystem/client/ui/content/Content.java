@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -109,9 +110,9 @@ public final class Content implements Initializable {
 
     static void updateFs(FileSystemService service) {
         try {
-            final var fs = service.getFileSystem();
+            final FileSystem fs = service.getFileSystem();
 
-            AppLocalFiles.updateFs(fs);
+            AppLocalFiles.saveFs(fs);
         }
         catch (IOException e) {
             e.printStackTrace();
