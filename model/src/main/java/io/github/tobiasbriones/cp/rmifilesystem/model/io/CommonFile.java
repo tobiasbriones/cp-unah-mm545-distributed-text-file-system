@@ -13,10 +13,12 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 
+import java.io.Serializable;
+
 /**
  * @author Tobias Briones
  */
-public sealed interface CommonFile permits Directory, File {
+public sealed interface CommonFile extends Serializable permits Directory, File {
     CommonPath path();
 
     default String name() {

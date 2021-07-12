@@ -13,12 +13,10 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 
-import java.io.Serializable;
-
 /**
  * @author Tobias Briones
  */
-public record Directory(CommonPath path) implements Serializable, CommonFile {
+public record Directory(CommonPath path) implements CommonFile {
     public static Directory of() {
         return new Directory(CommonPath.of());
     }
