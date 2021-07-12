@@ -40,7 +40,7 @@ public final class FileSystem implements Serializable {
     private final Map<File, Status> statuses;
     private JavaFile localRoot;
 
-    public record Status(File file, boolean isInvalid) {}
+    public record Status(File file, boolean isInvalid) implements Serializable {}
 
     public FileSystem(DirectoryNode root) {
         this.root = root;
