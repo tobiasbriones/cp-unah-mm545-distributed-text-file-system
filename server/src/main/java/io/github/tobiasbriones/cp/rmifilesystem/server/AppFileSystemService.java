@@ -94,10 +94,10 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     @Override
     public void writeDir(Directory directory) throws IOException {
         final JavaFile localFile = toLocalFile(directory.path());
+        final Path path = localFile.toPath();
 
-        if (!localFile.mkdirs()) {
-            final var msg = "Fail to make dirs";
-            throw new IOException(msg);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
         }
     }
 
