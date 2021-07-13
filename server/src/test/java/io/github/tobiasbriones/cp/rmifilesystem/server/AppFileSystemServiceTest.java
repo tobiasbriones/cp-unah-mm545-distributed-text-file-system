@@ -14,12 +14,12 @@
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,7 +63,8 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Read the default file system")
     void readFs() throws IOException {
-        final FileSystem fs = service.getFileSystem();
+        final FileSystemService.RealTimeFileSystem rtfs = service.getRealTimeFileSystem();
+        final FileSystem fs = FileSystems.buildFileSystem(rtfs, new HashMap<>(0));
 
         assertNotNull(fs, "Expects the file system to not be null");
 
@@ -96,7 +97,7 @@ class AppFileSystemServiceTest {
     void writeDir() throws IOException {
         final var dir = new Directory("/new-dir");
 
-        service.writeDir(dir);
+        service.writeDirectory(dir);
 
         assertTrue(
             Files.exists(Path.of(AppFileSystemService.ROOT, "new-dir")),
