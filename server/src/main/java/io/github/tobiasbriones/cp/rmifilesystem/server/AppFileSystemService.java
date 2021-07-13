@@ -15,17 +15,19 @@ package io.github.tobiasbriones.cp.rmifilesystem.server;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.*;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.*;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 
-import java.io.IOException;
-import java.io.Serial;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 /**
  * @author Tobias Briones
@@ -76,9 +78,9 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public FileSystem getFileSystem() throws IOException {
+    public RealTimeFileSystem getRealTimeFileSystem() throws IOException {
         try {
-            return new FileSystem(loadRoot());
+            return loadRealTimeFileSystem();
         }
         catch (SecurityException e) {
             throw new IOException(e);
@@ -92,12 +94,13 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public void writeDir(Directory directory) throws IOException {
+    public void writeDirectory(Directory directory) throws IOException {
         final JavaFile localFile = toLocalFile(directory.path());
         final Path path = localFile.toPath();
 
         if (!Files.exists(path)) {
             Files.createDirectories(path);
+            broadcastFSChange();
         }
     }
 
@@ -106,7 +109,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         final JavaFile localFile = toLocalFile(file.path());
 
         Files.writeString(localFile.toPath(), content);
-        broadcastUpdate(file);
+        setChanged(file);
+        broadcastFSChange();
     }
 
     @Override
@@ -114,15 +118,23 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         return clients.add(l);
     }
 
-    private void broadcastUpdate(File file) {
+    @Override
+    public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
+        return clients.remove(l);
+    }
+
+    private void broadcastFSChange() throws IOException {
+        final RealTimeFileSystem fs = loadRealTimeFileSystem();
+
         for (final var client : clients) {
-            try {
-                client.onFileChanged(new FileSystem.Status(file, true));
-            }
-            catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            client.onFSChanged(fs);
         }
+    }
+
+    private static RealTimeFileSystem loadRealTimeFileSystem() {
+        final DirectoryNode root = loadRoot();
+        final Map<File, LastUpdateStatus> statuses = loadStatuses();
+        return new RealTimeFileSystem(root, statuses);
     }
 
     private static DirectoryNode loadRoot() {
@@ -134,7 +146,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static void loadNode(DirectoryNode node, Path path, Path rootPath) {
-        final var directChildrenList = path.toFile().listFiles();
+        final FilenameFilter filter = (dir, name) -> !name.endsWith(".data");
+        final var directChildrenList = path.toFile().listFiles(filter);
 
         if (directChildrenList == null) {
             return;
@@ -162,6 +175,37 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
                 node.addChild(directoryChild);
                 loadNode(directoryChild, childPath, rootPath);
             }
+        }
+    }
+
+    private static void setChanged(File file) throws IOException {
+        final Map<File, LastUpdateStatus> statuses = loadStatuses();
+        final LastUpdateStatus status = LastUpdateStatus.of(file);
+
+        statuses.put(file, status);
+        saveStatuses(statuses);
+    }
+
+    private static Map<File, LastUpdateStatus> loadStatuses() {
+        final Path path = Path.of(ROOT, ".statuses.data");
+
+        if (!Files.exists(path)) {
+            return new HashMap<>(0);
+        }
+        try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+            return (Map<File, LastUpdateStatus>) input.readObject();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new HashMap<>(0);
+        }
+    }
+
+    private static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws IOException {
+        final Path path = Path.of(ROOT, ".statuses.data");
+
+        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
+            output.writeObject(statuses);
         }
     }
 }
