@@ -17,6 +17,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -26,11 +27,13 @@ import javafx.scene.layout.VBox;
  */
 final class EditorView extends VBox implements Editor.View {
     private static final int SAVE_BUTTON_WIDTH = 240;
+    private final Label fileLabel;
     private final TextArea contentArea;
     private final Button saveButton;
 
     EditorView() {
         super();
+        fileLabel = new Label();
         contentArea = new TextArea();
         saveButton = new Button();
     }
@@ -44,6 +47,8 @@ final class EditorView extends VBox implements Editor.View {
     public void createView() {
         final var actionPane = new HBox();
 
+        fileLabel.setPadding(new Insets(0, 0, 8, 0));
+        fileLabel.setStyle("-fx-font-weight: bold;-fx-font-size:16px;");
         saveButton.setText("Save");
         saveButton.setPrefWidth(SAVE_BUTTON_WIDTH);
 
@@ -52,6 +57,7 @@ final class EditorView extends VBox implements Editor.View {
         actionPane.setPadding(new Insets(8, 0, 8, 0));
 
         getChildren().addAll(
+            fileLabel,
             contentArea,
             actionPane
         );
@@ -60,6 +66,11 @@ final class EditorView extends VBox implements Editor.View {
     @Override
     public void bindEvents(Editor.Controller controller) {
         saveButton.setOnMouseClicked(event -> controller.onSaveButtonClick());
+    }
+
+    @Override
+    public void setWorkingFile(String fileName) {
+        fileLabel.setText(fileName);
     }
 
     @Override

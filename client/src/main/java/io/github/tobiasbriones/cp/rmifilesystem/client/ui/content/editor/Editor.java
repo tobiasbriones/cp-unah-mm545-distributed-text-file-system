@@ -37,6 +37,8 @@ public final class Editor implements Initializable {
     interface View extends MvpView<Controller> {
         String getContent();
 
+        void setWorkingFile(String fileName);
+
         void setContent(String value);
     }
 

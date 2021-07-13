@@ -59,7 +59,8 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     @Override
     public void setWorkingFile(File.TextFile file, String content) {
         currentFile = file;
-        view.setContent(content);
+
+        setCurrentFile(content);
     }
 
     @Override
@@ -71,11 +72,16 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
             final String content = service.readTextFile(currentFile);
 
             AppLocalFiles.writeFile(currentFile, content);
-            view.setContent(content);
+            setCurrentFile(content);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setCurrentFile(String content) {
+        view.setWorkingFile(currentFile.name());
+        view.setContent(content);
     }
 
     private void saveContent(String content) {
