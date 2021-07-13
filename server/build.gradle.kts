@@ -20,6 +20,7 @@ group = "io.github.tobiasbriones.cp"
 version = "1.0-SNAPSHOT"
 
 application {
+    mainModule.set("io.github.tobiasbriones.cp.rmifilesystem.server")
     mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.server.Main")
 }
 
@@ -49,4 +50,10 @@ tasks.withType<JavaExec>().all {
 
 tasks.withType<Test>().all {
     jvmArgs("--enable-preview")
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes("Main-Class" to "io.github.tobiasbriones.cp.rmifilesystem.server.Main")
+    }
 }
