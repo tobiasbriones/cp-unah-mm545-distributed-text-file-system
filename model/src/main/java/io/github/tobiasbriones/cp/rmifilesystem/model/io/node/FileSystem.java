@@ -17,6 +17,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +42,19 @@ public final class FileSystem implements Serializable {
     private final Map<File, Status> statuses;
 
     public record Status(File file, boolean isInvalid) implements Serializable {}
+
+    public record LastUpdateStatus(File file, ZonedDateTime time) implements Serializable {
+        public static final ZoneId zoneId = ZoneId.of("US/Eastern");
+
+        public static LastUpdateStatus of(File file) {
+            final ZonedDateTime time = ZonedDateTime.ofInstant(Instant.now(), zoneId);
+            return new LastUpdateStatus(file, time);
+        }
+
+        public boolean isInvalid(LastUpdateStatus other) {
+            return time.compareTo(other.time()) > 0;
+        }
+    }
 
     public FileSystem(DirectoryNode root) {
         this.root = root;

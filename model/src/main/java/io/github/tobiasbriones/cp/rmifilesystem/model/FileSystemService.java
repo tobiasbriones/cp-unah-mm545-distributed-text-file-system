@@ -15,23 +15,34 @@ package io.github.tobiasbriones.cp.rmifilesystem.model;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Map;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 /**
  * @author Tobias Briones
  */
 public interface FileSystemService extends Remote {
-    FileSystem getFileSystem() throws IOException;
+    record RealTimeFileSystem(
+        DirectoryNode root,
+        Map<File, LastUpdateStatus> statuses
+    ) implements Serializable {}
+
+    RealTimeFileSystem getRealTimeFileSystem() throws IOException;
 
     String readTextFile(File.TextFile file) throws IOException;
 
-    void writeDir(Directory directory) throws IOException;
+    void writeDirectory(Directory directory) throws IOException;
 
     void writeTextFile(File.TextFile file, String content) throws IOException;
 
     boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
+
+    boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 }

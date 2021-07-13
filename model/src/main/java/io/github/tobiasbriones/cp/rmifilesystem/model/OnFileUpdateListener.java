@@ -13,15 +13,16 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService.RealTimeFileSystem;
 
 /**
  * @author Tobias Briones
  */
 @FunctionalInterface
 public interface OnFileUpdateListener extends Remote {
-    void onFileChanged(FileSystem.Status status) throws RemoteException;
+    // Pass the full system to make it easier to implement
+    void onFSChanged(RealTimeFileSystem system) throws RemoteException;
 }
