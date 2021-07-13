@@ -79,6 +79,9 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     }
 
     private void saveContent(String content) {
+        if (currentFile == null) {
+            return;
+        }
         try {
             service.writeTextFile(currentFile, content);
         }

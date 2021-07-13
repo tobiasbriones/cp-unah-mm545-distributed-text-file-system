@@ -14,14 +14,21 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
+import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
 import javafx.application.Platform;
 
 import java.io.IOException;
 import java.io.Serial;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService.*;
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 /**
  * Receives the file changes from the RMI server broadcast.
@@ -39,8 +46,8 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
     }
 
     @Override
-    public void onFileChanged(FileSystem.Status status) throws RemoteException {
-        updateLocalFs(status);
+    public void onFSChanged(RealTimeFileSystem system) throws RemoteException {
+        updateLocalFs(system);
         post();
     }
 
@@ -48,20 +55,16 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
         Platform.runLater(l::update);
     }
 
-    private static void updateLocalFs(FileSystem.Status status) {
+    private static void updateLocalFs(RealTimeFileSystem system) {
         try {
-            final FileSystem fs = AppLocalFiles.readFs();
+            final Map<File, LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
+            final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
-            updateStatusIntoFs(fs, status);
+            AppLocalFiles.saveFs(fs);
         }
         catch (IOException e) {
             // TODO Emit failure via GUI
             e.printStackTrace();
         }
-    }
-
-    private static void updateStatusIntoFs(FileSystem fs, FileSystem.Status status) throws IOException {
-        fs.updateStatus(status);
-        AppLocalFiles.saveFs(fs);
     }
 }

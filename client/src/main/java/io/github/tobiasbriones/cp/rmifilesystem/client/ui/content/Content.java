@@ -13,7 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -25,6 +27,10 @@ import javafx.scene.Node;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Map;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService.*;
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 /**
  * @author Tobias Briones
@@ -100,6 +106,7 @@ public final class Content implements Initializable {
     }
 
     private void update() {
+        System.out.println("UPDATE");
         files.getInput().update();
         editor.getInput().update();
     }
@@ -119,7 +126,9 @@ public final class Content implements Initializable {
 
     private static void updateLocalFs(FileSystemService service) {
         try {
-            final FileSystem fs = service.getFileSystem();
+            final RealTimeFileSystem system = service.getRealTimeFileSystem();
+            final Map<File, LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
+            final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
             AppLocalFiles.saveFs(fs);
         }

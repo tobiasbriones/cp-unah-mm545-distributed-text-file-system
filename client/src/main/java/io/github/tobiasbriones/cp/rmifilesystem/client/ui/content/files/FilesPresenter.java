@@ -136,7 +136,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
             return;
         }
         try {
-            service.writeDir(directory);
+            service.writeDirectory(directory);
         }
         catch (IOException e) {
             e.printStackTrace();

@@ -18,9 +18,13 @@ import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files.Files;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.Map;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 final class FilesOutput implements Files.Output {
     private final FileSystemService service;
@@ -52,5 +56,14 @@ final class FilesOutput implements Files.Output {
     private void updateFile(File.TextFile file) throws IOException {
         final String content = service.readTextFile(file);
         AppLocalFiles.writeFile(file, content);
+        setDownloaded(file);
+    }
+
+    private static void setDownloaded(File file) throws IOException {
+        final Map<File, LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
+        final LastUpdateStatus status = LastUpdateStatus.of(file);
+
+        statuses.put(file, status);
+        AppLocalFiles.saveStatuses(statuses);
     }
 }

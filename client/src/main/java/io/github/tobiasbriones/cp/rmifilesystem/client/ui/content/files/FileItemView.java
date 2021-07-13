@@ -68,7 +68,10 @@ final class FileItemView extends TreeItem<Node<?>> {
                 final ObservableList<TreeItem<Node<?>>> children = FXCollections.observableArrayList();
 
                 for (Node<?> child : childrenNodes) {
-                    children.add(new FileItemView(child));
+                    final var itemView = new FileItemView(child);
+
+                    itemView.setExpanded(true);
+                    children.add(itemView);
                 }
                 return children;
             }

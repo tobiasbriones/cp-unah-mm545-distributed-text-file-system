@@ -15,14 +15,17 @@ package io.github.tobiasbriones.cp.rmifilesystem.client.io;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.JavaFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 /**
  * @author Tobias Briones
@@ -45,12 +48,38 @@ public final class AppLocalFiles {
         return new FileSystem(DirectoryNode.of());
     }
 
+    public static Map<File, LastUpdateStatus> readStatuses() throws IOException {
+        check();
+        final Path path = Path.of(ROOT, ".statuses.data");
+
+        if (!Files.exists(path)) {
+            return new HashMap<>(0);
+        }
+
+        try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+            return (Map<File, LastUpdateStatus>) input.readObject();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return new HashMap<>(0);
+        }
+    }
+
     public static void saveFs(FileSystem system) throws IOException {
         check();
         final var file = new java.io.File(ROOT, FS_FILE_NAME);
 
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
             output.writeObject(system);
+        }
+    }
+
+    public static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws IOException {
+        check();
+        final var file = new java.io.File(ROOT, ".statuses.data");
+
+        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+            output.writeObject(statuses);
         }
     }
 
