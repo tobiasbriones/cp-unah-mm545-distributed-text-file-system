@@ -125,9 +125,22 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
     private void broadcastFSChange() throws IOException {
         final RealTimeFileSystem fs = loadRealTimeFileSystem();
+        final Collection<OnFileUpdateListener> remove = new ArrayList<>(0);
 
         for (final var client : clients) {
-            client.onFSChanged(fs);
+            try {
+                client.onFSChanged(fs);
+            }
+            catch (ConnectException e) {
+                System.out.println(e.getMessage());
+                remove.add(client);
+            }
+        }
+
+        if (!remove.isEmpty()) {
+            remove.forEach(clients::remove);
+
+            System.out.println(remove.size() + " clients removed and " + clients.size() + " clients remaining");
         }
     }
 
