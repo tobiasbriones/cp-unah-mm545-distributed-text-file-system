@@ -108,6 +108,7 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     public void writeTextFile(File.TextFile file, String content) throws IOException {
         final JavaFile localFile = toLocalFile(file.path());
 
+        checkFileDirs(toLocalFile(file.path()).toPath());
         Files.writeString(localFile.toPath(), content);
         setChanged(file);
         broadcastFSChange();
@@ -219,6 +220,21 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             output.writeObject(statuses);
+        }
+    }
+
+    // ---------- TEMPORAL
+    private static void checkFileDirs(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            final Path parent = path.getParent();
+
+            checkDirs(parent);
+        }
+    }
+
+    private static void checkDirs(Path path) throws IOException {
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            Files.createDirectories(path);
         }
     }
 }
