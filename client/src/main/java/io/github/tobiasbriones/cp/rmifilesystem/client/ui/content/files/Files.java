@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
@@ -38,7 +39,7 @@ public final class Files implements Initializable {
     interface Controller {
         void onCreateButtonClick();
 
-        void onItemClick(File.TextFile file);
+        void onItemClick(CommonFile file);
 
         void onNewFileAction(DirectoryNode node);
 
@@ -53,6 +54,8 @@ public final class Files implements Initializable {
         void setController(Controller value);
 
         String getCreateInputText();
+
+        void setCreateInputText(String text);
 
         void setRoot(DirectoryNode root);
 

@@ -95,6 +95,11 @@ final class FilesView extends VBox implements Files.View {
     }
 
     @Override
+    public void setCreateInputText(String text) {
+        newFileField.setText(text);
+    }
+
+    @Override
     public void setRoot(DirectoryNode root) {
         final var rootItem = new FileItemView(root);
 
@@ -107,10 +112,7 @@ final class FilesView extends VBox implements Files.View {
             if (newValue != null) {
                 final Node<?> value = newValue.getValue();
 
-                if (value.commonFile() instanceof File.TextFile textFile) {
-                    controller.onItemClick(textFile);
-                    System.out.println("Selected Text : " + textFile);
-                }
+                controller.onItemClick(value.commonFile());
             }
         };
 

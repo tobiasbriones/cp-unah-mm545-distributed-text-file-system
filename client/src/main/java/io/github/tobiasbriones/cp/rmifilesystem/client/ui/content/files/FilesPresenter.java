@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
@@ -70,8 +71,14 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     @Override
-    public void onItemClick(TextFile file) {
-        getOutput().ifPresent(output -> output.onOpenFile(file));
+    public void onItemClick(CommonFile file) {
+        getOutput().ifPresent(output -> {
+            view.setCreateInputText(file.path().value());
+
+            if (file instanceof TextFile f) {
+                output.onOpenFile(f);
+            }
+        });
     }
 
     @Override
