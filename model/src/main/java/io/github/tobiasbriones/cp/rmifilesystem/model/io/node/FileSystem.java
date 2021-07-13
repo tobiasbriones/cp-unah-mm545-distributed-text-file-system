@@ -14,7 +14,6 @@
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.node;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.JavaFile;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -38,26 +37,16 @@ public final class FileSystem implements Serializable {
     private static final int INITIAL_FILES_CAPACITY = 25;
     private final DirectoryNode root;
     private final Map<File, Status> statuses;
-    private JavaFile localRoot;
 
     public record Status(File file, boolean isInvalid) implements Serializable {}
 
     public FileSystem(DirectoryNode root) {
         this.root = root;
         statuses = new HashMap<>(INITIAL_FILES_CAPACITY);
-        localRoot = new JavaFile("");
     }
 
     public DirectoryNode getRoot() {
         return root;
-    }
-
-    public JavaFile getLocalRoot() {
-        return localRoot;
-    }
-
-    public void setLocalRoot(JavaFile value) {
-        localRoot = value;
     }
 
     public Optional<Status> getStatus(File file) {
