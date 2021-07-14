@@ -75,6 +75,7 @@ public final class Content implements Initializable {
     private final Presenter presenter;
     private final Files files;
     private final Editor editor;
+    private final FilesOutput filesOutput;
     private final OnLocalFsChangeListener l;
     private FileSystemService service;
     private OnFileUpdateListener client;
@@ -84,6 +85,7 @@ public final class Content implements Initializable {
         presenter = new ContentPresenter(view);
         files = config.files();
         editor = config.editor();
+        filesOutput = new FilesOutput(editor.getInput());
         l = this::update;
         service = null;
         client = null;
@@ -97,6 +99,7 @@ public final class Content implements Initializable {
         service = value;
         files.setService(value);
         editor.setService(value);
+        filesOutput.setService(value);
         bindServiceListener();
         updateLocalFs(service); // should be async
     }
@@ -121,7 +124,7 @@ public final class Content implements Initializable {
     }
 
     private void setOutputs() {
-        files.setOutput(new FilesOutput(service, editor.getInput()));
+        files.setOutput(filesOutput);
     }
 
     private void bindServiceListener() {

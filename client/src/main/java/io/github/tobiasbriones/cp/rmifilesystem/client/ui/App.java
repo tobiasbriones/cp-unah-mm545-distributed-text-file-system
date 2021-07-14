@@ -32,6 +32,8 @@ import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * @author Tobias Briones
@@ -105,10 +107,9 @@ public final class App implements Initializable {
         final var scene = new Scene((Parent) view);
         final var title = "JavaRMI Text File System";
 
-        loadService();
-        menuOutput.setService(service);
+        loadServiceAsync();
+
         menu.setOutput(menuOutput);
-        content.setService(service);
         init();
 
         stage.setTitle(title);
@@ -120,13 +121,38 @@ public final class App implements Initializable {
         stage.setOnCloseRequest(event -> exit());
     }
 
-    private void loadService() {
+    private void loadServiceAsync() {
+        final Consumer<Optional<FileSystemService>> update = result ->
+            result.ifPresentOrElse(this::onServiceObtained, this::onFailedToObtainService);
+
+        final Runnable run = () -> {
+            final var result = obtainService();
+
+            Platform.runLater(() -> update.accept(result));
+        };
+        final var thread = new Thread(run);
+
+        thread.start();
+    }
+
+    private Optional<FileSystemService> obtainService() {
         try {
-            service = FileSystemServices.obtainService();
+            return Optional.ofNullable(FileSystemServices.obtainService());
         }
         catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
         }
+        return Optional.empty();
+    }
+
+    private void onServiceObtained(FileSystemService value) {
+        service = value;
+        menuOutput.setService(service);
+        content.setService(service);
+    }
+
+    private void onFailedToObtainService() {
+        System.out.println("FAILED");
     }
 
     private void exit() {

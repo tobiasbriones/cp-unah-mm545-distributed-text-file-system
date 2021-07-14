@@ -27,12 +27,12 @@ import java.util.Map;
 import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 final class FilesOutput implements Files.Output {
-    private final FileSystemService service;
     private final Editor.Input editorInput;
+    private FileSystemService service;
 
-    FilesOutput(FileSystemService service, Editor.Input editorInput) {
-        this.service = service;
+    FilesOutput(Editor.Input editorInput) {
         this.editorInput = editorInput;
+        this.service = null;
     }
 
     @Override
@@ -40,6 +40,10 @@ final class FilesOutput implements Files.Output {
         final String content = loadFile(file);
 
         editorInput.setWorkingFile(file, content);
+    }
+
+    void setService(FileSystemService value) {
+        service = value;
     }
 
     private String loadFile(File.TextFile file) {
@@ -54,6 +58,9 @@ final class FilesOutput implements Files.Output {
     }
 
     private void updateFile(File.TextFile file) throws IOException {
+        if (service == null) {
+            return;
+        }
         final String content = service.readTextFile(file);
         AppLocalFiles.writeFile(file, content);
         setDownloaded(file);
