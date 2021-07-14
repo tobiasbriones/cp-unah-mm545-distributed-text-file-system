@@ -21,13 +21,17 @@ import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.Content;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.header.Header;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.menu.AppMenu;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * @author Tobias Briones
@@ -112,6 +116,8 @@ public final class App implements Initializable {
         stage.setMinWidth(MIN_WIDTH);
         stage.setMinHeight(MIN_HEIGHT);
         stage.show();
+
+        stage.setOnCloseRequest(event -> exit());
     }
 
     private void loadService() {
@@ -120,6 +126,16 @@ public final class App implements Initializable {
         }
         catch (RemoteException | NotBoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void exit() {
+        try {
+            content.unbind();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
         }
     }
 }

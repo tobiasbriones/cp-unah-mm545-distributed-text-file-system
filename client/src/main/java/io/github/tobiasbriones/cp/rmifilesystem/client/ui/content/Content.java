@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
@@ -27,6 +28,7 @@ import javafx.scene.Node;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
 import static io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService.*;
@@ -75,6 +77,7 @@ public final class Content implements Initializable {
     private final Editor editor;
     private final OnLocalFsChangeListener l;
     private FileSystemService service;
+    private OnFileUpdateListener client;
 
     private Content(ChildrenConfig config) {
         view = new ContentView(config.newViewConfig());
@@ -83,6 +86,7 @@ public final class Content implements Initializable {
         editor = config.editor();
         l = this::update;
         service = null;
+        client = null;
     }
 
     public Node getView() {
@@ -105,6 +109,11 @@ public final class Content implements Initializable {
         editor.init();
     }
 
+    public void unbind() throws RemoteException {
+        service.removeOnFileUpdateListener(client);
+        UnicastRemoteObject.unexportObject(client, true);
+    }
+
     private void update() {
         System.out.println("UPDATE");
         files.getInput().update();
@@ -117,7 +126,8 @@ public final class Content implements Initializable {
 
     private void bindServiceListener() {
         try {
-            service.addOnFileUpdateListener(new ContentOnFileUpdateListener(l));
+            client = new ContentOnFileUpdateListener(l);
+            service.addOnFileUpdateListener(client);
         }
         catch (RemoteException e) {
             e.printStackTrace();
