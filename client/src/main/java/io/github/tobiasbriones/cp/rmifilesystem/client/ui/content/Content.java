@@ -113,6 +113,9 @@ public final class Content implements Initializable {
     }
 
     public void unbind() throws RemoteException {
+        if (service == null) {
+            return;
+        }
         service.removeOnFileUpdateListener(client);
         UnicastRemoteObject.unexportObject(client, true);
     }
