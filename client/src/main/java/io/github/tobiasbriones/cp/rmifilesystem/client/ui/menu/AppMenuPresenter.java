@@ -70,7 +70,7 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
 
     @Override
     public void onQuit() {
-        Platform.exit();
+        getOutput().ifPresent(AppMenu.Output::onQuit);
     }
 
     @Override

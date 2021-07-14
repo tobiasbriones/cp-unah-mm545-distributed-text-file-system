@@ -85,7 +85,7 @@ public final class App implements Initializable {
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
         menu = childrenConfig.menu();
-        menuOutput = new AppMenuOutput(childrenConfig.header().getInput());
+        menuOutput = new AppMenuOutput(childrenConfig.header().getInput(), this::quit);
         header = childrenConfig.header();
         content = childrenConfig.content();
         presenter = new AppPresenter(view, header.getInput());
@@ -151,6 +151,11 @@ public final class App implements Initializable {
 
     private void onFailedToObtainService() {
         setFailedServiceStatus(header.getInput());
+    }
+
+    private void quit() {
+        exit();
+        Platform.exit();
     }
 
     private void exit() {

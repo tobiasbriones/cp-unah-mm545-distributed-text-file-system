@@ -18,17 +18,24 @@ import io.github.tobiasbriones.cp.rmifilesystem.client.ui.menu.AppMenu;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * @author Tobias Briones
  */
 final class AppMenuOutput implements AppMenu.Output {
+    @FunctionalInterface
+    interface Quit {
+        void apply();
+    }
+
     private final Header.Input headerInput;
+    private final Quit quit;
     private FileSystemService service;
 
-    AppMenuOutput(Header.Input headerInput) {
+    AppMenuOutput(Header.Input headerInput, Quit quit) {
         this.headerInput = headerInput;
+        this.quit = quit;
         this.service = null;
     }
 
@@ -49,6 +56,11 @@ final class AppMenuOutput implements AppMenu.Output {
     @Override
     public void onLogin(String clientName) {
         headerInput.setUser("Login unsupported yet!");
+    }
+
+    @Override
+    public void onQuit() {
+        quit.apply();
     }
 
     @Override

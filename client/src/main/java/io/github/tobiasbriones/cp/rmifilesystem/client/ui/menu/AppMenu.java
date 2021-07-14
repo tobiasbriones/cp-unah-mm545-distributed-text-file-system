@@ -30,6 +30,8 @@ public final class AppMenu implements Initializable {
         void onCreateNewDirectory(File dirFile);
 
         void onLogin(String clientName);
+
+        void onQuit();
     }
 
     interface DefaultOutput {
