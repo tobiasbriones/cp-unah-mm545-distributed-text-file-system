@@ -24,6 +24,8 @@ import javafx.scene.Node;
 public final class Header implements Initializable {
     public interface Input {
         void setUser(String value);
+
+        void setStatus(String value);
     }
 
     interface View extends MvpView<Void>, Input {}

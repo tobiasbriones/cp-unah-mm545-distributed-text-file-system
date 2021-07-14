@@ -17,16 +17,19 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * @author Tobias Briones
  */
-final class HeaderView extends HBox implements Header.View {
+final class HeaderView extends VBox implements Header.View {
     private final Label userLabel;
+    private final Label statusLabel;
 
     HeaderView() {
         super();
         userLabel = new Label();
+        statusLabel = new Label();
     }
 
     @Override
@@ -36,19 +39,31 @@ final class HeaderView extends HBox implements Header.View {
 
     @Override
     public void createView() {
-        final var titleLabel = new Label();
+        final var userBox = new HBox();
+        final var userTitleLabel = new Label();
+        final var statusBox = new HBox();
+        final var statusTitleLabel = new Label();
 
-        titleLabel.setText("User: ");
-        titleLabel.setStyle("-fx-font-weight: bold;");
+        userTitleLabel.setText("User: ");
+        userTitleLabel.setStyle("-fx-font-weight: bold;");
+        userBox.getChildren().addAll(userTitleLabel, userLabel);
+
+        statusTitleLabel.setText("Service status: ");
+        statusTitleLabel.setStyle("-fx-font-weight: bold;");
+        statusBox.getChildren().addAll(statusTitleLabel, statusLabel);
+
         setPadding(new Insets(8, 0, 8, 0));
-        getChildren().addAll(
-            titleLabel,
-            userLabel
-        );
+        setSpacing(8);
+        getChildren().addAll(userBox, statusBox);
     }
 
     @Override
     public void setUser(String value) {
         userLabel.setText(value);
+    }
+
+    @Override
+    public void setStatus(String value) {
+        statusLabel.setText(value);
     }
 }

@@ -27,11 +27,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -107,8 +104,6 @@ public final class App implements Initializable {
         final var scene = new Scene((Parent) view);
         final var title = "JavaRMI Text File System";
 
-        loadServiceAsync();
-
         menu.setOutput(menuOutput);
         init();
 
@@ -119,6 +114,7 @@ public final class App implements Initializable {
         stage.show();
 
         stage.setOnCloseRequest(event -> exit());
+        loadServiceAsync();
     }
 
     private void loadServiceAsync() {
@@ -132,6 +128,7 @@ public final class App implements Initializable {
         };
         final var thread = new Thread(run);
 
+        setRetrievingServiceStatus(header.getInput());
         thread.start();
     }
 
@@ -149,10 +146,11 @@ public final class App implements Initializable {
         service = value;
         menuOutput.setService(service);
         content.setService(service);
+        setServiceRetrievedStatus(header.getInput());
     }
 
     private void onFailedToObtainService() {
-        System.out.println("FAILED");
+        setFailedServiceStatus(header.getInput());
     }
 
     private void exit() {
@@ -163,5 +161,18 @@ public final class App implements Initializable {
             e.printStackTrace();
             System.exit(-1);
         }
+    }
+
+    private static void setServiceRetrievedStatus(Header.Input input) {
+        input.setStatus("Connected");
+    }
+
+    private static void setRetrievingServiceStatus(Header.Input input) {
+        final var msg = "Retrieving service from %s...".formatted(FileSystemServices.HOST);
+        input.setStatus(msg);
+    }
+
+    private static void setFailedServiceStatus(Header.Input input) {
+        input.setStatus("Failed");
     }
 }

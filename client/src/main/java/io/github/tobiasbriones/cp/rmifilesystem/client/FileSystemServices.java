@@ -23,10 +23,12 @@ import java.rmi.registry.LocateRegistry;
  * @author Tobias Briones
  */
 public final class FileSystemServices {
+    public static final String HOST = "localhost";
+    private static final int PORT = 1099;
     private static final String SERVICE_NAME = "FileSystemService";
 
     public static FileSystemService obtainService() throws RemoteException, NotBoundException {
-        return (FileSystemService) LocateRegistry.getRegistry()
+        return (FileSystemService) LocateRegistry.getRegistry(HOST, PORT)
                                                  .lookup(SERVICE_NAME);
     }
 
