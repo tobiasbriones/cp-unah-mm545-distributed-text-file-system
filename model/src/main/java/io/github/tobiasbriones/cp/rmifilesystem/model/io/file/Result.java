@@ -16,36 +16,33 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.file;
 import java.util.Optional;
 
 /**
+ * Defines a result sum type which consists of {@link Success} and
+ * {@link Failure}. This implementation is not perfect though because I think
+ * that doing it the Kotlin way is not quite possible but this is the idea.
+ *
  * @author Tobias Briones
  */
-public sealed interface Result<C> {
-    record Success<C>(C content) implements Result<C> {
-        public static <C> Success<C> of(C content) {
+public sealed interface Result<T> {
+    record Success<T>(T value) implements Result<T> {
+        public static <T> Success<T> of(T content) {
             return new Success<>(content);
         }
     }
 
-    record Fail(
-        Optional<String> msg,
-        Optional<Throwable> throwable
-    ) implements Result<Nothing> {
-        public static Fail of() {
-            return of(null, null);
+    record Failure<T>(Optional<Throwable> reason) implements Result<T> {
+        public static<T> Failure<T> of() {
+            return of(null);
         }
 
-        public static Fail of(String msg) {
-            return of(msg, null);
-        }
-
-        public static Fail of(String msg, Throwable throwable) {
-            return new Fail(Optional.ofNullable(msg), Optional.ofNullable(throwable));
+        public static<T> Failure<T> of(Throwable reason) {
+            return new Failure<>(Optional.ofNullable(reason));
         }
 
         @Override
-        public Nothing content() {
-            return Nothing.of();
+        public T value() { // :/
+            return null;
         }
     }
 
-    C content();
+    T value();
 }
