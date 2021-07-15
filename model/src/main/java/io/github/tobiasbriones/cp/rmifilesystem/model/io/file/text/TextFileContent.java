@@ -20,4 +20,7 @@ import static io.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
 /**
  * @author Tobias Briones
  */
-public record TextFileContent(TextFile file, String content) implements FileContent<TextFile, String> {}
+public record TextFileContent(
+    TextFile file,
+    String value
+) implements FileContent<TextFile, String> {}
