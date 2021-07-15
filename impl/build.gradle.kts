@@ -11,12 +11,22 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-rootProject.name = "cp-distributed-text-file-system"
+plugins {
+    java
+}
 
-include(
-    "model",
-    "server",
-    "client",
-    "mvp"
-)
-include("impl")
+group = "io.github.tobiasbriones.cp"
+version = "1.0.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+}
+
+tasks.getByName<Test>("test") {
+    useJUnitPlatform()
+}
