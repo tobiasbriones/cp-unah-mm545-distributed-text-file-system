@@ -17,10 +17,10 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.file;
  * @author Tobias Briones
  */
 public record Nothing() {
-    private static final Nothing INSTANCE = new Nothing();
+    public static final Nothing Nothing = new Nothing();
 
     public static Nothing of() {
-        return INSTANCE;
+        return Nothing;
     }
 
     @Override
