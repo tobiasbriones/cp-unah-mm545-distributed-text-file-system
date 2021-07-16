@@ -18,6 +18,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
@@ -131,7 +132,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
             return;
         }
         try {
-            service.writeTextFile(file, "");
+            service.writeTextFile(new TextFileContent(file, ""));
         }
         catch (IOException e) {
             e.printStackTrace();

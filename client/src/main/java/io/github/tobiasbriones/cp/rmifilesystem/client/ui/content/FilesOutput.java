@@ -18,8 +18,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.files.Files;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
-import javafx.scene.text.Text;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 
 import java.io.IOException;
 import java.util.Map;
@@ -28,10 +29,12 @@ import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.
 
 final class FilesOutput implements Files.Output {
     private final Editor.Input editorInput;
+    private final TextFileRepository textFileRepository;
     private FileSystemService service;
 
     FilesOutput(Editor.Input editorInput) {
         this.editorInput = editorInput;
+        this.textFileRepository = AppLocalFiles.newTextFileRepository();
         this.service = null;
     }
 
@@ -49,10 +52,16 @@ final class FilesOutput implements Files.Output {
     private String loadFile(File.TextFile file) {
         try {
             updateFile(file);
-            return AppLocalFiles.readFile(file).orElse("");
         }
         catch (IOException e) {
             e.printStackTrace();
+            return "";
+        }
+        final var result = textFileRepository.get(file);
+
+        // Waiting for switch pattern matching! for proper monadic result design!
+        if (result instanceof Result.Success<TextFileContent> s) {
+            return s.value().value();
         }
         return "";
     }
@@ -61,8 +70,25 @@ final class FilesOutput implements Files.Output {
         if (service == null) {
             return;
         }
-        final String content = service.readTextFile(file);
-        AppLocalFiles.writeFile(file, content);
+        final Result<TextFileContent> result = service.readTextFile(file);
+
+        if (result instanceof Result.Success<TextFileContent> s) {
+            onFileObtained(s.value());
+        }
+        else {
+            throw new IOException("Fail to update file from service");
+        }
+    }
+
+    private void onFileObtained(TextFileContent content) throws IOException {
+        final File.TextFile file = content.file();
+
+        if (textFileRepository.exists(file)) {
+            textFileRepository.set(content);
+        }
+        else {
+            textFileRepository.add(content);
+        }
         setDownloaded(file);
     }
 

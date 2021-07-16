@@ -13,8 +13,9 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.io;
 
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
+import io.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 
@@ -23,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
@@ -36,7 +36,7 @@ public final class AppLocalFiles {
     private static final String ROOT = System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
 
     public static FileSystem readFs() throws IOException {
-        check();
+        createRootIfNotExists();
         final var file = new java.io.File(ROOT, FS_FILE_NAME);
 
         try (ObjectInput input = new ObjectInputStream(new FileInputStream(file))) {
@@ -49,7 +49,7 @@ public final class AppLocalFiles {
     }
 
     public static Map<File, LastUpdateStatus> readStatuses() throws IOException {
-        check();
+        createRootIfNotExists();
         final Path path = Path.of(ROOT, ".statuses.data");
 
         if (!Files.exists(path)) {
@@ -66,7 +66,7 @@ public final class AppLocalFiles {
     }
 
     public static void saveFs(FileSystem system) throws IOException {
-        check();
+        createRootIfNotExists();
         final var file = new java.io.File(ROOT, FS_FILE_NAME);
 
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
@@ -75,7 +75,7 @@ public final class AppLocalFiles {
     }
 
     public static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws IOException {
-        check();
+        createRootIfNotExists();
         final var file = new java.io.File(ROOT, ".statuses.data");
 
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
@@ -83,48 +83,15 @@ public final class AppLocalFiles {
         }
     }
 
-    public static Optional<String> readFile(File.TextFile file) throws IOException {
-        check();
-        final Path path = CommonPaths.toPath(ROOT, file.path());
-
-        if (Files.exists(path)) {
-            return Optional.ofNullable(Files.readString(path));
-        }
-        return Optional.empty();
+    public static TextFileRepository newTextFileRepository() {
+        return new AppLocalTextFileRepository(Path.of(ROOT));
     }
 
-    public static void writeFile(File.TextFile file, CharSequence content) throws IOException {
-        check();
-        final Path path = CommonPaths.toPath(ROOT, file.path());
-
-        checkFile(path);
-        Files.writeString(path, content);
+    private static void createRootIfNotExists() throws IOException {
+        createDirsIfNotExist(Path.of(ROOT));
     }
 
-    public static void writeDirectory(Directory directory) throws IOException {
-        check();
-        final Path path = CommonPaths.toPath(ROOT, directory.path());
-
-        if (Files.isDirectory(path)) {
-            return;
-        }
-        Files.createDirectories(path);
-    }
-
-    private static void check() throws IOException {
-        checkDirs(Path.of(ROOT));
-    }
-
-    private static void checkFile(Path path) throws IOException {
-        if (!Files.exists(path)) {
-            final Path parent = path.getParent();
-
-            checkDirs(parent);
-            Files.createFile(path);
-        }
-    }
-
-    private static void checkDirs(Path path) throws IOException {
+    private static void createDirsIfNotExist(Path path) throws IOException {
         if (!Files.exists(path) || !Files.isDirectory(path)) {
             Files.createDirectories(path);
         }

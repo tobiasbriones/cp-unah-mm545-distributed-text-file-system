@@ -13,9 +13,13 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.server;
 
+import io.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.model.*;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.*;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 
@@ -26,8 +30,10 @@ import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.function.Consumer;
 
 import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing.Nothing;
 
 /**
  * @author Tobias Briones
@@ -68,10 +74,12 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         return new JavaFile(ROOT, path.value());
     }
 
+    private final Path rootPath;
     private final List<OnFileUpdateListener> clients;
 
     public AppFileSystemService() throws RemoteException {
         super();
+        rootPath = Path.of(ROOT);
         clients = new ArrayList<>(10);
 
         System.out.println("Running on: " + ROOT);
@@ -88,30 +96,42 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public String readTextFile(File.TextFile file) throws IOException {
-        final JavaFile localFile = toLocalFile(file.path());
-        return Files.readString(localFile.toPath());
+    public Result<TextFileContent> readTextFile(File.TextFile file) throws RemoteException {
+        final var repository = new AppLocalTextFileRepository(rootPath);
+        final var result = repository.get(file);
+        return mapResult(result);
     }
 
     @Override
-    public void writeDirectory(Directory directory) throws IOException {
+    public Result<Nothing> writeDirectory(Directory directory) throws RemoteException {
         final JavaFile localFile = toLocalFile(directory.path());
         final Path path = localFile.toPath();
 
-        if (!Files.exists(path)) {
-            Files.createDirectories(path);
-            broadcastFSChange();
+        try {
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+                broadcastFSChange();
+                return Result.Success.of(Nothing);
+            }
         }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Result.Failure.of();
     }
 
     @Override
-    public void writeTextFile(File.TextFile file, String content) throws IOException {
-        final JavaFile localFile = toLocalFile(file.path());
+    public Result<Nothing> writeTextFile(TextFileContent content) throws RemoteException {
+        final File file = content.file();
+        final Path path = toLocalFile(file.path()).toPath();
+        final var repository = new AppLocalTextFileRepository(rootPath);
+        final var result = Files.exists(path) ? repository.set(content) : repository.add(content);
+        final var clientResult = mapResult(result);
 
-        checkFileDirs(toLocalFile(file.path()).toPath());
-        Files.writeString(localFile.toPath(), content);
-        setChanged(file);
-        broadcastFSChange();
+        if (clientResult instanceof Result.Success) {
+            onFileWrote(file);
+        }
+        return clientResult;
     }
 
     @Override
@@ -122,6 +142,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     @Override
     public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
         return clients.remove(l);
+    }
+
+    private void onFileWrote(File file) {
+        try {
+            setChanged(file);
+            broadcastFSChange();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void broadcastFSChange() throws IOException {
@@ -143,6 +173,17 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
             System.out.println(remove.size() + " clients removed and " + clients.size() + " clients remaining");
         }
+    }
+
+    private static <T extends Serializable> Result<T> mapResult(Result<T> result) {
+        final Consumer<Throwable> logFailure = reason -> System.out.println(reason.getMessage()); // Use proper logging
+
+        // Switch pattern matching for Java17 ep+
+        if (result instanceof Result.Failure<T> f) {
+            f.ifPresent(logFailure);
+            return Result.Failure.of();
+        }
+        return result;
     }
 
     private static RealTimeFileSystem loadRealTimeFileSystem() {
@@ -220,21 +261,6 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             output.writeObject(statuses);
-        }
-    }
-
-    // ---------- TEMPORAL
-    private static void checkFileDirs(Path path) throws IOException {
-        if (!Files.exists(path)) {
-            final Path parent = path.getParent();
-
-            checkDirs(parent);
-        }
-    }
-
-    private static void checkDirs(Path path) throws IOException {
-        if (!Files.exists(path) || !Files.isDirectory(path)) {
-            Files.createDirectories(path);
         }
     }
 }

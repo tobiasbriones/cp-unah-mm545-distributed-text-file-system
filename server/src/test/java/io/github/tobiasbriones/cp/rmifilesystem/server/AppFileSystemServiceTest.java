@@ -16,6 +16,8 @@ package io.github.tobiasbriones.cp.rmifilesystem.server;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
@@ -86,10 +88,13 @@ class AppFileSystemServiceTest {
     @DisplayName("Read a specific text file")
     void readFile() throws IOException {
         final var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
-        final var content = service.readTextFile(file);
+        final Result<TextFileContent> contentResult = service.readTextFile(file);
 
-        assertNotNull(content, "Expect the file content is not null");
-        assertThat(content, is(TEXT_FILE_1_CONTENT));
+        assertThat(contentResult instanceof Result.Success, is(true));
+
+        final TextFileContent actual = contentResult.value();
+
+        assertThat(actual.value(), is(TEXT_FILE_1_CONTENT));
     }
 
     @Test
@@ -109,16 +114,17 @@ class AppFileSystemServiceTest {
     @DisplayName("Write to a specific text file")
     void writeFile() throws IOException {
         final var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
-        final var content = "New file content";
+        final var contentValue = "New file content";
+        final var content = new TextFileContent(file, contentValue);
 
-        service.writeTextFile(file, content);
-        final String newContent = service.readTextFile(file);
+        service.writeTextFile(content);
+        final Result<TextFileContent> newContentResult = service.readTextFile(file);
 
-        assertNotNull(
-            newContent,
-            "Expect the new file content is null"
-        );
-        assertThat(newContent, is(content));
+        assertThat(newContentResult instanceof Result.Success, is(true));
+
+        final TextFileContent actual = newContentResult.value();
+
+        assertThat(actual, is(content));
     }
 
     private static void prepareFsRoot(java.io.File root) {

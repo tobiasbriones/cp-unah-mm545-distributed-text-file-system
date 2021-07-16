@@ -15,6 +15,9 @@ package io.github.tobiasbriones.cp.rmifilesystem.client.ui.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.io.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
@@ -25,12 +28,14 @@ import java.io.IOException;
  */
 final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor.Presenter {
     private final Editor.View view;
+    private final TextFileRepository textFileRepository;
     private FileSystemService service;
     private File.TextFile currentFile;
 
     EditorPresenter(Editor.View view) {
         super();
         this.view = view;
+        this.textFileRepository = AppLocalFiles.newTextFileRepository();
         this.service = null;
         this.currentFile = null;
     }
@@ -69,10 +74,14 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
             return;
         }
         try {
-            final String content = service.readTextFile(currentFile);
+            final Result<TextFileContent> result = service.readTextFile(currentFile);
 
-            AppLocalFiles.writeFile(currentFile, content);
-            setCurrentFile(content);
+            if (result instanceof Result.Success<TextFileContent> s) {
+                final TextFileContent content = s.value();
+
+                textFileRepository.set(content);
+                setCurrentFile(content.value());
+            }
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -89,7 +98,7 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
             return;
         }
         try {
-            service.writeTextFile(currentFile, content);
+            service.writeTextFile(new TextFileContent(currentFile, content));
         }
         catch (IOException e) {
             e.printStackTrace();
