@@ -57,13 +57,13 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public void onCreateButtonClick() {
-        final String fileName = view.getCreateInputText();
-        final Optional<CommonPath> path = CommonPath.of(fileName);
+        final String pathValue = view.getCreateInputText();
+        final Optional<CommonPath> path = CommonPath.of(pathValue);
 
         if (path.isEmpty()) {
             return;
         }
-        if (fileName.endsWith(".txt")) {
+        if (pathValue.endsWith(".txt")) {
             createNewFile(new TextFile(path.get()));
         }
         else {
@@ -85,13 +85,23 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     @Override
     public void onNewFileAction(DirectoryNode node) {
         final String newFileName = showInputDialog("Create new file");
-        System.out.println(newFileName);
+
+        if (!newFileName.endsWith(".txt") || newFileName.contains(CommonPath.SEPARATOR)) {
+            return;
+        }
+        final CommonPath path = CommonPath.of(node.commonPath(), new CommonPath(newFileName));
+        final TextFile file = new File.TextFile(path);
+
+        createNewFile(file);
     }
 
     @Override
     public void onNewDirectoryAction(DirectoryNode node) {
-        final String newFileName = showInputDialog("Create new directory");
-        System.out.println(newFileName);
+        final String newDirName = showInputDialog("Create new directory");
+        final CommonPath path = CommonPath.of(node.commonPath(), new CommonPath(newDirName));
+        final Directory directory = Directory.of(path);
+
+        createNewDir(directory);
     }
 
     @Override
