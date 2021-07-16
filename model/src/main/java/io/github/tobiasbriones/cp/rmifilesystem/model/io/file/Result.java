@@ -13,7 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.file;
 
-import java.util.Optional;
+import java.io.Serializable;
+import java.util.function.Consumer;
 
 /**
  * Defines a result sum type which consists of {@link Success} and
@@ -22,25 +23,32 @@ import java.util.Optional;
  *
  * @author Tobias Briones
  */
-public sealed interface Result<T> {
-    record Success<T>(T value) implements Result<T> {
-        public static <T> Success<T> of(T content) {
+public sealed interface Result<T extends Serializable> extends Serializable {
+    record Success<T extends Serializable>(T value) implements Result<T> {
+        public static <T extends Serializable> Success<T> of(T content) {
             return new Success<>(content);
         }
     }
 
-    record Failure<T>(Optional<Throwable> reason) implements Result<T> {
-        public static<T> Failure<T> of() {
+    record Failure<T extends Serializable>(Throwable reason) implements Result<T> {
+        public static<T extends Serializable> Failure<T> of() {
             return of(null);
         }
 
-        public static<T> Failure<T> of(Throwable reason) {
-            return new Failure<>(Optional.ofNullable(reason));
+        public static<T extends Serializable> Failure<T> of(Throwable reason) {
+            final Throwable nonNullReason = reason == null ? new RuntimeException("") : reason;
+            return new Failure<>(nonNullReason);
         }
 
         @Override
         public T value() { // :/
             return null;
+        }
+
+        public void ifPresent(Consumer<? super Throwable> consumer) {
+            if (!reason.getMessage().isBlank()) {
+                consumer.accept(reason);
+            }
         }
     }
 

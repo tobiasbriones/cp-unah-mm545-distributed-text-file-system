@@ -15,13 +15,15 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io.file;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 
+import java.io.Serializable;
+
 /**
  * Defines the {@link CommonFile}'s content. The content might be a String for a
  * text file for example.
  *
  * @author Tobias Briones
  */
-public interface FileContent<T extends CommonFile, C> {
+public interface FileContent<T extends CommonFile, C> extends Serializable {
     /**
      * Returns the file for which this content belongs to.
      *

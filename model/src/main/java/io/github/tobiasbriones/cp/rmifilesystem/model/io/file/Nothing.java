@@ -13,10 +13,12 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model.io.file;
 
+import java.io.Serializable;
+
 /**
  * @author Tobias Briones
  */
-public record Nothing() {
+public record Nothing() implements Serializable {
     public static final Nothing Nothing = new Nothing();
 
     public static Nothing of() {
