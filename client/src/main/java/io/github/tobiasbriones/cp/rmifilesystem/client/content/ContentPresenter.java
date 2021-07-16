@@ -11,28 +11,23 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem.client;
+package io.github.tobiasbriones.cp.rmifilesystem.client.content;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
 
 /**
  * @author Tobias Briones
  */
-public final class Main extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
+final class ContentPresenter extends AbstractMvpPresenter<Void> implements Content.Presenter {
+    private final Content.View view;
 
-    private final App app;
-
-    public Main() {
+    ContentPresenter(Content.View view) {
         super();
-        app = App.newInstance();
+        this.view = view;
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        app.start(primaryStage);
+    public void init() {
+        view.createView();
     }
 }

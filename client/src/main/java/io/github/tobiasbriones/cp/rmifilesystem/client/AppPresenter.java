@@ -13,26 +13,25 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
+import io.github.tobiasbriones.cp.rmifilesystem.client.header.Header;
 
 /**
  * @author Tobias Briones
  */
-public final class Main extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
+final class AppPresenter extends AbstractMvpPresenter<Void> implements App.Presenter {
+    private final App.View view;
+    private final Header.Input headerInput;
 
-    private final App app;
-
-    public Main() {
+    AppPresenter(App.View view, Header.Input headerInput) {
         super();
-        app = App.newInstance();
+        this.view = view;
+        this.headerInput = headerInput;
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        app.start(primaryStage);
+    public void init() {
+        view.createView();
+        headerInput.setUser("Unknown user");
     }
 }
