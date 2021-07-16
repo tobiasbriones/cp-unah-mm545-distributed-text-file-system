@@ -34,6 +34,7 @@ dependencies {
 
     implementation("org.hamcrest:hamcrest:2.2")
     implementation(project(":model"))
+    implementation(project(":impl"))
 }
 
 tasks.getByName<Test>("test") {

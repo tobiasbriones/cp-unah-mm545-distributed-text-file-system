@@ -17,6 +17,7 @@
 module io.github.tobiasbriones.cp.rmifilesystem.server {
     requires java.rmi;
     requires io.github.tobiasbriones.cp.rmifilesystem.model;
+    requires io.github.tobiasbriones.cp.rmifilesystem.impl;
 
     exports io.github.tobiasbriones.cp.rmifilesystem.server;
 }

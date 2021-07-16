@@ -13,7 +13,8 @@
 
 rootProject.name = "client"
 
-include("model", "mvp")
+include("model", "impl", "mvp")
 
 project(":model").projectDir = file("../model")
+project(":impl").projectDir = file("../impl")
 project(":mvp").projectDir = file("../mvp")

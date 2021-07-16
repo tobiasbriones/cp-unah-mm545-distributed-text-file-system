@@ -13,6 +13,7 @@
 
 rootProject.name = "server"
 
-include("model")
+include("model", "impl")
 
 project(":model").projectDir = file("../model")
+project(":impl").projectDir = file("../impl")
