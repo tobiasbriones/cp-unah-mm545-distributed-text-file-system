@@ -15,6 +15,8 @@ package io.github.tobiasbriones.cp.rmifilesystem.model.io;
 
 import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -68,6 +70,20 @@ public record CommonPath(String value) implements Serializable {
 
     public static Optional<CommonPath> of(String value) {
         return Optional.of(value).filter(CommonPath::isValid).map(CommonPath::new);
+    }
+
+    public static CommonPath of(CommonPath... paths) {
+        final String value = Arrays.stream(paths)
+                                   .map(CommonPath::split)
+                                   .map(Arrays::asList)
+                                   .flatMap(Collection::stream)
+                                   .reduce("", (s1, s2) -> s1 + SEPARATOR + s2)
+                                   .substring(1);
+
+        if (value.equals(SEPARATOR) || value.startsWith(SEPARATOR + SEPARATOR)) {
+            return of();
+        }
+        return new CommonPath(value);
     }
 
     private static boolean isValid(CharSequence value) {
