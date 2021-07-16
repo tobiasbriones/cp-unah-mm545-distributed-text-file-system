@@ -24,6 +24,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 
 import java.io.*;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.ConnectException;
@@ -132,6 +133,28 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
             onFileWrote(file);
         }
         return clientResult;
+    }
+
+    @Override
+    public Result<Nothing> deleteFile(CommonFile file) throws RemoteException {
+        final Path path = toLocalFile(file.path()).toPath();
+
+        if (!Files.exists(path)) {
+            return Result.Failure.of(new IOException("File doesn't exist"));
+        }
+
+        try {
+            Files.delete(path);
+            broadcastFSChange();
+        }
+        catch (DirectoryNotEmptyException e) {
+            return Result.Failure.of(new IOException("Directory not empty"));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return Result.Failure.of();
+        }
+        return Result.Success.of(Nothing);
     }
 
     @Override

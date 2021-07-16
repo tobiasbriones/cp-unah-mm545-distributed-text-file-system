@@ -69,6 +69,15 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     }
 
     @Override
+    public void closeFile(File.TextFile file) {
+        if (file == currentFile) {
+            currentFile = null;
+            view.setWorkingFile("");
+            view.setContent("");
+        }
+    }
+
+    @Override
     public void update() {
         if (currentFile == null) {
             return;

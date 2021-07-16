@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.model;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
@@ -44,6 +45,8 @@ public interface FileSystemService extends Remote {
     Result<Nothing> writeDirectory(Directory directory) throws RemoteException;
 
     Result<Nothing> writeTextFile(TextFileContent content) throws RemoteException;
+
+    Result<Nothing> deleteFile(CommonFile file) throws RemoteException;
 
     boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 

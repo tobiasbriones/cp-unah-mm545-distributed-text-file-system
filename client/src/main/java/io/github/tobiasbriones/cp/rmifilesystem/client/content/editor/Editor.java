@@ -27,6 +27,8 @@ public final class Editor implements Initializable {
     public interface Input {
         void setWorkingFile(File.TextFile file, String content);
 
+        void closeFile(File.TextFile file);
+
         void update();
     }
 

@@ -45,6 +45,11 @@ final class FilesOutput implements Files.Output {
         editorInput.setWorkingFile(file, content);
     }
 
+    @Override
+    public void onCloseFile(File.TextFile file) {
+        editorInput.closeFile(file);
+    }
+
     void setService(FileSystemService value) {
         service = value;
     }

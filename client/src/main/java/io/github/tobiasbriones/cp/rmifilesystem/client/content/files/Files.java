@@ -34,6 +34,8 @@ public final class Files implements Initializable {
 
     public interface Output {
         void onOpenFile(File.TextFile file);
+
+        void onCloseFile(File.TextFile file);
     }
 
     interface Controller {

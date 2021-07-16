@@ -18,8 +18,11 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
@@ -29,6 +32,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -106,7 +110,10 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public void onDeleteAction(Node<?> node) {
-        System.out.println("Delete " + node);
+        if (node instanceof FileNode fn && fn.commonFile() instanceof TextFile f) {
+            getOutput().ifPresent(output -> output.onCloseFile(f));
+        }
+        delete(node.commonFile());
     }
 
     @Override
@@ -144,7 +151,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         try {
             service.writeTextFile(new TextFileContent(file, ""));
         }
-        catch (IOException e) {
+        catch (RemoteException e) {
             e.printStackTrace();
         }
     }
@@ -156,7 +163,23 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         try {
             service.writeDirectory(directory);
         }
-        catch (IOException e) {
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void delete(CommonFile commonFile) {
+        if (service == null) {
+            return;
+        }
+        try {
+            final var result = service.deleteFile(commonFile);
+
+            if (result instanceof Result.Failure<Nothing> f) {
+                f.ifPresent(throwable -> System.out.println(throwable.getMessage()));
+            }
+        }
+        catch (RemoteException e) {
             e.printStackTrace();
         }
     }
