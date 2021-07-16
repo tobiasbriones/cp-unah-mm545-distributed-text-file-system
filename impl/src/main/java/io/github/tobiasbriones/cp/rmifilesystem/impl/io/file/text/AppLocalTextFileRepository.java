@@ -99,6 +99,12 @@ public class AppLocalTextFileRepository implements TextFileRepository {
         }
     }
 
+    @Override
+    public boolean exists(TextFile file) {
+        final Path path = CommonPaths.toPath(root, file.path());
+        return Files.exists(path);
+    }
+
     private void createRootIfNotExists() throws IOException {
         createDirsIfNotExists(root);
     }

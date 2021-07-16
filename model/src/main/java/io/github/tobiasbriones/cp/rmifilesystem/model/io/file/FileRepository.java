@@ -34,4 +34,6 @@ public interface FileRepository<F extends CommonFile, C extends FileContent<F, ?
     Result<Nothing> add(C content);
 
     Result<Nothing> remove(F file);
+
+    boolean exists(F file);
 }
