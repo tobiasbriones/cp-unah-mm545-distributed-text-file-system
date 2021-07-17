@@ -15,6 +15,7 @@ package io.github.tobiasbriones.cp.rmifilesystem.client.content;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
@@ -47,8 +48,11 @@ public final class Content implements Initializable {
     }
 
     public static Content newInstance() {
+        final TextFileRepository repository = AppLocalFiles.newTextFileRepository();
         final var config = new ChildrenConfig(
-            Files.newInstance(),
+            Files.newInstance(
+                new Files.DependencyConfig(repository)
+            ),
             Editor.newInstance()
         );
         return new Content(config);
@@ -97,8 +101,6 @@ public final class Content implements Initializable {
 
     public void setService(FileSystemService value) {
         service = value;
-        files.setService(value);
-        editor.setService(value);
         filesOutput.setService(value);
         bindServiceListener();
         updateLocalFs(service); // should be async

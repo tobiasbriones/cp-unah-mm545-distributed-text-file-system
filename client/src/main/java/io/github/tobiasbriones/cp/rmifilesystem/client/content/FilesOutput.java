@@ -17,12 +17,15 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.client.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.client.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.client.content.files.Files;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Map;
 
 import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
@@ -48,6 +51,37 @@ final class FilesOutput implements Files.Output {
     @Override
     public void onCloseFile(File.TextFile file) {
         editorInput.closeFile(file);
+    }
+
+    @Override
+    public void onFileCreated(CommonFile file) {
+        if (service == null) {
+            return;
+        }
+        try {
+            if (file instanceof Directory d) {
+                service.writeDirectory(d);
+            }
+            else if (file instanceof File.TextFile f) {
+                service.writeTextFile(new TextFileContent(f, ""));
+            }
+        }
+        catch(RemoteException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFileDeleted(CommonFile file) {
+        if (service == null) {
+            return;
+        }
+        try {
+            service.deleteFile(file);
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     void setService(FileSystemService value) {

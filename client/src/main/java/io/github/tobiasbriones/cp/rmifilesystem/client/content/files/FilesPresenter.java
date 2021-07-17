@@ -21,18 +21,17 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
-import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -41,13 +40,13 @@ import java.util.function.Supplier;
  */
 final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements Files.Presenter {
     private final Files.View view;
-    private FileSystemService service;
+    private final TextFileRepository repository;
     private FileSystem fs;
 
-    FilesPresenter(Files.View view) {
+    FilesPresenter(Files.View view, TextFileRepository repository) {
         super();
         this.view = view;
-        service = null;
+        this.repository = repository;
         fs = null;
     }
 
@@ -127,11 +126,6 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     @Override
-    public void setService(FileSystemService value) {
-        service = value;
-    }
-
-    @Override
     public void update() {
         try {
             fs = AppLocalFiles.readFs();
@@ -145,42 +139,45 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     private void createNewFile(TextFile file) {
-        if (service == null) {
-            return;
+        final var result = repository.add(new TextFileContent(file, ""));
+
+        if (result instanceof Result.Failure<Nothing> f) {
+            f.ifPresent(System.out::println);
         }
-        try {
-            service.writeTextFile(new TextFileContent(file, ""));
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
+        else {
+            getOutput().ifPresent(output -> output.onFileCreated(file));
         }
     }
 
     private void createNewDir(Directory directory) {
-        if (service == null) {
-            return;
-        }
         try {
-            service.writeDirectory(directory);
+            AppLocalFiles.createDirectory(directory);
+            getOutput().ifPresent(output -> output.onFileCreated(directory));
         }
-        catch (RemoteException e) {
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void delete(CommonFile commonFile) {
-        if (service == null) {
-            return;
-        }
-        try {
-            final var result = service.deleteFile(commonFile);
-
-            if (result instanceof Result.Failure<Nothing> f) {
-                f.ifPresent(throwable -> System.out.println(throwable.getMessage()));
+        if (commonFile instanceof Directory d) {
+            try {
+                AppLocalFiles.deleteDirectory(d);
+                getOutput().ifPresent(output -> output.onFileDeleted(d));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        catch (RemoteException e) {
-            e.printStackTrace();
+        else if (commonFile instanceof TextFile f){
+            final var result = repository.remove(f);
+
+            if (result instanceof Result.Failure<Nothing> fail) {
+                fail.ifPresent(System.out::println);
+            }
+            else {
+                getOutput().ifPresent(output -> output.onFileDeleted(f));
+            }
         }
     }
 
