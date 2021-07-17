@@ -87,6 +87,20 @@ public final class AppLocalFiles {
         }
     }
 
+    public static void addToChangeList(File file) throws IOException {
+        final Set<File> changelist = readChangelist();
+
+        changelist.add(file);
+        saveChanglist(changelist);
+    }
+
+    public static void removeFromChangeList(File file) throws IOException {
+        final Set<File> changelist = readChangelist();
+
+        changelist.remove(file);
+        saveChanglist(changelist);
+    }
+
     public static Set<File> readChangelist() throws IOException {
         createRootIfNotExists();
         final Path path = Path.of(ROOT, ".changelist.data");
