@@ -23,7 +23,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
@@ -80,6 +82,32 @@ public final class AppLocalFiles {
 
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
             output.writeObject(statuses);
+        }
+    }
+
+    public static Set<File> readChangelist() throws IOException {
+        createRootIfNotExists();
+        final Path path = Path.of(ROOT, ".changelist.data");
+
+        if (!Files.exists(path)) {
+            return new HashSet<>(0);
+        }
+
+        try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+            return (Set<File>) input.readObject();
+        }
+        catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return new HashSet<>(0);
+        }
+    }
+
+    public static void saveChanglist(Set<File> changelist) throws IOException {
+        createRootIfNotExists();
+        final var file = new java.io.File(ROOT, ".changelist.data");
+
+        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+            output.writeObject(changelist);
         }
     }
 
