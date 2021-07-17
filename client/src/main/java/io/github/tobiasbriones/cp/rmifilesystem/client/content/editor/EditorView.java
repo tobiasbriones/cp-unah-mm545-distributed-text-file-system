@@ -30,12 +30,16 @@ final class EditorView extends VBox implements Editor.View {
     private final Label fileLabel;
     private final TextArea contentArea;
     private final Button saveButton;
+    private final Button pushButton;
+    private final Button pullButton;
 
     EditorView() {
         super();
         fileLabel = new Label();
         contentArea = new TextArea();
         saveButton = new Button();
+        pushButton = new Button();
+        pullButton = new Button();
     }
 
     @Override
@@ -45,14 +49,26 @@ final class EditorView extends VBox implements Editor.View {
 
     @Override
     public void createView() {
-        final var actionPane = new HBox();
+        final var actionPane = new VBox();
+        final var servicePane = new HBox();
 
         fileLabel.setPadding(new Insets(0, 0, 8, 0));
         fileLabel.setStyle("-fx-font-weight: bold;-fx-font-size:16px;");
         saveButton.setText("Save");
         saveButton.setPrefWidth(SAVE_BUTTON_WIDTH);
 
-        actionPane.getChildren().addAll(saveButton);
+        pushButton.setText("Push");
+        pushButton.setPrefWidth(SAVE_BUTTON_WIDTH / 2 - 4);
+
+        pullButton.setText("Pull");
+        pullButton.setPrefWidth(SAVE_BUTTON_WIDTH / 2 - 4);
+
+        servicePane.getChildren().addAll(pushButton, pullButton);
+        servicePane.setAlignment(Pos.CENTER_RIGHT);
+        servicePane.setPadding(new Insets(8, 0, 8, 0));
+        servicePane.setSpacing(8);
+
+        actionPane.getChildren().addAll(saveButton, servicePane);
         actionPane.setAlignment(Pos.CENTER_RIGHT);
         actionPane.setPadding(new Insets(8, 0, 8, 0));
 
@@ -66,6 +82,8 @@ final class EditorView extends VBox implements Editor.View {
     @Override
     public void bindEvents(Editor.Controller controller) {
         saveButton.setOnMouseClicked(event -> controller.onSaveButtonClick());
+        pushButton.setOnMouseClicked(event -> controller.onPushButtonClick());
+        pullButton.setOnMouseClicked(event -> controller.onPullButtonClick());
     }
 
     @Override

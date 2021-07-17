@@ -43,6 +43,7 @@ public final class Content implements Initializable {
 
     interface Presenter extends MvpPresenter<Void> {}
 
+    @FunctionalInterface
     interface OnLocalFsChangeListener {
         void update();
     }
@@ -53,9 +54,11 @@ public final class Content implements Initializable {
             Files.newInstance(
                 new Files.DependencyConfig(repository)
             ),
-            Editor.newInstance()
+            Editor.newInstance(
+                new Editor.DependencyConfig(repository)
+            )
         );
-        return new Content(config);
+        return new Content(config, repository);
     }
 
     record ChildrenConfig(
@@ -80,16 +83,21 @@ public final class Content implements Initializable {
     private final Files files;
     private final Editor editor;
     private final FilesOutput filesOutput;
+    private final EditorOutput editorOutput;
     private final OnLocalFsChangeListener l;
     private FileSystemService service;
     private OnFileUpdateListener client;
 
-    private Content(ChildrenConfig config) {
+    private Content(
+        ChildrenConfig config,
+        TextFileRepository repository
+    ) {
         view = new ContentView(config.newViewConfig());
         presenter = new ContentPresenter(view);
         files = config.files();
         editor = config.editor();
-        filesOutput = new FilesOutput(editor.getInput());
+        filesOutput = new FilesOutput(files.getInput(), editor.getInput(), repository);
+        editorOutput = new EditorOutput(files.getInput(), editor.getInput(), repository);
         l = this::update;
         service = null;
         client = null;
@@ -102,8 +110,10 @@ public final class Content implements Initializable {
     public void setService(FileSystemService value) {
         service = value;
         filesOutput.setService(value);
+        editorOutput.setService(value);
         bindServiceListener();
         updateLocalFs(service); // should be async
+        update();
     }
 
     @Override
@@ -123,13 +133,13 @@ public final class Content implements Initializable {
     }
 
     private void update() {
-        System.out.println("UPDATE");
         files.getInput().update();
         editor.getInput().update();
     }
 
     private void setOutputs() {
         files.setOutput(filesOutput);
+        editor.setOutput(editorOutput);
     }
 
     private void bindServiceListener() {
@@ -142,7 +152,7 @@ public final class Content implements Initializable {
         }
     }
 
-    private static void updateLocalFs(FileSystemService service) {
+    static void updateLocalFs(FileSystemService service) {
         try {
             final RealTimeFileSystem system = service.getRealTimeFileSystem();
             final Map<File, LastUpdateStatus> statuses = AppLocalFiles.readStatuses();

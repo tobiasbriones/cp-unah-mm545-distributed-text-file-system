@@ -53,6 +53,8 @@ public final class Files implements Initializable {
         void onDeleteAction(Node<?> node);
 
         FileSystem.Status getStatus(File file); // place this here temporarily
+
+        boolean isInChangelist(File file); // place this here temporarily
     }
 
     interface View extends MvpView<Controller> {

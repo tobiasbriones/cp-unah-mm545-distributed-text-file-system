@@ -26,18 +26,17 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepos
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.Map;
-
-import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 final class FilesOutput implements Files.Output {
+    private final Files.Input filesInput;
     private final Editor.Input editorInput;
-    private final TextFileRepository textFileRepository;
+    private final TextFileRepository repository;
     private FileSystemService service;
 
-    FilesOutput(Editor.Input editorInput) {
+    FilesOutput(Files.Input filesInput, Editor.Input editorInput, TextFileRepository repository) {
+        this.filesInput = filesInput;
         this.editorInput = editorInput;
-        this.textFileRepository = AppLocalFiles.newTextFileRepository();
+        this.repository = repository;
         this.service = null;
     }
 
@@ -63,10 +62,13 @@ final class FilesOutput implements Files.Output {
                 service.writeDirectory(d);
             }
             else if (file instanceof File.TextFile f) {
-                service.writeTextFile(new TextFileContent(f, ""));
+                final var content = new TextFileContent(f, "");
+
+                service.writeTextFile(content);
+                onFileObtained(content);
             }
         }
-        catch(RemoteException e){
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -89,14 +91,7 @@ final class FilesOutput implements Files.Output {
     }
 
     private String loadFile(File.TextFile file) {
-        try {
-            updateFile(file);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        }
-        final var result = textFileRepository.get(file);
+        final Result<TextFileContent> result = repository.get(file);
 
         // Waiting for switch pattern matching! for proper monadic result design!
         if (result instanceof Result.Success<TextFileContent> s) {
@@ -105,37 +100,18 @@ final class FilesOutput implements Files.Output {
         return "";
     }
 
-    private void updateFile(File.TextFile file) throws IOException {
-        if (service == null) {
-            return;
-        }
-        final Result<TextFileContent> result = service.readTextFile(file);
-
-        if (result instanceof Result.Success<TextFileContent> s) {
-            onFileObtained(s.value());
-        }
-        else {
-            throw new IOException("Fail to update file from service");
-        }
-    }
-
     private void onFileObtained(TextFileContent content) throws IOException {
         final File.TextFile file = content.file();
 
-        if (textFileRepository.exists(file)) {
-            textFileRepository.set(content);
+        if (repository.exists(file)) {
+            repository.set(content);
         }
         else {
-            textFileRepository.add(content);
+            repository.add(content);
         }
-        setDownloaded(file);
-    }
-
-    private static void setDownloaded(File file) throws IOException {
-        final Map<File, LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
-        final LastUpdateStatus status = LastUpdateStatus.of(file);
-
-        statuses.put(file, status);
-        AppLocalFiles.saveStatuses(statuses);
+        AppLocalFiles.setDownloaded(file);
+        Content.updateLocalFs(service);
+        filesInput.update();
+        editorInput.update();
     }
 }

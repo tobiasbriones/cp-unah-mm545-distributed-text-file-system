@@ -145,7 +145,7 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
         try {
             Files.delete(path);
-            broadcastFSChange();
+            onFileDeleted(file);
         }
         catch (DirectoryNotEmptyException e) {
             return Result.Failure.of(new IOException("Directory not empty"));
@@ -175,6 +175,13 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void onFileDeleted(CommonFile file) throws IOException {
+        if (file instanceof File.TextFile f) {
+            deleteFileStatus(f);
+        }
+        broadcastFSChange();
     }
 
     private void broadcastFSChange() throws IOException {
@@ -260,7 +267,15 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         final Map<File, LastUpdateStatus> statuses = loadStatuses();
         final LastUpdateStatus status = LastUpdateStatus.of(file);
 
+        // TODO files are coming file.txt not like /file.txt hence deleteFileStatus won't work!!!
         statuses.put(file, status);
+        saveStatuses(statuses);
+    }
+
+    private static void deleteFileStatus(File file) throws IOException {
+        final Map<File, LastUpdateStatus> statuses = loadStatuses();
+
+        statuses.remove(file);
         saveStatuses(statuses);
     }
 

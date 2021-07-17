@@ -15,28 +15,26 @@ package io.github.tobiasbriones.cp.rmifilesystem.client.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
-import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
 import java.io.IOException;
 
 /**
  * @author Tobias Briones
  */
-final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor.Presenter {
+final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implements Editor.Presenter {
     private final Editor.View view;
-    private final TextFileRepository textFileRepository;
-    private FileSystemService service;
+    private final TextFileRepository repository;
     private File.TextFile currentFile;
 
-    EditorPresenter(Editor.View view) {
+    EditorPresenter(Editor.View view, TextFileRepository repository) {
         super();
         this.view = view;
-        this.textFileRepository = AppLocalFiles.newTextFileRepository();
-        this.service = null;
+        this.repository = repository;
         this.currentFile = null;
     }
 
@@ -47,15 +45,24 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     }
 
     @Override
-    public void setService(FileSystemService value) {
-        service = value;
+    public void onPushButtonClick() {
+        if (currentFile == null) {
+            return;
+        }
+        onSaveButtonClick();
+        getOutput().ifPresent(output -> output.onPush(currentFile));
+    }
+
+    @Override
+    public void onPullButtonClick() {
+        if (currentFile == null) {
+            return;
+        }
+        getOutput().ifPresent(output -> output.onPull(currentFile));
     }
 
     @Override
     public void onSaveButtonClick() {
-        if (service == null || currentFile == null) {
-            return;
-        }
         final String content = view.getContent();
 
         saveContent(content);
@@ -65,49 +72,64 @@ final class EditorPresenter extends AbstractMvpPresenter<Void> implements Editor
     public void setWorkingFile(File.TextFile file, String content) {
         currentFile = file;
 
-        setCurrentFile(content);
+        setCurrentFileContent(content);
     }
 
     @Override
     public void closeFile(File.TextFile file) {
-        if (file == currentFile) {
-            currentFile = null;
-            view.setWorkingFile("");
-            view.setContent("");
+        if (file.equals(currentFile)) {
+            clear();
         }
     }
 
     @Override
     public void update() {
         if (currentFile == null) {
+            clear();
             return;
         }
-        try {
-            final Result<TextFileContent> result = service.readTextFile(currentFile);
+        final Result<TextFileContent> result = repository.get(currentFile);
 
-            if (result instanceof Result.Success<TextFileContent> s) {
-                final TextFileContent content = s.value();
+        if (result instanceof Result.Success<TextFileContent> s) {
+            final TextFileContent content = s.value();
 
-                textFileRepository.set(content);
-                setCurrentFile(content.value());
-            }
+            setCurrentFileContent(content.value());
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        else if (result instanceof Result.Failure<TextFileContent> f) {
+            f.ifPresent(System.out::println);
         }
     }
 
-    private void setCurrentFile(String content) {
+    private void setCurrentFileContent(String content) {
         view.setWorkingFile(currentFile.name());
         view.setContent(content);
+    }
+
+    private void clear() {
+        currentFile = null;
+
+        view.setWorkingFile("");
+        view.setContent("");
     }
 
     private void saveContent(String content) {
         if (currentFile == null) {
             return;
         }
+        final Result<Nothing> result = repository.set(new TextFileContent(currentFile, content));
+
+        if (result instanceof Result.Success<Nothing>) {
+            addToChangeList();
+        }
+        else if(result instanceof Result.Failure<Nothing> f) {
+            f.ifPresent(System.out::println);
+        }
+    }
+
+    private void addToChangeList() {
         try {
-            service.writeTextFile(new TextFileContent(currentFile, content));
+            AppLocalFiles.addToChangeList(currentFile);
+            getOutput().ifPresent(output -> output.onFileAddedToChangelist(currentFile));
         }
         catch (IOException e) {
             e.printStackTrace();

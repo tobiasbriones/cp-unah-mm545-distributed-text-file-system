@@ -32,7 +32,9 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -41,12 +43,14 @@ import java.util.function.Supplier;
 final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements Files.Presenter {
     private final Files.View view;
     private final TextFileRepository repository;
+    private Set<File> changelist;
     private FileSystem fs;
 
     FilesPresenter(Files.View view, TextFileRepository repository) {
         super();
         this.view = view;
         this.repository = repository;
+        changelist = new HashSet<>(0);
         fs = null;
     }
 
@@ -126,9 +130,15 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     @Override
+    public boolean isInChangelist(File file) {
+        return changelist.contains(file);
+    }
+
+    @Override
     public void update() {
         try {
             fs = AppLocalFiles.readFs();
+            changelist = AppLocalFiles.readChangelist();
 
             view.clear();
             view.setRoot(fs.getRoot());

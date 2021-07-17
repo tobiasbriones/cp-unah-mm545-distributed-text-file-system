@@ -137,6 +137,7 @@ final class FilesView extends VBox implements Files.View {
         @Override
         public void updateItem(Node<?> item, boolean empty) {
             super.updateItem(item, empty);
+            var styles = "";
 
             if (empty) {
                 setStyle("");
@@ -152,12 +153,31 @@ final class FilesView extends VBox implements Files.View {
 
                 if (file instanceof File f) {
                     final boolean isInvalid = controller.getStatus(f).isInvalid();
+                    final boolean isInChangelist = controller.isInChangelist(f);
 
                     if (isInvalid) {
-                        setStyle("-fx-text-fill: #757575;");
+                        if (isInChangelist) {
+                            styles += "-fx-text-fill: #E64A19;"; // red
+                        }
+                        else {
+                            styles += "-fx-text-fill: #757575;"; // grey
+                        }
+                    }
+                    else {
+                        if (isInChangelist) {
+                            styles += "-fx-text-fill: #1976D2;"; // blue
+                        }
                     }
                 }
             }
+
+            if (isSelected()) {
+                styles += "-fx-background-color: #64B5F6;";
+            }
+            else {
+                styles += "-fx-background-color: none;";
+            }
+            setStyle(styles);
         }
 
         void setText(CommonFile file) {

@@ -14,16 +14,18 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.content.editor;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
-import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import javafx.scene.Node;
 
 /**
  * @author Tobias Briones
  */
 public final class Editor implements Initializable {
+    public record DependencyConfig(TextFileRepository repository) {}
+
     public interface Input {
         void setWorkingFile(File.TextFile file, String content);
 
@@ -32,7 +34,19 @@ public final class Editor implements Initializable {
         void update();
     }
 
+    public interface Output {
+        void onFileAddedToChangelist(File file);
+
+        void onPush(File file);
+
+        void onPull(File file);
+    }
+
     interface Controller {
+        void onPushButtonClick();
+
+        void onPullButtonClick();
+
         void onSaveButtonClick();
     }
 
@@ -44,20 +58,18 @@ public final class Editor implements Initializable {
         void setContent(String value);
     }
 
-    interface Presenter extends MvpPresenter<Void>, Controller, Input {
-        void setService(FileSystemService value);
-    }
+    interface Presenter extends MvpPresenter<Output>, Controller, Input {}
 
-    public static Editor newInstance() {
-        return new Editor();
+    public static Editor newInstance(DependencyConfig config) {
+        return new Editor(config);
     }
 
     private final View view;
     private final Presenter presenter;
 
-    private Editor() {
+    private Editor(DependencyConfig config) {
         view = new EditorView();
-        presenter = new EditorPresenter(view);
+        presenter = new EditorPresenter(view, config.repository());
     }
 
     public Node getView() {
@@ -68,8 +80,8 @@ public final class Editor implements Initializable {
         return presenter;
     }
 
-    public void setService(FileSystemService value) {
-        presenter.setService(value);
+    public void setOutput(Output value) {
+        presenter.setOutput(value);
     }
 
     @Override
