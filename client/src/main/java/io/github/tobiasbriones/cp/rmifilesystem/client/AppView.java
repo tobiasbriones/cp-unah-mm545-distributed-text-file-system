@@ -25,12 +25,14 @@ final class AppView extends VBox implements App.View {
     private final Node menu;
     private final Node header;
     private final Node content;
+    private final Node info;
 
     AppView(App.ViewConfig config) {
         super();
         menu = config.menuView();
         header = config.headerView();
         content = config.contentView();
+        info = config.infoView();
     }
 
     @Override
@@ -49,7 +51,8 @@ final class AppView extends VBox implements App.View {
         );
         getChildren().addAll(
             menu,
-            container
+            container,
+            info
         );
     }
 }

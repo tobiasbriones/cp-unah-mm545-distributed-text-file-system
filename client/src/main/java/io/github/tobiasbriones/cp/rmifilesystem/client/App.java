@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client;
 
+import io.github.tobiasbriones.cp.rmifilesystem.client.info.Info;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -45,10 +46,12 @@ public final class App implements Initializable {
     public static App newInstance() {
         final var menu = new AppMenu();
         final var header = new Header();
+        final var info = new Info();
         final var childrenConfig = new ChildrenConfig(
             menu,
             header,
-            Content.newInstance()
+            Content.newInstance(),
+            info
         );
         return new App(childrenConfig);
     }
@@ -56,13 +59,15 @@ public final class App implements Initializable {
     record ChildrenConfig(
         AppMenu menu,
         Header header,
-        Content content
+        Content content,
+        Info info
     ) {
         ViewConfig newViewConfig() {
             return new ViewConfig(
                 menu.getView(),
                 header.getView(),
-                content.getView()
+                content.getView(),
+                info.getView()
             );
         }
     }
@@ -70,7 +75,8 @@ public final class App implements Initializable {
     record ViewConfig(
         Node menuView,
         Node headerView,
-        Node contentView
+        Node contentView,
+        Node infoView
     ) {}
 
     private final View view;
@@ -79,6 +85,7 @@ public final class App implements Initializable {
     private final AppMenuOutput menuOutput;
     private final Header header;
     private final Content content;
+    private final Info info;
     private FileSystemService service;
 
     private App(ChildrenConfig childrenConfig) {
@@ -87,6 +94,7 @@ public final class App implements Initializable {
         menuOutput = new AppMenuOutput(childrenConfig.header().getInput(), this::quit);
         header = childrenConfig.header();
         content = childrenConfig.content();
+        info = childrenConfig.info();
         presenter = new AppPresenter(view, header.getInput());
         service = null;
     }
@@ -97,6 +105,7 @@ public final class App implements Initializable {
         menu.init();
         header.init();
         content.init();
+        info.init();
     }
 
     public void start(Stage stage) {
@@ -127,7 +136,7 @@ public final class App implements Initializable {
         };
         final var thread = new Thread(run);
 
-        setRetrievingServiceStatus(header.getInput());
+        setRetrievingServiceStatus();
         thread.start();
     }
 
@@ -145,11 +154,11 @@ public final class App implements Initializable {
         service = value;
         menuOutput.setService(service);
         content.setService(service);
-        setServiceRetrievedStatus(header.getInput());
+        setServiceRetrievedStatus();
     }
 
     private void onFailedToObtainService() {
-        setFailedServiceStatus(header.getInput());
+        setFailedServiceStatus();
     }
 
     private void quit() {
@@ -167,16 +176,21 @@ public final class App implements Initializable {
         }
     }
 
-    private static void setServiceRetrievedStatus(Header.Input input) {
-        input.setStatus("Connected");
+    private void setServiceRetrievedStatus() {
+        header.getInput().setStatus("Connected");
+        info.getInput().end("");
     }
 
-    private static void setRetrievingServiceStatus(Header.Input input) {
+    private void setRetrievingServiceStatus() {
         final var msg = "Retrieving service from %s...".formatted(FileSystemServices.HOST);
-        input.setStatus(msg);
+
+        header.getInput().setStatus(msg);
+        info.getInput().start("Retrieving service");
     }
 
-    private static void setFailedServiceStatus(Header.Input input) {
-        input.setStatus("Failed");
+    private void setFailedServiceStatus() {
+        header.getInput().setStatus("Failed");
+        info.getInput().end("");
+        info.getInput().setError("Failed to connect to service: %s".formatted(FileSystemServices.HOST));
     }
 }
