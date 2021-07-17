@@ -14,6 +14,8 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client;
 
 import io.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
+import io.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.CommonPaths;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
@@ -109,6 +111,20 @@ public final class AppLocalFiles {
         try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
             output.writeObject(changelist);
         }
+    }
+
+    public static void createDirectory(Directory directory) throws IOException {
+        createRootIfNotExists();
+        final Path path = CommonPaths.toPath(Path.of(ROOT), directory.path());
+
+        Files.createDirectories(path);
+    }
+
+    public static void deleteDirectory(Directory directory) throws IOException {
+        createRootIfNotExists();
+        final Path path = CommonPaths.toPath(Path.of(ROOT), directory.path());
+
+        Files.delete(path);
     }
 
     public static TextFileRepository newTextFileRepository() {
