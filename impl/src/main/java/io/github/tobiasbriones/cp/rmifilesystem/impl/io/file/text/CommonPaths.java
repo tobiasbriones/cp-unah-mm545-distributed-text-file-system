@@ -21,8 +21,8 @@ import java.nio.file.Path;
 /**
  * @author Tobias Briones
  */
-final class CommonPaths {
-    static Path toPath(Path root, CommonPath commonPath) {
+public final class CommonPaths {
+    public static Path toPath(Path root, CommonPath commonPath) {
         final var sb = new StringBuilder(5);
 
         for (final String token : commonPath.split()) {
