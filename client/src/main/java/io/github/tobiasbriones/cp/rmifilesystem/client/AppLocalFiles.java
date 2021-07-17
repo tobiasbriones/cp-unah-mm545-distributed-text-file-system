@@ -43,6 +43,10 @@ public final class AppLocalFiles {
         createRootIfNotExists();
         final var file = new java.io.File(ROOT, FS_FILE_NAME);
 
+        if (!file.exists()) {
+            return new FileSystem(DirectoryNode.of());
+        }
+
         try (ObjectInput input = new ObjectInputStream(new FileInputStream(file))) {
             return (FileSystem) input.readObject();
         }
