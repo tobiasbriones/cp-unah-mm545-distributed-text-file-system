@@ -52,6 +52,22 @@ public final class AppLocalFiles {
         return new FileSystem(DirectoryNode.of());
     }
 
+    public static void saveFs(FileSystem system) throws IOException {
+        createRootIfNotExists();
+        final var file = new java.io.File(ROOT, FS_FILE_NAME);
+
+        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+            output.writeObject(system);
+        }
+    }
+
+    public static void setDownloaded(File file) throws IOException {
+        final Map<File, LastUpdateStatus> statuses = readStatuses();
+
+        statuses.put(file, LastUpdateStatus.of(file));
+        saveStatuses(statuses);
+    }
+
     public static Map<File, LastUpdateStatus> readStatuses() throws IOException {
         createRootIfNotExists();
         final Path path = Path.of(ROOT, ".statuses.data");
@@ -66,15 +82,6 @@ public final class AppLocalFiles {
         catch (ClassNotFoundException e) {
             e.printStackTrace();
             return new HashMap<>(0);
-        }
-    }
-
-    public static void saveFs(FileSystem system) throws IOException {
-        createRootIfNotExists();
-        final var file = new java.io.File(ROOT, FS_FILE_NAME);
-
-        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
-            output.writeObject(system);
         }
     }
 
