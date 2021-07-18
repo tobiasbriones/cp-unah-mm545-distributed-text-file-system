@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
@@ -72,6 +73,7 @@ final class EditorView extends VBox implements Editor.View {
         actionPane.setAlignment(Pos.CENTER_RIGHT);
         actionPane.setPadding(new Insets(8, 0, 8, 0));
 
+        VBox.setVgrow(contentArea, Priority.ALWAYS);
         getChildren().addAll(
             fileLabel,
             contentArea,
