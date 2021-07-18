@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client.info;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -44,9 +45,12 @@ final class InfoView extends VBox implements Info.View {
     public void createView() {
         final var loadingBox = new HBox();
 
-        loadingBox.setPrefHeight(18);
+        loadingBox.setAlignment(Pos.CENTER_LEFT);
+        loadingBox.setSpacing(16);
         loadingBox.getChildren().addAll(indicator, label);
 
+        errorLabel.managedProperty().bind(errorLabel.visibleProperty());
+        errorLabel.setVisible(false);
         errorLabel.setStyle("-fx-text-fill: #E64A19;");
 
         setPadding(new Insets(4, 16, 16, 16));
@@ -56,17 +60,20 @@ final class InfoView extends VBox implements Info.View {
 
     @Override
     public void setError(String value) {
+        errorLabel.setVisible(true);
         errorLabel.setText(value);
     }
 
     @Override
     public void start(String value) {
+        errorLabel.setVisible(false);
         label.setText(value);
         indicator.setProgress(-1);
     }
 
     @Override
     public void end(String value) {
+        errorLabel.setVisible(false);
         label.setText(value);
         indicator.setProgress(1);
     }
