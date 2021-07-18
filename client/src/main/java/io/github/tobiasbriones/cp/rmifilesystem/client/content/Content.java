@@ -13,6 +13,8 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.client.header.Header;
+import io.github.tobiasbriones.cp.rmifilesystem.client.info.Info;
 import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
@@ -25,6 +27,7 @@ import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.client.content.editor.Editor;
 import io.github.tobiasbriones.cp.rmifilesystem.client.content.files.Files;
 import io.github.tobiasbriones.cp.rmifilesystem.client.AppLocalFiles;
+import javafx.application.Platform;
 import javafx.scene.Node;
 
 import java.io.IOException;
@@ -39,6 +42,8 @@ import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.
  * @author Tobias Briones
  */
 public final class Content implements Initializable {
+    public record DependencyConfig(TextFileRepository repository, Header.Input headerInput, Info.Input infoInput) {}
+
     interface View extends MvpView<Void> {}
 
     interface Presenter extends MvpPresenter<Void> {}
@@ -48,9 +53,9 @@ public final class Content implements Initializable {
         void update();
     }
 
-    public static Content newInstance() {
-        final TextFileRepository repository = AppLocalFiles.newTextFileRepository();
-        final var config = new ChildrenConfig(
+    public static Content newInstance(DependencyConfig config) {
+        final TextFileRepository repository = config.repository();
+        final var children = new ChildrenConfig(
             Files.newInstance(
                 new Files.DependencyConfig(repository)
             ),
@@ -58,7 +63,7 @@ public final class Content implements Initializable {
                 new Editor.DependencyConfig(repository)
             )
         );
-        return new Content(config, repository);
+        return new Content(config, children);
     }
 
     record ChildrenConfig(
@@ -84,20 +89,34 @@ public final class Content implements Initializable {
     private final Editor editor;
     private final FilesOutput filesOutput;
     private final EditorOutput editorOutput;
+    private final Header.Input headerInput;
+    private final Info.Input infoInput;
     private final OnLocalFsChangeListener l;
     private FileSystemService service;
     private OnFileUpdateListener client;
 
     private Content(
-        ChildrenConfig config,
-        TextFileRepository repository
+        DependencyConfig config,
+        ChildrenConfig children
     ) {
-        view = new ContentView(config.newViewConfig());
+        view = new ContentView(children.newViewConfig());
         presenter = new ContentPresenter(view);
-        files = config.files();
-        editor = config.editor();
-        filesOutput = new FilesOutput(files.getInput(), editor.getInput(), repository);
-        editorOutput = new EditorOutput(files.getInput(), editor.getInput(), repository);
+        headerInput = config.headerInput();
+        infoInput = config.infoInput();
+        files = children.files();
+        editor = children.editor();
+        filesOutput = new FilesOutput(new FilesOutput.DependencyConfig(
+            config.repository(),
+            files.getInput(),
+            editor.getInput(),
+            infoInput
+        ));
+        editorOutput = new EditorOutput(new EditorOutput.DependencyConfig(
+            config.repository(),
+            files.getInput(),
+            editor.getInput(),
+            infoInput
+        ));
         l = this::update;
         service = null;
         client = null;
@@ -105,15 +124,6 @@ public final class Content implements Initializable {
 
     public Node getView() {
         return view.getView();
-    }
-
-    public void setService(FileSystemService value) {
-        service = value;
-        filesOutput.setService(value);
-        editorOutput.setService(value);
-        bindServiceListener();
-        updateLocalFs(service); // should be async
-        update();
     }
 
     @Override
@@ -124,12 +134,22 @@ public final class Content implements Initializable {
         editor.init();
     }
 
+    public void setService(FileSystemService value) {
+        service = value;
+
+        bindServiceListener();
+    }
+
     public void unbind() throws RemoteException {
         if (service == null) {
             return;
         }
+        infoInput.start("Unbinding service");
+        filesOutput.setService(null);
+        editorOutput.setService(null);
         service.removeOnFileUpdateListener(client);
         UnicastRemoteObject.unexportObject(client, true);
+        infoInput.end("Service unbound");
     }
 
     private void update() {
@@ -143,13 +163,36 @@ public final class Content implements Initializable {
     }
 
     private void bindServiceListener() {
-        try {
-            client = new ContentOnFileUpdateListener(l);
-            service.addOnFileUpdateListener(client);
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        final Runnable runnable = () -> {
+            try {
+                client = new ContentOnFileUpdateListener(l);
+
+                service.addOnFileUpdateListener(client);
+                Platform.runLater(this::onServiceBound);
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+                Platform.runLater(this::onServiceBindError);
+            }
+        };
+        final var thread = new Thread(runnable);
+
+        infoInput.start("Binding service listener");
+        thread.start();
+    }
+
+    private void onServiceBound() {
+        headerInput.setStatus("Connected");
+        infoInput.end("Service listener bound!!!");
+        filesOutput.setService(service);
+        editorOutput.setService(service);
+        updateLocalFs(service);
+        update();
+    }
+
+    private void onServiceBindError() {
+        infoInput.end("");
+        infoInput.setError("Fail to bind service listener");
     }
 
     static void updateLocalFs(FileSystemService service) {
@@ -159,6 +202,7 @@ public final class Content implements Initializable {
             final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
             AppLocalFiles.saveFs(fs);
+            System.out.println("FS updated");
         }
         catch (IOException e) {
             e.printStackTrace();

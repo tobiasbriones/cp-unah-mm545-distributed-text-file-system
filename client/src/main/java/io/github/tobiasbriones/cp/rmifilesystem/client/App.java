@@ -14,6 +14,7 @@
 package io.github.tobiasbriones.cp.rmifilesystem.client;
 
 import io.github.tobiasbriones.cp.rmifilesystem.client.info.Info;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
 import io.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
@@ -44,13 +45,14 @@ public final class App implements Initializable {
     interface View extends MvpView<Void> {}
 
     public static App newInstance() {
+        final TextFileRepository repository = AppLocalFiles.newTextFileRepository();
         final var menu = new AppMenu();
         final var header = new Header();
         final var info = new Info();
         final var childrenConfig = new ChildrenConfig(
             menu,
             header,
-            Content.newInstance(),
+            Content.newInstance(new Content.DependencyConfig(repository, header.getInput(), info.getInput())),
             info
         );
         return new App(childrenConfig);
@@ -152,9 +154,10 @@ public final class App implements Initializable {
 
     private void onServiceObtained(FileSystemService value) {
         service = value;
+
+        setServiceRetrievedStatus();
         menuOutput.setService(service);
         content.setService(service);
-        setServiceRetrievedStatus();
     }
 
     private void onFailedToObtainService() {
@@ -177,7 +180,7 @@ public final class App implements Initializable {
     }
 
     private void setServiceRetrievedStatus() {
-        header.getInput().setStatus("Connected");
+        header.getInput().setStatus("Connecting");
         info.getInput().end("");
     }
 

@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.client.info.Info;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import io.github.tobiasbriones.cp.rmifilesystem.client.AppLocalFiles;
 import io.github.tobiasbriones.cp.rmifilesystem.client.content.editor.Editor;
@@ -20,23 +21,35 @@ import io.github.tobiasbriones.cp.rmifilesystem.client.content.files.Files;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
+import javafx.application.Platform;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.function.Consumer;
 
 final class FilesOutput implements Files.Output {
+    record DependencyConfig(
+        TextFileRepository repository,
+        Files.Input filesInput,
+        Editor.Input editorInput,
+        Info.Input infoInput
+    ) {}
+
+    private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;
-    private final TextFileRepository repository;
+    private final Info.Input infoInput;
     private FileSystemService service;
 
-    FilesOutput(Files.Input filesInput, Editor.Input editorInput, TextFileRepository repository) {
-        this.filesInput = filesInput;
-        this.editorInput = editorInput;
-        this.repository = repository;
+    FilesOutput(DependencyConfig config) {
+        this.repository = config.repository();
+        this.filesInput = config.filesInput();
+        this.editorInput = config.editorInput();
+        this.infoInput = config.infoInput();
         this.service = null;
     }
 
@@ -45,6 +58,7 @@ final class FilesOutput implements Files.Output {
         final String content = loadFile(file);
 
         editorInput.setWorkingFile(file, content);
+        infoInput.end("Open file: " + file.path().value());
     }
 
     @Override
@@ -57,20 +71,7 @@ final class FilesOutput implements Files.Output {
         if (service == null) {
             return;
         }
-        try {
-            if (file instanceof Directory d) {
-                service.writeDirectory(d);
-            }
-            else if (file instanceof File.TextFile f) {
-                final var content = new TextFileContent(f, "");
-
-                service.writeTextFile(content);
-                onFileObtained(content);
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        createRemoteFileAsync(file);
     }
 
     @Override
@@ -78,12 +79,7 @@ final class FilesOutput implements Files.Output {
         if (service == null) {
             return;
         }
-        try {
-            service.deleteFile(file);
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        deleteRemoteFileAsync(file);
     }
 
     void setService(FileSystemService value) {
@@ -100,6 +96,82 @@ final class FilesOutput implements Files.Output {
         return "";
     }
 
+    // ---------- CREATE
+    private void createRemoteFileAsync(CommonFile file) {
+        if (file instanceof Directory d) {
+            createRemoteDirectoryAsync(d);
+        }
+        else if (file instanceof File.TextFile f) {
+            createRemoteTextFileAsync(f);
+        }
+    }
+
+    private void createRemoteTextFileAsync(File.TextFile file) {
+        final var content = new TextFileContent(file, "");
+        final Consumer<Result<Nothing>> resultConsumer = result -> {
+            if (result instanceof Result.Success<Nothing>) {
+                Platform.runLater(() -> onNewRemoteFileWrote(content));
+            }
+            else {
+                Platform.runLater(() -> onNewRemoteFileWriteError(file));
+            }
+        };
+        final Runnable runnable = () -> {
+            try {
+                final Result<Nothing> result = service.writeTextFile(content);
+                resultConsumer.accept(result);
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+                resultConsumer.accept(Result.Failure.of(e));
+            }
+        };
+        final var thread = new Thread(runnable);
+
+        thread.start();
+    }
+
+    private void createRemoteDirectoryAsync(Directory directory) {
+        final Consumer<Result<Nothing>> resultConsumer = result -> {
+            if (result instanceof Result.Success<Nothing>) {
+                Platform.runLater(() -> onRemoteDirectoryWrote(directory));
+            }
+            else {
+                Platform.runLater(() -> onNewRemoteFileWriteError(directory));
+            }
+        };
+        final Runnable runnable = () -> {
+            try {
+                final Result<Nothing> result = service.writeDirectory(directory);
+                resultConsumer.accept(result);
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+                resultConsumer.accept(Result.Failure.of(e));
+            }
+        };
+        final var thread = new Thread(runnable);
+
+        thread.start();
+    }
+
+    private void onRemoteDirectoryWrote(Directory directory) {
+        infoInput.end("Create remote directory: " + directory.path().value());
+    }
+
+    private void onNewRemoteFileWrote(TextFileContent content) {
+        try {
+            onFileObtained(content);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onNewRemoteFileWriteError(CommonFile file) {
+        infoInput.setError("Fail to write remote file: " + file.name());
+    }
+
     private void onFileObtained(TextFileContent content) throws IOException {
         final File.TextFile file = content.file();
 
@@ -113,5 +185,38 @@ final class FilesOutput implements Files.Output {
         Content.updateLocalFs(service);
         filesInput.update();
         editorInput.update();
+    }
+
+    // ---------- DELETE
+    private void deleteRemoteFileAsync(CommonFile file) {
+        final Consumer<Result<Nothing>> resultConsumer = result -> {
+            if (result instanceof Result.Success<Nothing>) {
+                Platform.runLater(() -> onRemoteFileDeleted(file));
+            }
+            else {
+                Platform.runLater(() -> onRemoteFileDeleteError(file));
+            }
+        };
+        final Runnable runnable = () -> {
+            try {
+                final Result<Nothing> result = service.deleteFile(file);
+                resultConsumer.accept(result);
+            }
+            catch (RemoteException e) {
+                e.printStackTrace();
+                resultConsumer.accept(Result.Failure.of(e));
+            }
+        };
+        final var thread = new Thread(runnable);
+
+        thread.start();
+    }
+
+    private void onRemoteFileDeleted(CommonFile file) {
+        infoInput.end("Delete remote file: " + file.path().value());
+    }
+
+    private void onRemoteFileDeleteError(CommonFile file) {
+        infoInput.setError("Fail to delete remote file: " + file.path().value());
     }
 }
