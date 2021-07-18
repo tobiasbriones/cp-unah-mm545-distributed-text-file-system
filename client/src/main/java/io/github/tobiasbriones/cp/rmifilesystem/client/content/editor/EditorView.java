@@ -19,6 +19,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -59,9 +61,11 @@ final class EditorView extends VBox implements Editor.View {
         saveButton.setPrefWidth(SAVE_BUTTON_WIDTH);
 
         pushButton.setText("Push");
+        pushButton.setGraphic(new ImageView(new Image("/ic_push.png")));
         pushButton.setPrefWidth(SAVE_BUTTON_WIDTH / 2 - 4);
 
         pullButton.setText("Pull");
+        pullButton.setGraphic(new ImageView(new Image("/ic_pull.png")));
         pullButton.setPrefWidth(SAVE_BUTTON_WIDTH / 2 - 4);
 
         servicePane.getChildren().addAll(pushButton, pullButton);
