@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client.content;
 
+import io.github.tobiasbriones.cp.rmifilesystem.client.FileSystemServices;
 import io.github.tobiasbriones.cp.rmifilesystem.client.header.Header;
 import io.github.tobiasbriones.cp.rmifilesystem.client.info.Info;
 import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
@@ -183,6 +184,7 @@ public final class Content implements Initializable {
 
     private void onServiceBound() {
         headerInput.setStatus("Connected");
+        headerInput.setHost(FileSystemServices.HOST);
         infoInput.end("Service listener bound!!!");
         filesOutput.setService(service);
         editorOutput.setService(service);
@@ -202,7 +204,6 @@ public final class Content implements Initializable {
             final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
             AppLocalFiles.saveFs(fs);
-            System.out.println("FS updated");
         }
         catch (IOException e) {
             e.printStackTrace();

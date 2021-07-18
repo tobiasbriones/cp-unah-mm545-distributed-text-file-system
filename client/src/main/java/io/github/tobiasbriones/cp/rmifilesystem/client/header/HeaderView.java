@@ -25,11 +25,13 @@ import javafx.scene.layout.VBox;
 final class HeaderView extends VBox implements Header.View {
     private final Label userLabel;
     private final Label statusLabel;
+    private final Label hostLabel;
 
     HeaderView() {
         super();
         userLabel = new Label();
         statusLabel = new Label();
+        hostLabel = new Label();
     }
 
     @Override
@@ -43,6 +45,7 @@ final class HeaderView extends VBox implements Header.View {
         final var userTitleLabel = new Label();
         final var statusBox = new HBox();
         final var statusTitleLabel = new Label();
+        final var hostTitleLabel = new Label();
 
         userTitleLabel.setText("User: ");
         userTitleLabel.setStyle("-fx-font-weight: bold;");
@@ -50,7 +53,14 @@ final class HeaderView extends VBox implements Header.View {
 
         statusTitleLabel.setText("Service status: ");
         statusTitleLabel.setStyle("-fx-font-weight: bold;");
-        statusBox.getChildren().addAll(statusTitleLabel, statusLabel);
+
+        hostTitleLabel.setText("Host: ");
+        hostTitleLabel.setPadding(new Insets(0, 0, 0, 16));
+        hostTitleLabel.setStyle("-fx-font-weight: bold;");
+        hostLabel.setText("-");
+
+        statusBox.setSpacing(4);
+        statusBox.getChildren().addAll(statusTitleLabel, statusLabel, hostTitleLabel, hostLabel);
 
         setPadding(new Insets(8, 0, 8, 0));
         setSpacing(8);
@@ -65,5 +75,10 @@ final class HeaderView extends VBox implements Header.View {
     @Override
     public void setStatus(String value) {
         statusLabel.setText(value);
+    }
+
+    @Override
+    public void setHost(String value) {
+        hostLabel.setText(value);
     }
 }

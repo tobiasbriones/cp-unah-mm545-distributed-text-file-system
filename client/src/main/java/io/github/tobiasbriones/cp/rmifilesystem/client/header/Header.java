@@ -26,6 +26,8 @@ public final class Header implements Initializable {
         void setUser(String value);
 
         void setStatus(String value);
+
+        void setHost(String value);
     }
 
     interface View extends MvpView<Void>, Input {}
