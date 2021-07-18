@@ -60,6 +60,7 @@ final class InfoView extends VBox implements Info.View {
 
     @Override
     public void setError(String value) {
+        end("");
         errorLabel.setVisible(true);
         errorLabel.setText(value);
     }
