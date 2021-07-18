@@ -25,6 +25,8 @@ public final class Header implements Initializable {
     public interface Input {
         void setUser(String value);
 
+        void setConnected(String host);
+
         void setStatus(String value);
 
         void setHost(String value);

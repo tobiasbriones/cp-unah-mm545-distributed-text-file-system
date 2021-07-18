@@ -16,8 +16,14 @@ package io.github.tobiasbriones.cp.rmifilesystem.client.header;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * @author Tobias Briones
@@ -73,6 +79,13 @@ final class HeaderView extends VBox implements Header.View {
     }
 
     @Override
+    public void setConnected(String host) {
+        loadIcon("ic_status_connected.png").ifPresent(statusLabel::setGraphic);
+        setStatus("Connected");
+        setHost(host);
+    }
+
+    @Override
     public void setStatus(String value) {
         statusLabel.setText(value);
     }
@@ -80,5 +93,18 @@ final class HeaderView extends VBox implements Header.View {
     @Override
     public void setHost(String value) {
         hostLabel.setText(value);
+    }
+
+    private Optional<ImageView> loadIcon(String iconName) {
+        Optional<ImageView> image = Optional.empty();
+        final var path = "/" + iconName;
+
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is != null) {
+                image = Optional.of(new ImageView(new Image((is))));
+            }
+        }
+        catch (IOException ignore) {}
+        return image;
     }
 }

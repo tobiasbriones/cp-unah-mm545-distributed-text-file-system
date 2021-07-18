@@ -183,9 +183,8 @@ public final class Content implements Initializable {
     }
 
     private void onServiceBound() {
-        headerInput.setStatus("Connected");
-        headerInput.setHost(FileSystemServices.HOST);
-        infoInput.end("Service listener bound!!!");
+        headerInput.setConnected(FileSystemServices.HOST);
+        infoInput.end("Service listener bound");
         filesOutput.setService(service);
         editorOutput.setService(service);
         updateLocalFs(service);
