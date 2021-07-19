@@ -11,13 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-rootProject.name = "cp-distributed-text-file-system"
-
-include(
-    "model",
-    "server",
-    "client",
-    "mvp"
-)
-include("impl")
-include("registry")
+/**
+ * @author Tobias Briones
+ */
+package io.github.tobiasbriones.cp.rmifilesystem.registry;

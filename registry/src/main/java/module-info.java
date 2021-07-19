@@ -11,13 +11,13 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-rootProject.name = "cp-distributed-text-file-system"
+/**
+ * @author Tobias Briones
+ */
+module io.github.tobiasbriones.cp.rmifilesystem.registry {
+    requires java.rmi;
+    requires io.github.tobiasbriones.cp.rmifilesystem.model;
+    requires io.github.tobiasbriones.cp.rmifilesystem.impl;
 
-include(
-    "model",
-    "server",
-    "client",
-    "mvp"
-)
-include("impl")
-include("registry")
+    exports io.github.tobiasbriones.cp.rmifilesystem.registry;
+}

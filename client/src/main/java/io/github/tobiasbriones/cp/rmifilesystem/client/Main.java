@@ -13,6 +13,7 @@
 
 package io.github.tobiasbriones.cp.rmifilesystem.client;
 
+import io.github.tobiasbriones.cp.rmifilesystem.model.AppProperties;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -29,6 +30,11 @@ public final class Main extends Application {
     public Main() {
         super();
         app = App.newInstance();
+
+        System.setProperty(
+            "java.rmi.server.hostname",
+            AppProperties.readHostname(getClass().getClassLoader())
+        );
     }
 
     @Override

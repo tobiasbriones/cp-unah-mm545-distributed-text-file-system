@@ -11,12 +11,13 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem.server;
+package io.github.tobiasbriones.cp.rmifilesystem.registry;
 
 import io.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
-import io.github.tobiasbriones.cp.rmifilesystem.model.*;
-import io.github.tobiasbriones.cp.rmifilesystem.model.io.*;
+import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
+import io.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.File;
+import io.github.tobiasbriones.cp.rmifilesystem.model.io.*;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import io.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
@@ -36,8 +37,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 import static io.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing.Nothing;
+import static io.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.LastUpdateStatus;
 
 /**
  * @author Tobias Briones

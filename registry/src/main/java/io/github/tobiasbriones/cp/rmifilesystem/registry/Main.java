@@ -11,12 +11,11 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package io.github.tobiasbriones.cp.rmifilesystem.server;
+package io.github.tobiasbriones.cp.rmifilesystem.registry;
 
 import io.github.tobiasbriones.cp.rmifilesystem.model.AppProperties;
 import io.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -42,6 +41,8 @@ public final class Main {
             "java.rmi.server.hostname",
             AppProperties.readHostname(getClass().getClassLoader())
         );
+
+        System.out.println(AppProperties.readHostname(getClass().getClassLoader()));
         try {
             server = new AppFileSystemService();
         }
@@ -53,16 +54,10 @@ public final class Main {
 
     private void start() {
         try {
-            final Registry registry = LocateRegistry.getRegistry(PORT);
-
-            final FileSystemService service = (FileSystemService) registry.lookup("FileSystemService");
-
-            service.recordObject("RMIServer", server);
+            final Registry registry = LocateRegistry.createRegistry(PORT);
+            registry.rebind("FileSystemService", server);
         }
         catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        catch (NotBoundException e) {
             e.printStackTrace();
         }
     }

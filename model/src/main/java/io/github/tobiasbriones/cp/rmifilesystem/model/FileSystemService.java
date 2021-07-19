@@ -51,4 +51,6 @@ public interface FileSystemService extends Remote {
     boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 
     boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
+
+    int recordObject(String name, Remote obj) throws RemoteException;
 }
