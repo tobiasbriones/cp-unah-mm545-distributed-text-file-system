@@ -24,11 +24,8 @@ import java.rmi.registry.LocateRegistry;
  */
 public final class FileSystemServices {
     public static final String HOST = "localhost";
-    // public static final String HOST = "192.168.0.5";
-    // public static final String HOST = "20.106.144.4";
     private static final int PORT = 1099;
     private static final String SERVICE_NAME = "RMIServer";
-    // private static final String SERVICE_NAME = "FileSystemService";
 
     public static FileSystemService obtainService() throws RemoteException, NotBoundException {
         return (FileSystemService) LocateRegistry.getRegistry(HOST, PORT)

@@ -53,7 +53,8 @@ public final class Main {
 
     private void start() {
         try {
-            final Registry registry = LocateRegistry.getRegistry(PORT);
+            final String registryHostname = AppProperties.readRegistryHostname(getClass().getClassLoader());
+            final Registry registry = LocateRegistry.getRegistry(registryHostname, PORT);
 
             final FileSystemService service = (FileSystemService) registry.lookup("FileSystemService");
 

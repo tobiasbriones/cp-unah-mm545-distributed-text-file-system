@@ -34,5 +34,18 @@ public final class AppProperties {
         return prop.getProperty("java.rmi.server.hostname");
     }
 
+    public static String readRegistryHostname(ClassLoader loader) {
+        var prop = new Properties();
+
+        try (InputStream resourceStream = loader.getResourceAsStream("config.properties")) {
+            prop.load(resourceStream);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+        return prop.getProperty("registry.hostname");
+    }
+
     private AppProperties() {}
 }
