@@ -14,10 +14,10 @@
 /**
  * @author Tobias Briones
  */
-module io.github.tobiasbriones.cp.rmifilesystem.server {
+module com.github.tobiasbriones.cp.rmifilesystem.server {
     requires java.rmi;
-    requires io.github.tobiasbriones.cp.rmifilesystem.model;
-    requires io.github.tobiasbriones.cp.rmifilesystem.impl;
+    requires com.github.tobiasbriones.cp.rmifilesystem.model;
+    requires com.github.tobiasbriones.cp.rmifilesystem.impl;
 
-    exports io.github.tobiasbriones.cp.rmifilesystem.server;
+    exports com.github.tobiasbriones.cp.rmifilesystem.server;
 }

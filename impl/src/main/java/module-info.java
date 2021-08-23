@@ -14,8 +14,8 @@
 /**
  * @author Tobias Briones
  */
-module io.github.tobiasbriones.cp.rmifilesystem.impl {
-    requires io.github.tobiasbriones.cp.rmifilesystem.model;
+module com.github.tobiasbriones.cp.rmifilesystem.impl {
+    requires com.github.tobiasbriones.cp.rmifilesystem.model;
 
-    exports io.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text;
+    exports com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text;
 }
