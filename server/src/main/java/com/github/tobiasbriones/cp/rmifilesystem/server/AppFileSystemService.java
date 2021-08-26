@@ -13,11 +13,12 @@
 
 package com.github.tobiasbriones.cp.rmifilesystem.server;
 
+import com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
 import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import com.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.*;
+import com.github.tobiasbriones.cp.rmifilesystem.model.RegistryService;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
+import com.github.tobiasbriones.cp.rmifilesystem.model.io.*;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
@@ -29,18 +30,22 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.ConnectException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.function.Consumer;
 
 import static com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing.Nothing;
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
+import static com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.LastUpdateStatus;
 
 /**
  * @author Tobias Briones
  */
-public final class AppFileSystemService extends UnicastRemoteObject implements FileSystemService {
+public final class AppFileSystemService extends UnicastRemoteObject implements FileSystemService,
+                                                                               RegistryService {
     @Serial
     private static final long serialVersionUID = 7826374551124313303L;
     private static final String RELATIVE_ROOT = "fs";
@@ -166,6 +171,20 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     @Override
     public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
         return clients.remove(l);
+    }
+
+    @Override
+    public boolean regObject(String name, Remote obj) {
+        try {
+            final Registry registry = LocateRegistry.getRegistry();
+
+            registry.bind(name, obj);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private void onFileWrote(File file) {
