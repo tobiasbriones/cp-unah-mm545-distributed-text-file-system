@@ -73,6 +73,119 @@ For a cloud deployment the requirements are simple:
 
 It doesn't hurt to pick a better one. An Azure B2s / B2ms size is plenty enough for testing.
 
+### Deployment
+
+For this version of the software, you need to do some manual configs regarding IP addresses or
+hostnames. This is because the RMI technology requires knowing not only the server hostname where
+the JVM is running but also the client's hostname to answer back to it. If the hostname property
+isn't set on the client app then the server won't be able to respond to that client, or it might
+take a huge amount of time to respond. Fortunately, everything is set up already, and the config
+process just requires a bit of work.
+
+#### Server applications
+
+On server machine (assumed to be Ubuntu 20.x x64), install LXC, configure LXD and create two
+containers: `registry` and `fs`; for the registry server and the file-system server respectively. I
+don't recommend using snap along with LXC since I had a trouble which made me uninstall it later.
+Then install a proxy device into the registry container to map the VM RMI port to the registry
+container port:
+
+`sudo apt update`
+
+`sudo apt upgrade`
+
+`sudo apt install lxd`
+
+Choose the latest version of LXD (4.x+) and run `lxc list` to check it appears an empty list of
+containers, and the installation was successful. Run `sudo lxd init` and choose all the defaults to
+finish the lxd set up. Now install an Ubuntu image (in this case 20.04) and create the two
+containers required:
+
+`lxc launch ubuntu:20.04 registry`
+
+`lxc launch ubuntu:20.04 fs`
+
+Then check with `lxc list` that you have created two new linux containers.
+
+##### Common set up
+
+Next, run the following commands on both containers `registry` and `fs` to install common tools that
+are suggested to deploy the applications:
+
+`lxc exec {container-name} -- bash`
+
+`sudo apt update`
+
+`sudo apt upgrade`
+
+`sudo apt install zip`
+
+`sudo apt install unzip`
+
+Install SDKMAN:
+
+`curl -s "https://get.sdkman.io" | bash`
+
+`source "$HOME/.sdkman/bin/sdkman-init.sh"`
+
+Check SDKMAN installation: `sdk version`. Now install Gradle and Java. The current non-LTS version
+of Java I used is JDK16 with enable-preview, I suggest installing JDK17+ (which is not GA yet at the
+time of this release) for the current release v0.1.0:
+
+`sdk list java` (choose the latest 17.0.x, 17+ version)
+
+`sdk install java 17.0.x-open`
+
+`sdk install gradle`
+
+Clone the project repository into a directory of choice:
+
+`git clone https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system.git`
+
+Now the common configuration has finished for both containers.
+
+##### Registry container
+
+Install the proxy device into the registry container to accept communication to the outside:
+
+`lxc config device add registry rmi-port proxy listen=tcp:0.0.0.0:1099 connect=tcp:127.0.0.1:1099`
+
+Prior to continuing, you'd like to take note of both container's IP addresses, check it out
+with `lxc list`.
+
+Enter into the registry container and run the server as a registry application assuming you are into
+the project root directory:
+
+`lxc exec registry -- bash`
+
+`cd server`
+
+`gradle run --args="{registry-ip-address} reg"`
+
+Thus, the server should be running as an RMI registry server and listening to incoming clients.
+
+##### FileSystem container
+
+Enter into the fs container and run the server as a file-system server:
+
+`lxc exec fs -- bash`
+
+`cd server`
+
+`gradle run --args="{fs-ip-address} fs {registry-ip-address}"`
+
+Thus, the server should be running as an RMI file-system server. So, the remote object of this
+server has been bound to the registry server so that the registry server knows that clients want to
+access *that* remote object located at *this* container.
+
+##### Troubleshooting
+
+- Don't forget to configure the inbound/outbound security groups to allow traffic pass by your VM.
+
+- Since I haven't added the dynamic IP config via the `NetworkInterface` Java API, and they have to
+  be passed manually by JVM args, don't forget that IP addresses change when restarting the network.
+  I was playing with that API though JShell, and I think it will work well when I implement it.
+
 ## About
 
 **Course Project at UNAH-MM545: Distributed Text File System**
