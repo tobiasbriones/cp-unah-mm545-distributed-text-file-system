@@ -39,6 +39,40 @@ fixes. So let's keep that game for later with Java 17 LTS since I am also using 
 `--enable-preview` as a good mathematician to take advantage of the new data oriented and FP
 features for the *model* (or domain) layer.
 
+### Requirements
+
+#### AIO deploy
+
+For the "All-In-One" deployment model the requirements are as follows:
+
+**Minimum requirements**
+
+- Intel® Core™ i3-6100 / Intel® Core™ i5-2400
+- 8 GB of system memory
+- 35 GB of available storage
+
+**Recommended requirements**
+
+- Intel® Core™ i5-4590 / Intel® Core™ i7-2600
+- 12 GB of system memory
+- 50 GB of available SSD storage
+- Nvidia GT-730 / 256 MB of dedicated VRAM
+
+Additionally, a broadband internet connection is required to install all the tools.
+
+Some of these requirements are for the Ubuntu VM installation and accelerated graphics boots to make
+the VM run smoother.
+
+#### Cloud deploy
+
+For a cloud deployment the requirements are simple:
+
+- An Ubuntu VM with at least 1 vCPU, 2 GB RAM, 8 GB storage.
+
+- A desktop computer to run the JavaFX clients.
+
+It doesn't hurt to pick a better one. An Azure B2s / B2ms size is plenty enough for testing.
+
 ## About
 
 **Course Project at UNAH-MM545: Distributed Text File System**
