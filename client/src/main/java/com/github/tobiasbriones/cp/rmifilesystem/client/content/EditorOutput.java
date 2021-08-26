@@ -13,10 +13,10 @@
 
 package com.github.tobiasbriones.cp.rmifilesystem.client.content;
 
+import com.github.tobiasbriones.cp.rmifilesystem.client.AppLocalFiles;
 import com.github.tobiasbriones.cp.rmifilesystem.client.content.editor.Editor;
 import com.github.tobiasbriones.cp.rmifilesystem.client.content.files.Files;
 import com.github.tobiasbriones.cp.rmifilesystem.client.info.Info;
-import com.github.tobiasbriones.cp.rmifilesystem.client.AppLocalFiles;
 import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
@@ -187,8 +187,14 @@ final class EditorOutput implements Editor.Output {
     }
 
     private void updateLocalContent(TextFileContent content) {
-        final Result<Nothing> result = repository.set(content);
+        Result<Nothing> result;
 
+        if (repository.exists(content.file())) {
+            result = repository.set(content);
+        }
+        else {
+            result = repository.add(content);
+        }
         if (result instanceof Result.Failure<Nothing> fail) {
             fail.ifPresent(System.out::println);
         }
