@@ -134,7 +134,7 @@ time of this release) for the current release v0.1.0:
 
 `sdk list java` (choose the latest 17.0.x, 17+ version)
 
-`sdk install java 17.0.x-open`
+`sdk install java 17.0.{x}-open`
 
 `sdk install gradle`
 
@@ -185,6 +185,47 @@ access *that* remote object located at *this* container.
 - Since I haven't added the dynamic IP config via the `NetworkInterface` Java API, and they have to
   be passed manually by JVM args, don't forget that IP addresses change when restarting the network.
   I was playing with that API though JShell, and I think it will work well when I implement it.
+
+#### Desktop client
+
+Finally, to deploy the client into a desktop machine: clone the repository, install SDKMAN, Gradle
+and a version of JDK with FX mods (Zulu FX or Liberica). If you use IntelliJ IDEA then it can be
+faster to run from the Gradle window. You will need the familiar commands if you are in Linux or
+Mac, for Windows the installations may be harder that's why I recommend using IntelliJ IDEA if you'
+re using Windows. The following commands work for an Ubuntu desktop:
+
+`sudo apt update`
+
+`sudo apt upgrade`
+
+`sudo apt install zip`
+
+`sudo apt install unzip`
+
+`curl -s "https://get.sdkman.io" | bash`
+
+`source "$HOME/.sdkman/bin/sdkman-init.sh"`
+
+`sdk install gradle`
+
+Install a JDK version of your choice (JDK17+) but make sure it contains the `fx` modules:
+
+`sdk list java | grep fx`
+
+`sdk install java 17.0.{x}.fx-zulu`
+
+Now edit the source file:
+
+`cd client`
+
+`sudo nano src/main/java/com/github/tobiasbriones/cp/rmifilesystem/client/FileSystemServices.java`
+
+Then set the `HOST` constant of that file to the public IP address or hostname of your VM.
+
+Finally, run the application and pass the IP address of your current desktop machine where the
+client will run:
+
+`gradle run --args="{client-ip-address}"`
 
 ## About
 
