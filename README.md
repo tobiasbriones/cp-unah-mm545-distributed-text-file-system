@@ -195,6 +195,8 @@ access *that* remote object located at *this* container.
 - Since I haven't added the dynamic IP config via the `NetworkInterface` Java API, and they have to
   be passed manually by JVM args, don't forget that IP addresses change when restarting the network.
   I was playing with that API though JShell, and I think it will work well when I implement it.
+  
+- [Storage issues](./docs/troubleshooting/storage/storage.md): Container out of space, "no space left on device" when running an app.
 
 #### Desktop client
 
