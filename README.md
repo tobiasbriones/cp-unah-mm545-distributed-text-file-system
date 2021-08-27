@@ -5,7 +5,13 @@
 [![Project GitHub License](https://img.shields.io/github/license/tobiasbriones/cp-unah-mm545-distributed-text-file-system.svg?style=flat-square)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system/blob/main/LICENSE)
 
 Implementation of a server/client application in Java RMI and JavaFX to manage concurrent
-connections for managing a file system that accepts operations on users text files.
+connections for managing a file system that accepts operations on users' text files.
+
+The original course project required a much simpler implementation, and the main objective was to
+apply DevOps skills. Needless to say, as I often do, I have added a huge amount of extra value to
+this project to make it worth it. My objectives are to keep working on some new features after the
+first release and build good DevOps documentation. Additionally, it's a good chance to show good use
+cases of the main underlying technologies: Java and JavaFX.
 
 ## Required technologies
 
@@ -257,7 +263,7 @@ Tobias Briones: [GitHub](https://github.com/tobiasbriones)
 **Course Project at UNAH-MM545: Distributed Text File System**
 
 Implementation of a server/client application in Java RMI and JavaFX to manage concurrent
-connections for managing a file system that accepts operations on users text files.
+connections for managing a file system that accepts operations on users' text files.
 
 Copyright © 2021 Tobias Briones. All rights reserved.
 
