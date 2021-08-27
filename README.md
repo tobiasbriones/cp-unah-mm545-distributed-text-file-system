@@ -241,6 +241,13 @@ client will run:
 **Demo Animation**
 ![Demo Animation](./docs/img/demo.gif)
 
+## Contact
+
+This project: [Docs](https://tobiasbriones.github.io/cp-unah-mm545-distributed-text-file-system),
+[Repository](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system)
+
+Tobias Briones: [GitHub](https://github.com/tobiasbriones)
+
 ## About
 
 **Course Project at UNAH-MM545: Distributed Text File System**
