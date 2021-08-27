@@ -239,6 +239,10 @@ client will run:
 
 `gradle run --args="{ client-ip-address }"`
 
+##### Suggested reading
+
+In [this article](./docs/troubleshooting/binary-incompatibility/binary-incompatibility.md), I talk about an experience I had with the famous binary compatibility.
+
 ##### Issues
 
 One of the main issue of `v0.1.0` is the local FS update regarding deleting files. When a user
