@@ -122,7 +122,7 @@ Then check with `lxc list` that you have created two new linux containers.
 Next, run the following commands on both containers `registry` and `fs` to install common tools that
 are suggested to deploy the applications:
 
-`lxc exec {container-name} -- bash`
+`lxc exec { container } -- bash`
 
 `sudo apt update`
 
@@ -144,7 +144,7 @@ time of this release) for the current release v0.1.0:
 
 `sdk list java` (choose the latest 17.0.x, 17+ version)
 
-`sdk install java 17.0.{x}-open`
+`sdk install java 17.0.{ x }-open`
 
 `sdk install gradle`
 
@@ -170,7 +170,7 @@ the project root directory:
 
 `cd server`
 
-`gradle run --args="{registry-ip-address} reg"`
+`gradle run --args="{ registry-ip-address } reg"`
 
 Thus, the server should be running as an RMI registry server and listening to incoming clients.
 
@@ -182,7 +182,7 @@ Enter into the fs container and run the server as a file-system server:
 
 `cd server`
 
-`gradle run --args="{fs-ip-address} fs {registry-ip-address}"`
+`gradle run --args="{ fs-ip-address } fs { registry-ip-address }"`
 
 Thus, the server should be running as an RMI file-system server. So, the remote object of this
 server has been bound to the registry server so that the registry server knows that clients want to
@@ -224,7 +224,7 @@ Install a JDK version of your choice (JDK17+) but make sure it contains the `fx`
 
 `sdk list java | grep fx`
 
-`sdk install java 17.0.{x}.fx-zulu`
+`sdk install java 17.0.{ x }.fx-zulu`
 
 Now edit the source file:
 
@@ -237,7 +237,7 @@ Then set the `HOST` constant of that file to the public IP address or hostname o
 Finally, run the application and pass the IP address of your current desktop machine where the
 client will run:
 
-`gradle run --args="{client-ip-address}"`
+`gradle run --args="{ client-ip-address }"`
 
 ##### Issues
 
@@ -246,6 +246,16 @@ deletes a file form the system, it's physically deleted from the user machine bu
 deleted from the other client machines. This feature will be implemented in a further project
 version. Significant performance optimizations will be scheduled for later releases too.
 
+### Bibliography
+
+- Linux Containers. (2021). Linuxcontainers.Org. https://linuxcontainers.org/
+  
+- Home - SDKMAN! the Software Development Kit Manager. (2021). Sdkman.Io. https://sdkman.io/
+
+- Xenitellis, S. (2021, February 8). How to use the LXD Proxy Device to map ports between the host
+  and the containers.
+  Blog.Simos.Info. https://blog.simos.info/how-to-use-the-lxd-proxy-device-to-map-ports-between-the-host-and-the-containers/
+  
 ## Screenshots
 
 **LXC and Registry Container**
