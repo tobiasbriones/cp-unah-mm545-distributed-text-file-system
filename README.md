@@ -78,7 +78,6 @@ the VM run smoother.
 For a cloud deployment the requirements are simple:
 
 - An Ubuntu VM with at least 1 vCPU, 2 GB RAM, 8 GB storage.
-
 - A desktop computer to run the JavaFX clients.
 
 It doesn't hurt to pick a better one. An Azure B2s / B2ms size is plenty enough for testing.
