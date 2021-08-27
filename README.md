@@ -1,5 +1,9 @@
 # Course Project at UNAH-MM545: Distributed Text File System
 
+[![GitHub Repository](https://raw.githubusercontent.com/tobiasbriones/general-images/main/example-projects/badges/ep-gh-repo-badge.svg)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system)
+
+[![Project GitHub License](https://img.shields.io/github/license/tobiasbriones/cp-unah-mm545-distributed-text-file-system.svg?style=flat-square)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system/blob/main/LICENSE)
+
 Implementation of a server/client application in Java RMI and JavaFX to manage concurrent
 connections for managing a file system that accepts operations on users text files.
 
