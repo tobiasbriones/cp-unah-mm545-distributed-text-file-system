@@ -227,6 +227,20 @@ client will run:
 
 `gradle run --args="{client-ip-address}"`
 
+## Screenshots
+
+**LXC and Registry Container**
+![Registry](./docs/img/lxc-list-and-registry-screenshot.png)
+
+**LXC and FS container**
+![FS](./docs/img/lxc-list-and-fs-screenshot.png)
+
+**Client running and FS Server files**
+![Client](./docs/img/client-and-fs-files-screenshot.png)
+
+**Demo Animation**
+![Demo Animation](./docs/img/demo.gif)
+
 ## About
 
 **Course Project at UNAH-MM545: Distributed Text File System**
