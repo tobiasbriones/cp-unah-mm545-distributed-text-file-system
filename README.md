@@ -237,6 +237,13 @@ client will run:
 
 `gradle run --args="{client-ip-address}"`
 
+##### Issues
+
+One of the main issue of `v0.1.0` is the local FS update regarding deleting files. When a user
+deletes a file form the system, it's physically deleted from the user machine but not physically
+deleted from the other client machines. This feature will be implemented in a further project
+version. Significant performance optimizations will be scheduled for later releases too.
+
 ## Screenshots
 
 **LXC and Registry Container**
