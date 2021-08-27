@@ -239,6 +239,13 @@ client will run:
 
 `gradle run --args="{ client-ip-address }"`
 
+##### Troubleshooting
+
+- If you get a weird error when running the app,
+  like [Error initializing QuantumRenderer: no suitable pipeline found](https://stackoverflow.com/questions/68204320/javafx-installation-issues-error-initializing-quantumrenderer)
+  make sure to had installed an updated JDK version containing the JavaFX mods like Azul FX or
+  BellSoft Liberica and run the application with that JDK.
+
 ##### Suggested reading
 
 In [this article](./docs/troubleshooting/binary-incompatibility/binary-incompatibility.md), I talk about an experience I had with the famous binary compatibility.
