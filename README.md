@@ -82,6 +82,21 @@ For a cloud deployment the requirements are simple:
 
 It doesn't hurt to pick a better one. An Azure B2s / B2ms size is plenty enough for testing.
 
+**Important:** If you plan to set up a cloud deployment over a WAN or the Internet then you must 
+have a good background in networking since this is a really tough/impossible endeavor. I have
+tried for many days to achieve this goal but it is not feasible to fulfill. I don't plan on doing so,
+because the underlying technology is archaic (RMI) and I'm a Software Engineer and not a DevOps.
+The problem is likely due to the system using callbacks and the client has to be a server too to 
+export its object, then firewall and inbound rules have to be configured for each client machine,
+the IPs and ports are another mess and a machine might just be able to run only one client at a
+time. Then, just make an "AIO"-fashioned deploy where all of the machines run on the same LAN if
+you don't have a larger infraestructure running on the same LAN.
+More on this:
+
+- [How to send a message from Server to Client using Java RMI?](https://stackoverflow.com/questions/29284276/how-to-send-a-message-from-server-to-client-using-java-rmi)
+- [Can I invoke a client´s method from a server with RMI](https://stackoverflow.com/questions/21665300/can-i-invoke-a-client%C2%B4s-method-from-a-server-with-rmi)
+- [Java rmi over the internet](https://stackoverflow.com/questions/16268391/java-rmi-over-the-internet)
+
 ### Deployment
 
 For this version of the software, you need to do some manual configs regarding IP addresses or
