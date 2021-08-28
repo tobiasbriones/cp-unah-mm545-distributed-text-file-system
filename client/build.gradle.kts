@@ -18,12 +18,11 @@ plugins {
     id("application")
 }
 
-group = "io.github.tobiasbriones.cp"
-version = "1.0-SNAPSHOT"
+version = "0.1.0"
 
 application {
-    mainModule.set("io.github.tobiasbriones.cp.rmifilesystem.client")
-    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.client.Launcher")
+    mainModule.set("com.github.tobiasbriones.cp.rmifilesystem.client")
+    mainClass.set("com.github.tobiasbriones.cp.rmifilesystem.client.Launcher")
 }
 
 repositories {

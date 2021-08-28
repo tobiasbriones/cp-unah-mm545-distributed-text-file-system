@@ -14,9 +14,9 @@
 /**
  * @author Tobias Briones
  */
-module io.github.tobiasbriones.cp.rmifilesystem.mvp {
+module com.github.tobiasbriones.cp.rmifilesystem.mvp {
     requires javafx.base;
     requires javafx.graphics;
 
-    exports io.github.tobiasbriones.cp.rmifilesystem.mvp;
+    exports com.github.tobiasbriones.cp.rmifilesystem.mvp;
 }

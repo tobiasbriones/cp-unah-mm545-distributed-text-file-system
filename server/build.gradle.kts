@@ -11,17 +11,16 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
+version = "0.1.0"
+
 plugins {
     java
     id("application")
 }
 
-group = "io.github.tobiasbriones.cp"
-version = "1.0-SNAPSHOT"
-
 application {
-    mainModule.set("io.github.tobiasbriones.cp.rmifilesystem.server")
-    mainClass.set("io.github.tobiasbriones.cp.rmifilesystem.server.Main")
+    mainModule.set("com.github.tobiasbriones.cp.rmifilesystem.server")
+    mainClass.set("com.github.tobiasbriones.cp.rmifilesystem.server.Main")
 }
 
 repositories {
@@ -55,6 +54,6 @@ tasks.withType<Test>().all {
 
 tasks.withType<Jar> {
     manifest {
-        attributes("Main-Class" to "io.github.tobiasbriones.cp.rmifilesystem.server.Main")
+        attributes("Main-Class" to "com.github.tobiasbriones.cp.rmifilesystem.server.Main")
     }
 }

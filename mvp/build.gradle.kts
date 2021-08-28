@@ -17,8 +17,7 @@ plugins {
     java
 }
 
-group = "io.github.tobiasbriones.cp"
-version = "0.1.0.RELEASE"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
