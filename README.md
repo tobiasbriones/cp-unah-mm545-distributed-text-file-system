@@ -10,7 +10,7 @@ connections for managing a file system that accepts operations on users' text fi
 The original course project required a much simpler implementation, and the main objective was to
 apply DevOps skills. Needless to say, as I often do, I have added a huge amount of extra value to
 this project to make it worth it. My objectives are to keep working on some new features after the
-first release and build good DevOps documentation. Additionally, it's a good chance to show good use
+initial release and build good DevOps documentation. Additionally, it's a good chance to show good use
 cases of the main underlying technologies: Java and JavaFX.
 
 ## Required technologies
@@ -51,7 +51,7 @@ features for the *model* (or domain) layer.
 
 ### Requirements
 
-#### AIO deploy
+#### AIO deployment
 
 For the "All-In-One" deployment model the requirements are as follows:
 
