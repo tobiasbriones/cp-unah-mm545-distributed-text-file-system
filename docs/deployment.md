@@ -1,5 +1,10 @@
 # Deployment
 
+The next section will tell you about some important information to understand before making a
+deployment for a more serious production environment.
+
+## Introduction
+
 One way to deploy all the system is as a standalone fashion. This way you need tons of RAM to run
 many VMs, JVMs, Linux Containers and other open applications as depicted by the following diagram:
 
@@ -63,7 +68,7 @@ Since the cloud deployment is not feasible as I mentioned above, then just set u
 machine(s) and containers abstracting away the fact whether they are cloud or just more machines
 inside the same LAN.
 
-### Deployment
+## Deployment
 
 For this version of the software, you need to do some manual configs regarding IP addresses or
 hostnames. This is because the RMI technology requires knowing not only the server hostname where
@@ -72,7 +77,7 @@ isn't set on the client app then the server won't be able to respond to that cli
 take a huge amount of time to respond. Fortunately, everything is set up already, and the config
 process just requires a bit of work.
 
-#### Server applications
+### Server applications
 
 On server machine (assumed to be Ubuntu 20.x x64), install LXC, configure LXD and create two
 containers: `registry` and `fs`; for the registry server and the file-system server respectively. I
@@ -97,7 +102,7 @@ containers required:
 
 Then check with `lxc list` that you have created two new linux containers.
 
-##### Common set up
+#### Common set up
 
 Next, run the following commands on both containers `registry` and `fs` to install common tools that
 are suggested to deploy the applications:
@@ -134,7 +139,7 @@ Clone the project repository into a directory of choice:
 
 Now the common configuration has finished for both containers.
 
-##### Registry container
+#### Registry container
 
 Install the proxy device into the registry container to accept communication to the outside:
 
@@ -154,7 +159,7 @@ the project root directory:
 
 Thus, the server should be running as an RMI registry server and listening to incoming clients.
 
-##### FileSystem container
+#### FileSystem container
 
 Enter into the fs container and run the server as a file-system server:
 
@@ -168,7 +173,7 @@ Thus, the server should be running as an RMI file-system server. So, the remote 
 server has been bound to the registry server so that the registry server knows that clients want to
 access *that* remote object located at *this* container.
 
-##### Troubleshooting
+#### Troubleshooting
 
 - Don't forget to configure the inbound/outbound security groups to allow traffic pass by your VM.
 
@@ -179,7 +184,7 @@ access *that* remote object located at *this* container.
 - [Storage issues](./troubleshooting/storage/storage.md): Container out of space, "no space left on
   device" when running an app.
 
-#### Desktop client
+### Desktop client
 
 Finally, to deploy the client into a desktop machine: clone the repository, install SDKMAN, Gradle
 and a version of JDK with FX mods (Zulu FX or Liberica). If you use IntelliJ IDEA then it can be
@@ -220,19 +225,19 @@ client will run:
 
 `gradle run --args="{ client-ip-address }"`
 
-##### Troubleshooting
+#### Troubleshooting
 
 - If you get a weird error when running the app,
   like [Error initializing QuantumRenderer: no suitable pipeline found](https://stackoverflow.com/questions/68204320/javafx-installation-issues-error-initializing-quantumrenderer)
   make sure to had installed an updated JDK version containing the JavaFX mods like Azul FX or
   BellSoft Liberica and run the application with that JDK.
 
-##### Suggested reading
+#### Suggested reading
 
 In [this article](./troubleshooting/binary-incompatibility/binary-incompatibility.md), I talk about
 an experience I had with the famous binary compatibility.
 
-##### Issues
+#### Issues
 
 One of the main issue of `v0.1.0` is the local FS update regarding deleting files. When a user
 deletes a file form the system, it's physically deleted from the user machine but not physically
