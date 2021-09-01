@@ -21,7 +21,7 @@ container to use.
 
 #### AIO deploy
 
-For the "All-In-One" deployment model the requirements are as follows:
+For the "All-In-One" deployment model which is just a development environment, the requirements are as follows:
 
 **Minimum requirements**
 
