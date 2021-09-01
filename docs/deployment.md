@@ -36,7 +36,7 @@ Additionally, a broadband internet connection is required to install all the too
 Some of these requirements are for the Ubuntu VM installation and accelerated graphics boots to make
 the VM run smoother.
 
-#### Cloud deploy
+#### Cloud deployment
 
 For a cloud deployment the requirements are simple:
 
@@ -44,6 +44,20 @@ For a cloud deployment the requirements are simple:
 - A desktop computer to run the JavaFX clients.
 
 It doesn't hurt to pick a better one. An Azure B2s / B2ms size is plenty enough for testing.
+
+**Important:** If you plan to set up a cloud deployment over a WAN or the Internet then you must
+have a good background in networking since this is a really tough/impossible endeavor. I have tried
+for many days to achieve this goal, but it is not feasible to fulfill. I don't plan on doing so,
+because the underlying technology is archaic (RMI), and I'm a Software Engineer and not a DevOps.
+The problem is likely due to the system using callbacks, and the client has to be a server too to
+export its object, then firewall and inbound rules have to be configured for each client machine,
+the IPs and ports are another mess, and a machine might just be able to run only one client at a
+time. Then, just make an "AIO"-fashioned deploy where all the machines run on the same LAN if you
+don't have a larger infrastructure running on the same LAN. More on this:
+
+- [How to send a message from Server to Client using Java RMI?](https://stackoverflow.com/questions/29284276/how-to-send-a-message-from-server-to-client-using-java-rmi)
+- [Can I invoke a client´s method from a server with RMI](https://stackoverflow.com/questions/21665300/can-i-invoke-a-client%C2%B4s-method-from-a-server-with-rmi)
+- [Java rmi over the internet](https://stackoverflow.com/questions/16268391/java-rmi-over-the-internet)
 
 Since the cloud deployment is not feasible as I mentioned above, then just set up the server
 machine(s) and containers abstracting away the fact whether they are cloud or just more machines
@@ -162,8 +176,8 @@ access *that* remote object located at *this* container.
   be passed manually by JVM args, don't forget that IP addresses change when restarting the network.
   I was playing with that API though JShell, and I think it will work well when I implement it.
 
-- [Storage issues](./troubleshooting/storage/storage.md): Container out of space, "no space
-  left on device" when running an app.
+- [Storage issues](./troubleshooting/storage/storage.md): Container out of space, "no space left on
+  device" when running an app.
 
 #### Desktop client
 
