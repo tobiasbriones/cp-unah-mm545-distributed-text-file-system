@@ -14,6 +14,7 @@
 package com.github.tobiasbriones.cp.rmifilesystem.client.menu;
 
 import com.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 
 /**
@@ -74,6 +75,10 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
 
     @Override
     public void onAbout() {
-        // TODO
+        final var alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.setHeaderText("About");
+        alert.setContentText("GitHub: https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system");
+        alert.show();
     }
 }
