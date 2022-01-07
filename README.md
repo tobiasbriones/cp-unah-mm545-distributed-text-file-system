@@ -1,8 +1,8 @@
 # Course Project at UNAH-MM545: Distributed Text File System
 
-[![GitHub Repository](https://raw.githubusercontent.com/tobiasbriones/general-images/main/example-projects/badges/ep-gh-repo-badge.svg)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system)
+[![GitHub Repository](https://img.shields.io/static/v1?label=GITHUB&message=REPOSITORY&labelColor=555&color=0277bd&style=for-the-badge&logo=GITHUB)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system)
 
-[![Project GitHub License](https://img.shields.io/github/license/tobiasbriones/cp-unah-mm545-distributed-text-file-system.svg?style=flat-square)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system/blob/main/LICENSE)
+[![GitHub Project License](https://img.shields.io/github/license/tobiasbriones/cp-unah-mm545-distributed-text-file-system.svg?style=flat-square)](https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system/blob/main/LICENSE)
 
 Implementation of a server/client application in Java RMI and JavaFX to manage concurrent
 connections for managing a file system that accepts operations on users' text files.
@@ -13,13 +13,13 @@ this project to make it worth it. My objectives are to keep working on some new 
 initial release and build good DevOps documentation. Additionally, it's a good chance to show good
 use cases of the main underlying technologies: Java and JavaFX.
 
-## Required technologies
+## Required Technologies
 
 - Java RMI or Python Pyro only.
 - Anything that works for the client.
 - Linux containers.
 
-## Getting started
+## Getting Started
 
 This system can be deployed in several ways. According to the course topics, you should use linux
 containers for the server applications. For this server, there are two applications that run the
@@ -55,12 +55,12 @@ isn't set on the client app then the server won't be able to respond to that cli
 take a huge amount of time to respond. Fortunately, everything is set up already, and the config
 process just requires a bit of work.
 
-### Run in development mode
+### Run in Development Mode
 
 Check [Deployment](#deployment) for info while this section is updated with a dead simple test
 environment.
 
-### Suggested reading
+### Suggested Reading
 
 In [this article](./docs/troubleshooting/binary-incompatibility/binary-incompatibility.md), I talk
 about an experience I had with the famous binary compatibility. This happens when you update a
