@@ -16,15 +16,15 @@ package engineer.mathsoftware.cp.dtfs.client.content;
 import engineer.mathsoftware.cp.dtfs.client.header.Header;
 import engineer.mathsoftware.cp.dtfs.client.FileSystemServices;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
-import engineer.mathsoftware.cp.dtfs.model.OnFileUpdateListener;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystems;
+import engineer.mathsoftware.cp.dtfs.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.io.node.FileSystems;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
-import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
 import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
@@ -36,7 +36,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
-import static engineer.mathsoftware.cp.dtfs.model.FileSystemService.*;
+import static engineer.mathsoftware.cp.dtfs.FileSystemService.*;
 
 /**
  * @author Tobias Briones
@@ -198,7 +198,7 @@ public final class Content implements Initializable {
     static void updateLocalFs(FileSystemService service) {
         try {
             final RealTimeFileSystem system = service.getRealTimeFileSystem();
-            final Map<File, LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
+            final Map<File, FileSystem.LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
             final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
             AppLocalFiles.saveFs(fs);

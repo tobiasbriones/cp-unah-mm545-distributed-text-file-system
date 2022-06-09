@@ -13,10 +13,10 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content.files;
 
-import engineer.mathsoftware.cp.dtfs.model.io.CommonFile;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.Node;
+import engineer.mathsoftware.cp.dtfs.io.CommonFile;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.io.node.Node;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;

@@ -14,21 +14,21 @@
 package engineer.mathsoftware.cp.dtfs.client.content.files;
 
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
-import engineer.mathsoftware.cp.dtfs.model.io.CommonFile;
-import engineer.mathsoftware.cp.dtfs.model.io.CommonPath;
-import engineer.mathsoftware.cp.dtfs.model.io.Directory;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
-import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
-import engineer.mathsoftware.cp.dtfs.model.io.node.Node;
+import engineer.mathsoftware.cp.dtfs.io.CommonFile;
+import engineer.mathsoftware.cp.dtfs.io.CommonPath;
+import engineer.mathsoftware.cp.dtfs.io.Directory;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.io.node.FileNode;
+import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.io.node.Node;
 import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 
-import engineer.mathsoftware.cp.dtfs.model.io.File.TextFile;
+import engineer.mathsoftware.cp.dtfs.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;

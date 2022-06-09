@@ -15,11 +15,11 @@ package engineer.mathsoftware.cp.dtfs.client;
 
 import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
 import engineer.mathsoftware.cp.dtfs.impl.io.file.text.CommonPaths;
-import engineer.mathsoftware.cp.dtfs.model.io.Directory;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
-import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.io.Directory;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -64,13 +64,13 @@ public final class AppLocalFiles {
     }
 
     public static void setDownloaded(File file) throws IOException {
-        final Map<File, LastUpdateStatus> statuses = readStatuses();
+        final Map<File, FileSystem.LastUpdateStatus> statuses = readStatuses();
 
-        statuses.put(file, LastUpdateStatus.of(file));
+        statuses.put(file, FileSystem.LastUpdateStatus.of(file));
         saveStatuses(statuses);
     }
 
-    public static Map<File, LastUpdateStatus> readStatuses() throws IOException {
+    public static Map<File, FileSystem.LastUpdateStatus> readStatuses() throws IOException {
         createRootIfNotExists();
         final Path path = Path.of(ROOT, ".statuses.data");
 
@@ -79,7 +79,7 @@ public final class AppLocalFiles {
         }
 
         try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
-            return (Map<File, LastUpdateStatus>) input.readObject();
+            return (Map<File, FileSystem.LastUpdateStatus>) input.readObject();
         }
         catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public final class AppLocalFiles {
         }
     }
 
-    public static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws IOException {
+    public static void saveStatuses(Map<File, FileSystem.LastUpdateStatus> statuses) throws IOException {
         createRootIfNotExists();
         final var file = new java.io.File(ROOT, ".statuses.data");
 

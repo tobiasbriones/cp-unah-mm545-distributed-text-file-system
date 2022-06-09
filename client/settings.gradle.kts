@@ -13,8 +13,8 @@
 
 rootProject.name = "client"
 
-include("model", "impl", "mvp")
+include("dtfs", "impl", "mvp")
 
-project(":model").projectDir = file("../model")
+project(":dtfs").projectDir = file("../dtfs")
 project(":impl").projectDir = file("../impl")
 project(":mvp").projectDir = file("../mvp")

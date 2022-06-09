@@ -14,7 +14,7 @@
 rootProject.name = "cp-distributed-text-file-system"
 
 include(
-    "model",
+    "dtfs",
     "server",
     "client",
     "mvp"

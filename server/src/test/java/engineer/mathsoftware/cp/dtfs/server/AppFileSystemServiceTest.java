@@ -13,15 +13,15 @@
 
 package engineer.mathsoftware.cp.dtfs.server;
 
-import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
-import engineer.mathsoftware.cp.dtfs.model.io.Directory;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
-import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystems;
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.io.Directory;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.io.node.FileNode;
+import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.io.node.FileSystems;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

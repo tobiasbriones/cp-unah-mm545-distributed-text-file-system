@@ -38,7 +38,7 @@ dependencies {
     implementation("org.openjfx:javafx-controls:15.0.1:${platform}")
     implementation("org.openjfx:javafx-fxml:15.0.1:${platform}")
 
-    implementation(project(":model"))
+    implementation(project(":dtfs"))
     implementation(project(":impl"))
     implementation(project(":mvp"))
 }

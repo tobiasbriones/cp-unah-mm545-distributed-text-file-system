@@ -14,11 +14,11 @@
 package engineer.mathsoftware.cp.dtfs.client.content.editor;
 
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 
 import java.io.IOException;

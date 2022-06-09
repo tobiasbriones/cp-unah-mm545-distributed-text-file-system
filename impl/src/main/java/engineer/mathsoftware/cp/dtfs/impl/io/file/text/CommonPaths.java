@@ -13,7 +13,7 @@
 
 package engineer.mathsoftware.cp.dtfs.impl.io.file.text;
 
-import engineer.mathsoftware.cp.dtfs.model.io.CommonPath;
+import engineer.mathsoftware.cp.dtfs.io.CommonPath;
 
 import java.io.File;
 import java.nio.file.Path;

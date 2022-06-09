@@ -15,7 +15,7 @@
  * @author Tobias Briones
  */
 module engineer.mathsoftware.cp.dtfs.impl {
-    requires engineer.mathsoftware.cp.dtfs.model;
+    requires engineer.mathsoftware.cp.dtfs;
 
     exports engineer.mathsoftware.cp.dtfs.impl.io.file.text;
 }

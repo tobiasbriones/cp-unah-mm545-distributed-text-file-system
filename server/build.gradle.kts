@@ -32,7 +32,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     implementation("org.hamcrest:hamcrest:2.2")
-    implementation(project(":model"))
+    implementation(project(":dtfs"))
     implementation(project(":impl"))
 }
 

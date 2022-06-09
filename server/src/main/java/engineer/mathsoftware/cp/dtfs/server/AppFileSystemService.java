@@ -14,16 +14,16 @@
 package engineer.mathsoftware.cp.dtfs.server;
 
 import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
-import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
-import engineer.mathsoftware.cp.dtfs.model.OnFileUpdateListener;
-import engineer.mathsoftware.cp.dtfs.model.RegistryService;
-import engineer.mathsoftware.cp.dtfs.model.io.*;
-import engineer.mathsoftware.cp.dtfs.model.io.File;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
-import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
-import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
-import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
-import engineer.mathsoftware.cp.dtfs.model.io.node.FileNode;
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.RegistryService;
+import engineer.mathsoftware.cp.dtfs.io.*;
+import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.io.node.FileNode;
 
 import java.io.*;
 import java.nio.file.DirectoryNotEmptyException;
@@ -38,8 +38,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static engineer.mathsoftware.cp.dtfs.model.io.file.Nothing.Nothing;
-import static engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem.LastUpdateStatus;
+import static engineer.mathsoftware.cp.dtfs.io.file.Nothing.Nothing;
+import static engineer.mathsoftware.cp.dtfs.io.node.FileSystem.LastUpdateStatus;
 
 /**
  * @author Tobias Briones
