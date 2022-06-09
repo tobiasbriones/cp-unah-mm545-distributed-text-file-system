@@ -11,7 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-rootProject.name = "cp-distributed-text-file-system"
+rootProject.name = "cp-unah-mm545-distributed-text-file-system"
 
 include(
     "dtfs",
