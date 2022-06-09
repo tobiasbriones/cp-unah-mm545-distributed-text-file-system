@@ -21,8 +21,8 @@ plugins {
 version = "0.1.0"
 
 application {
-    mainModule.set("com.github.tobiasbriones.cp.rmifilesystem.client")
-    mainClass.set("com.github.tobiasbriones.cp.rmifilesystem.client.Launcher")
+    mainModule.set("engineer.mathsoftware.cp.dtfs.client")
+    mainClass.set("engineer.mathsoftware.cp.dtfs.client.Launcher")
 }
 
 repositories {

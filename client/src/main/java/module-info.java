@@ -12,9 +12,9 @@
  */
 
 /**
- *
+ * @author Tobias Briones
  */
-module com.github.tobiasbriones.cp.rmifilesystem.client {
+module engineer.mathsoftware.cp.dtfs.client {
     requires java.rmi;
     requires javafx.base;
     requires javafx.graphics;
@@ -24,6 +24,6 @@ module com.github.tobiasbriones.cp.rmifilesystem.client {
     requires com.github.tobiasbriones.cp.rmifilesystem.impl;
     requires com.github.tobiasbriones.cp.rmifilesystem.mvp;
 
-    opens com.github.tobiasbriones.cp.rmifilesystem.client
+    opens engineer.mathsoftware.cp.dtfs.client
         to javafx.graphics, java.rmi;
 }
