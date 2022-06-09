@@ -13,8 +13,8 @@
 
 package engineer.mathsoftware.cp.dtfs.client;
 
-import com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.CommonPaths;
+import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
+import engineer.mathsoftware.cp.dtfs.impl.io.file.text.CommonPaths;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;

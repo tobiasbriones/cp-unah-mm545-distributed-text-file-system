@@ -21,7 +21,7 @@ module engineer.mathsoftware.cp.dtfs.client {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.github.tobiasbriones.cp.rmifilesystem.model;
-    requires com.github.tobiasbriones.cp.rmifilesystem.impl;
+    requires engineer.mathsoftware.cp.dtfs.impl;
     requires engineer.mathsoftware.cp.dtfs.mvp;
 
     opens engineer.mathsoftware.cp.dtfs.client

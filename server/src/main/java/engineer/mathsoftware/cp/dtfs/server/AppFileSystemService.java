@@ -13,7 +13,7 @@
 
 package engineer.mathsoftware.cp.dtfs.server;
 
-import com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text.AppLocalTextFileRepository;
+import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
 import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import com.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
 import com.github.tobiasbriones.cp.rmifilesystem.model.RegistryService;

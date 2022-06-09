@@ -14,4 +14,4 @@
 /**
  * @author Tobias Briones
  */
-package com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text;
+package engineer.mathsoftware.cp.dtfs.impl.io.file.text;

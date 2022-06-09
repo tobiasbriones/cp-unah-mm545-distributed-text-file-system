@@ -14,8 +14,8 @@
 /**
  * @author Tobias Briones
  */
-module com.github.tobiasbriones.cp.rmifilesystem.impl {
+module engineer.mathsoftware.cp.dtfs.impl {
     requires com.github.tobiasbriones.cp.rmifilesystem.model;
 
-    exports com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text;
+    exports engineer.mathsoftware.cp.dtfs.impl.io.file.text;
 }

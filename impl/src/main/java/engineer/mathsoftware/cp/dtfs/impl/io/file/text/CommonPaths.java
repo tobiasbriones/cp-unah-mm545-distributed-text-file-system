@@ -11,7 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package com.github.tobiasbriones.cp.rmifilesystem.impl.io.file.text;
+package engineer.mathsoftware.cp.dtfs.impl.io.file.text;
 
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
 
