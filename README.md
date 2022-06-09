@@ -62,7 +62,7 @@ environment.
 
 ### Suggested Reading
 
-In [this article](./docs/troubleshooting/binary-incompatibility/binary-incompatibility.md), I talk
+In [this article](docs/troubleshooting/binary-incompatibility), I talk
 about an experience I had with the famous binary compatibility. This happens when you update a
 software (
 library, etc.) to other version with binary breaking changes. For instance, changing a method

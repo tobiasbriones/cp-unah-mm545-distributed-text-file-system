@@ -234,7 +234,7 @@ client will run:
 
 #### Suggested reading
 
-In [this article](./troubleshooting/binary-incompatibility/binary-incompatibility.md), I talk about
+In [this article](troubleshooting/binary-incompatibility), I talk about
 an experience I had with the famous binary compatibility.
 
 #### Issues
