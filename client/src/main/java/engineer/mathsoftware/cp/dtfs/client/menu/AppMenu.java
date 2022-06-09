@@ -13,9 +13,9 @@
 
 package engineer.mathsoftware.cp.dtfs.client.menu;
 
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.Initializable;
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.MvpPresenter;
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.MvpView;
+import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
+import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
+import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
 import javafx.scene.Node;
 
 import java.io.File;

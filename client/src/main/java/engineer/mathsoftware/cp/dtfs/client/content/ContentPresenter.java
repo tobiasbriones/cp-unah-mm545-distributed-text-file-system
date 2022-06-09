@@ -13,7 +13,7 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content;
 
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
+import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 
 /**
  * @author Tobias Briones

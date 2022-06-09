@@ -11,12 +11,17 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package com.github.tobiasbriones.cp.rmifilesystem.mvp;
+package engineer.mathsoftware.cp.dtfs.mvp;
+
+import javafx.scene.Node;
 
 /**
  * @author Tobias Briones
  */
-@FunctionalInterface
-public interface Initializable {
-    void init();
+public interface MvpView<C> {
+    Node getView();
+
+    void createView();
+
+    default void bindEvents(C controller) {}
 }

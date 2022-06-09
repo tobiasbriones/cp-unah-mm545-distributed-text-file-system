@@ -13,7 +13,7 @@
 
 package engineer.mathsoftware.cp.dtfs.client.menu;
 
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
+import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 

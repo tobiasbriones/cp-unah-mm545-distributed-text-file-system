@@ -14,9 +14,9 @@
 /**
  * @author Tobias Briones
  */
-module com.github.tobiasbriones.cp.rmifilesystem.mvp {
+module engineer.mathsoftware.cp.dtfs.mvp {
     requires javafx.base;
     requires javafx.graphics;
 
-    exports com.github.tobiasbriones.cp.rmifilesystem.mvp;
+    exports engineer.mathsoftware.cp.dtfs.mvp;
 }

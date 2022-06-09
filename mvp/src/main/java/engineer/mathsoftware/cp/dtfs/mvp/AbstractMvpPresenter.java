@@ -11,11 +11,26 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package com.github.tobiasbriones.cp.rmifilesystem.mvp;
+package engineer.mathsoftware.cp.dtfs.mvp;
+
+import java.util.Optional;
 
 /**
  * @author Tobias Briones
  */
-public interface MvpPresenter<O> extends Initializable {
-    void setOutput(O value);
+public abstract class AbstractMvpPresenter<O> implements MvpPresenter<O> {
+    private O output;
+
+    protected AbstractMvpPresenter() {
+        output = null;
+    }
+
+    protected Optional<O> getOutput() {
+        return Optional.ofNullable(output);
+    }
+
+    @Override
+    public final void setOutput(O value) {
+        output = value;
+    }
 }

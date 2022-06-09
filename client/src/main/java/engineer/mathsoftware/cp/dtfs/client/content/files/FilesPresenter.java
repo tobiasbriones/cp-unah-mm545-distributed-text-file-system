@@ -26,7 +26,7 @@ import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
+import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;

@@ -22,7 +22,7 @@ module engineer.mathsoftware.cp.dtfs.client {
     requires javafx.fxml;
     requires com.github.tobiasbriones.cp.rmifilesystem.model;
     requires com.github.tobiasbriones.cp.rmifilesystem.impl;
-    requires com.github.tobiasbriones.cp.rmifilesystem.mvp;
+    requires engineer.mathsoftware.cp.dtfs.mvp;
 
     opens engineer.mathsoftware.cp.dtfs.client
         to javafx.graphics, java.rmi;

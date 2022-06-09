@@ -19,7 +19,7 @@ import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.mvp.AbstractMvpPresenter;
+import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 
 import java.io.IOException;
 
