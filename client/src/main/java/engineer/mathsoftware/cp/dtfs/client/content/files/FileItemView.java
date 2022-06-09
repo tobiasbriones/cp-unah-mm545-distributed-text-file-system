@@ -13,8 +13,8 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content.files;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
+import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.Node;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;

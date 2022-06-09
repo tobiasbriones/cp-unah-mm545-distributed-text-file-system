@@ -15,11 +15,11 @@ package engineer.mathsoftware.cp.dtfs.client;
 
 import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
 import engineer.mathsoftware.cp.dtfs.impl.io.file.text.CommonPaths;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.model.io.Directory;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
 
 /**
  * @author Tobias Briones

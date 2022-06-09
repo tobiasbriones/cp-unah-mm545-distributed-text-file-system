@@ -13,18 +13,18 @@
 
 package engineer.mathsoftware.cp.dtfs.impl.io.file.text;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing.Nothing;
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
+import static engineer.mathsoftware.cp.dtfs.model.io.file.Nothing.Nothing;
+import static engineer.mathsoftware.cp.dtfs.model.io.File.TextFile;
 
 /**
  * @author Tobias Briones

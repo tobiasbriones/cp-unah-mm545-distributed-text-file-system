@@ -16,15 +16,15 @@ package engineer.mathsoftware.cp.dtfs.client.content;
 import engineer.mathsoftware.cp.dtfs.client.header.Header;
 import engineer.mathsoftware.cp.dtfs.client.FileSystemServices;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
-import com.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
+import engineer.mathsoftware.cp.dtfs.model.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystems;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
-import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
 import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
@@ -36,8 +36,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
-import static com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService.*;
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
+import static engineer.mathsoftware.cp.dtfs.model.FileSystemService.*;
 
 /**
  * @author Tobias Briones

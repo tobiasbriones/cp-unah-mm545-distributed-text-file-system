@@ -13,8 +13,8 @@
 
 package engineer.mathsoftware.cp.dtfs.server;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import com.github.tobiasbriones.cp.rmifilesystem.model.RegistryService;
+import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.model.RegistryService;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

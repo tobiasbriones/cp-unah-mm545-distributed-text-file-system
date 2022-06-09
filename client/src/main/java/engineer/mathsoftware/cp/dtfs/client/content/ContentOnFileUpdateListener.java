@@ -14,10 +14,10 @@
 package engineer.mathsoftware.cp.dtfs.client.content;
 
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
-import com.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystems;
+import engineer.mathsoftware.cp.dtfs.model.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystems;
 import javafx.application.Platform;
 
 import java.io.IOException;
@@ -26,8 +26,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
-import static com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService.*;
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.*;
+import static engineer.mathsoftware.cp.dtfs.model.FileSystemService.*;
 
 /**
  * Receives the file changes from the RMI server broadcast.

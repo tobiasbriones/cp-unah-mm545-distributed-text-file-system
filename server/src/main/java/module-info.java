@@ -16,7 +16,7 @@
  */
 module engineer.mathsoftware.cp.dtfs.server {
     requires java.rmi;
-    requires com.github.tobiasbriones.cp.rmifilesystem.model;
+    requires engineer.mathsoftware.cp.dtfs.model;
     requires engineer.mathsoftware.cp.dtfs.impl;
 
     exports engineer.mathsoftware.cp.dtfs.server;

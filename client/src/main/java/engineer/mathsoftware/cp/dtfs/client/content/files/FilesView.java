@@ -13,10 +13,10 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content.files;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
+import engineer.mathsoftware.cp.dtfs.model.io.CommonFile;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.Node;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;

@@ -20,7 +20,7 @@ module engineer.mathsoftware.cp.dtfs.client {
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
-    requires com.github.tobiasbriones.cp.rmifilesystem.model;
+    requires engineer.mathsoftware.cp.dtfs.model;
     requires engineer.mathsoftware.cp.dtfs.impl;
     requires engineer.mathsoftware.cp.dtfs.mvp;
 

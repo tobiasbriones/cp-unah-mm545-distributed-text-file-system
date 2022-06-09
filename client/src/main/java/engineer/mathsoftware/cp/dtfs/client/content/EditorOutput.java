@@ -17,12 +17,12 @@ import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
 import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
 import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
-import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
 import javafx.application.Platform;
 
 import java.io.IOException;

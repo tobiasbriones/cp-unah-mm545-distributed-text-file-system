@@ -14,16 +14,16 @@
 package engineer.mathsoftware.cp.dtfs.server;
 
 import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
-import com.github.tobiasbriones.cp.rmifilesystem.model.OnFileUpdateListener;
-import com.github.tobiasbriones.cp.rmifilesystem.model.RegistryService;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.*;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
+import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.model.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.model.RegistryService;
+import engineer.mathsoftware.cp.dtfs.model.io.*;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileNode;
 
 import java.io.*;
 import java.nio.file.DirectoryNotEmptyException;
@@ -38,8 +38,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing.Nothing;
-import static com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem.LastUpdateStatus;
+import static engineer.mathsoftware.cp.dtfs.model.io.file.Nothing.Nothing;
+import static engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem.LastUpdateStatus;
 
 /**
  * @author Tobias Briones

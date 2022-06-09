@@ -14,21 +14,21 @@
 package engineer.mathsoftware.cp.dtfs.client.content.files;
 
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.CommonPath;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Nothing;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.Result;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileContent;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
+import engineer.mathsoftware.cp.dtfs.model.io.CommonFile;
+import engineer.mathsoftware.cp.dtfs.model.io.CommonPath;
+import engineer.mathsoftware.cp.dtfs.model.io.Directory;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Nothing;
+import engineer.mathsoftware.cp.dtfs.model.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileContent;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.model.io.node.Node;
 import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File.TextFile;
+import engineer.mathsoftware.cp.dtfs.model.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;

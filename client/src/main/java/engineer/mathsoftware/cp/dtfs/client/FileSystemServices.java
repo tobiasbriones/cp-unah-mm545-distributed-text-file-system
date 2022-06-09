@@ -13,7 +13,7 @@
 
 package engineer.mathsoftware.cp.dtfs.client;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
+import engineer.mathsoftware.cp.dtfs.model.FileSystemService;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

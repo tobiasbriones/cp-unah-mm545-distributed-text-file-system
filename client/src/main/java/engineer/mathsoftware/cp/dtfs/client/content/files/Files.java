@@ -13,15 +13,15 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content.files;
 
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.CommonFile;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.File;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.file.text.TextFileRepository;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.DirectoryNode;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.model.io.CommonFile;
+import engineer.mathsoftware.cp.dtfs.model.io.File;
+import engineer.mathsoftware.cp.dtfs.model.io.file.text.TextFileRepository;
+import engineer.mathsoftware.cp.dtfs.model.io.node.DirectoryNode;
+import engineer.mathsoftware.cp.dtfs.model.io.node.FileSystem;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
-import com.github.tobiasbriones.cp.rmifilesystem.model.io.node.Node;
+import engineer.mathsoftware.cp.dtfs.model.io.node.Node;
 
 /**
  * @author Tobias Briones
