@@ -19,8 +19,8 @@ plugins {
 }
 
 application {
-    mainModule.set("com.github.tobiasbriones.cp.rmifilesystem.server")
-    mainClass.set("com.github.tobiasbriones.cp.rmifilesystem.server.Main")
+    mainModule.set("engineer.mathsoftware.cp.dtfs.server")
+    mainClass.set("engineer.mathsoftware.cp.dtfs.server.Main")
 }
 
 repositories {
@@ -54,6 +54,6 @@ tasks.withType<Test>().all {
 
 tasks.withType<Jar> {
     manifest {
-        attributes("Main-Class" to "com.github.tobiasbriones.cp.rmifilesystem.server.Main")
+        attributes("Main-Class" to "engineer.mathsoftware.cp.dtfs.server.Main")
     }
 }

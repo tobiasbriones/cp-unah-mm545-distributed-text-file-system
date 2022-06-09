@@ -11,7 +11,7 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package com.github.tobiasbriones.cp.rmifilesystem.server;
+package engineer.mathsoftware.cp.dtfs.server;
 
 import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import com.github.tobiasbriones.cp.rmifilesystem.model.io.Directory;

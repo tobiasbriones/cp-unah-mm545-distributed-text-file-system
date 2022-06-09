@@ -11,16 +11,14 @@
  * https://opensource.org/licenses/BSD-3-Clause.
  */
 
-package com.github.tobiasbriones.cp.rmifilesystem.server;
+package engineer.mathsoftware.cp.dtfs.server;
 
 import com.github.tobiasbriones.cp.rmifilesystem.model.FileSystemService;
 import com.github.tobiasbriones.cp.rmifilesystem.model.RegistryService;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Arrays;
 
 /**
  * @author Tobias Briones
