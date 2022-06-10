@@ -7,7 +7,6 @@ rootProject.name = "cp-unah-mm545-distributed-text-file-system"
 include(
     "dtfs",
     "server",
-    "client",
-    "mvp"
+    "client"
 )
 include("impl")

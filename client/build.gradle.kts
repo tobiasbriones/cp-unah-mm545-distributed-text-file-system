@@ -31,7 +31,6 @@ dependencies {
 
     implementation(project(":dtfs"))
     implementation(project(":impl"))
-    implementation(project(":mvp"))
 }
 
 tasks.getByName<Test>("test") {

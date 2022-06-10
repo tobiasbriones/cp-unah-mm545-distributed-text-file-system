@@ -13,8 +13,7 @@
 
 rootProject.name = "client"
 
-include("dtfs", "impl", "mvp")
+include("dtfs", "impl")
 
 project(":dtfs").projectDir = file("../dtfs")
 project(":impl").projectDir = file("../impl")
-project(":mvp").projectDir = file("../mvp")

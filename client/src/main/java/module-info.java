@@ -22,7 +22,6 @@ module engineer.mathsoftware.cp.dtfs.client {
     requires javafx.fxml;
     requires engineer.mathsoftware.cp.dtfs;
     requires engineer.mathsoftware.cp.dtfs.impl;
-    requires engineer.mathsoftware.cp.dtfs.mvp;
 
     opens engineer.mathsoftware.cp.dtfs.client
         to javafx.graphics, java.rmi;
