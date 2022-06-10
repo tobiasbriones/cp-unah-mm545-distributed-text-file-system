@@ -1,3 +1,7 @@
+<!-- Copyright (c) 2021 Tobias Briones. All rights reserved. -->
+<!-- SPDX-License-Identifier: BSD-3-Clause -->
+<!-- This file is part of https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system -->
+
 # Binary Incompatibility Issues
 
 Many features haven't been implemented in Java because of binary compatibilities. A clear case of

@@ -1,3 +1,7 @@
+<!-- Copyright (c) 2022 Tobias Briones. All rights reserved. -->
+<!-- SPDX-License-Identifier: BSD-3-Clause -->
+<!-- This file is part of https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system -->
+
 # Fix IntelliJ Gradle JVM
 
 When I opened up the project after a long while, I had a problem to build
