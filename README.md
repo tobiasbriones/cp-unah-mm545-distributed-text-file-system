@@ -84,7 +84,7 @@ version. Significant performance optimizations will be scheduled for later relea
 
 ## Deployment
 
-Go to the [deployment](./docs/deployment.md) documentation.
+Go to the [deployment](./docs/index.md) documentation.
 
 ## Screenshots
 

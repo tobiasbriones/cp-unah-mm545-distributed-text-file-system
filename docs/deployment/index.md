@@ -12,7 +12,7 @@ deployment for a more serious production environment.
 One way to deploy all the system is as a standalone fashion. This way you need tons of RAM to run
 many VMs, JVMs, Linux Containers and other open applications as depicted by the following diagram:
 
-![All-In-One Deployment](./img/deployment.svg)
+![All-In-One Deployment](../img/deployment.svg)
 
 Remind that, as far as I'm aware, the deployment over the Internet (or a WAN) is not feasible as
 long as the underlying implementation are remote objects with callbacks. So, in order to make the
@@ -185,8 +185,8 @@ access *that* remote object located at *this* container.
   be passed manually by JVM args, don't forget that IP addresses change when restarting the network.
   I was playing with that API though JShell, and I think it will work well when I implement it.
 
-- [Storage issues](./troubleshooting/storage/storage.md): Container out of space, "no space left on
-  device" when running an app.
+- [Storage issues](../troubleshooting/storage/storage.md): Container out of 
+  space, "no space left on device" when running an app.
 
 ### Desktop client
 
@@ -238,7 +238,7 @@ client will run:
 
 #### Suggested reading
 
-In [this article](troubleshooting/binary-incompatibility), I talk about
+In [this article](../troubleshooting/binary-incompatibility), I talk about
 an experience I had with the famous binary compatibility.
 
 #### Issues
