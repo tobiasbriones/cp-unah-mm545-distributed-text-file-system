@@ -4,8 +4,8 @@
 
 # Storage Issues
 
-If a linux container gets out of space, you might experience a similar error when running a Java
-application:
+If a linux container gets out of space, you might experience a similar error
+when running a Java application:
 
 ```
 Starting a Gradle Daemon, 2 busy Daemons could not be reused, use --status for details
@@ -68,26 +68,27 @@ Caused by: java.io.IOException: No space left on device
         ... 19 more
 ```
 
-That happened to me just before the last steps when testing the system the last time, and the client
-applications stopped working since the servers went down!. When running `lxc init` at the beginning
-I accepted the default 6 GB storage pool and that wasn't enough!. I realized that my LXC storage
-pool was out of space. The solution is to create a new storage pool and move the container(s) to the
-new larger pool:
+That happened to me just before the last steps when testing the system the last
+time, and the client applications stopped working since the servers went down!.
+When running `lxc init` at the beginning I accepted the default 6 GB storage
+pool and that wasn't enough!. I realized that my LXC storage pool was out of
+space. The solution is to create a new storage pool and move the container(s) to
+the new larger pool:
 
 ![Move Container to New Storage Pool](./move-container-to-new-storage-pool.png)
 
-Then the server will go back to function properly. I just moved the `fs` container from the default
-pool to the new pool, and so I left much more free space on the default pool for the `registry`
-container:
+Then the server will go back to function properly. I just moved the `fs`
+container from the default pool to the new pool, and so I left much more free
+space on the default pool for the `registry`container:
 
 ![New Default Storage Pool](./new-def-storage-pool-info.png)
 
 The following commands may be useful:
 
 - `lxc storage list`
-  
+
 - `lxc storage show default`
-  
+
 - `lxc storage info default`
 
 - `lxc storage create { pool-name } zfs --size={ pool-size }GB`
