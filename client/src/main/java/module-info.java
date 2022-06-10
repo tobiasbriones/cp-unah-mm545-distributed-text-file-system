@@ -16,10 +16,7 @@
  */
 module engineer.mathsoftware.cp.dtfs.client {
     requires java.rmi;
-    requires javafx.base;
-    requires javafx.graphics;
     requires javafx.controls;
-    requires javafx.fxml;
     requires engineer.mathsoftware.cp.dtfs;
     requires engineer.mathsoftware.cp.dtfs.impl;
 
