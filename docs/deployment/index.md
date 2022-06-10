@@ -203,7 +203,7 @@ container.
   addresses change when restarting the network. I was playing with that API
   though JShell, and I think it will work well when I implement it.
 
-- [Storage issues](../troubleshooting/storage/storage.md): Container out of
+- [Storage issues](../troubleshooting/storage/index.md): Container out of
   space, "no space left on device" when running an app.
 
 ### Desktop client
