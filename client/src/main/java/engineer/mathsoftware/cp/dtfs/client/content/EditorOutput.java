@@ -136,7 +136,7 @@ final class EditorOutput implements Editor.Output {
                 );
             }
         };
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             try {
                 var result = service.readTextFile(file);
                 resultConsumer.accept(result);

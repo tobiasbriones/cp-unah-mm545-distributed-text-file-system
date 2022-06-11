@@ -184,7 +184,7 @@ final class FilesOutput implements Files.Output {
                 );
             }
         };
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             try {
                 var result = service.deleteFile(file);
                 resultConsumer.accept(result);

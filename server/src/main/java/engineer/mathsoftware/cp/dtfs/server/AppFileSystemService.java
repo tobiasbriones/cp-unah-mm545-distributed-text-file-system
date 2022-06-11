@@ -225,8 +225,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static RealTimeFileSystem loadRealTimeFileSystem() {
-        final DirectoryNode root = loadRoot();
-        final Map<File, LastUpdateStatus> statuses = loadStatuses();
+        var root = loadRoot();
+        var statuses = loadStatuses();
         return new RealTimeFileSystem(root, statuses);
     }
 
