@@ -12,6 +12,8 @@ import engineer.mathsoftware.cp.dtfs.client.info.Info;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
 import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Failure;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Success;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import javafx.application.Platform;
@@ -68,24 +70,24 @@ final class EditorOutput implements Editor.Output {
     }
 
     // ---------- PUSH
-    private void pushFile(File.TextFile f) {
-        var result = repository.get(f);
-
-        if (result instanceof Result.Success<TextFileContent> s) {
-            pushFileContentAsync(s.value());
-        }
-        else if (result instanceof Result.Failure<TextFileContent> fail) {
-            fail.ifPresent(throwable -> infoInput.setError(throwable.getMessage()));
+    private void pushFile(File.TextFile file) {
+        switch (repository.get(file)) {
+            case Success<TextFileContent> s -> pushFileContentAsync(s.value());
+            case Failure<TextFileContent> f -> f.ifPresent(
+                throwable -> infoInput.setError(throwable.getMessage())
+            );
         }
     }
 
     private void pushFileContentAsync(TextFileContent content) {
         Consumer<Result<Nothing>> resultConsumer = result -> {
-            if (result instanceof Result.Success<Nothing>) {
-                Platform.runLater(() -> onFilePushed(content.file()));
-            }
-            else {
-                Platform.runLater(() -> onFilePushFailed(content.file()));
+            switch (result) {
+                case Success<Nothing> ignored -> Platform.runLater(
+                    () -> onFilePushed(content.file())
+                );
+                case Failure<Nothing> ignored -> Platform.runLater(
+                    () -> onFilePushFailed(content.file())
+                );
             }
         };
         Runnable runnable = () -> {
@@ -125,14 +127,13 @@ final class EditorOutput implements Editor.Output {
     // ---------- PULL
     private void pullFile(File.TextFile file) {
         Consumer<Result<TextFileContent>> resultConsumer = result -> {
-            if (result instanceof Result.Success<TextFileContent> s) {
-                Platform.runLater(() -> onFileContentPulled(s.value()));
-            }
-            else if (result instanceof Result.Failure<TextFileContent> fail) {
-                fail.ifPresent(throwable -> onFilePullFailed(
-                    file,
-                    throwable.getMessage()
-                ));
+            switch (result) {
+                case Success<TextFileContent> s -> Platform.runLater(
+                    () -> onFileContentPulled(s.value())
+                );
+                case Failure<TextFileContent> fail -> fail.ifPresent(
+                    throwable -> onFilePullFailed(file, throwable.getMessage())
+                );
             }
         };
         final Runnable runnable = () -> {

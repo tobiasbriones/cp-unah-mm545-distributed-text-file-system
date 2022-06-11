@@ -7,7 +7,8 @@ package engineer.mathsoftware.cp.dtfs.client.content.editor;
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
-import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Failure;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Success;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
@@ -82,14 +83,12 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
             clear();
             return;
         }
-        var result = repository.get(currentFile);
-
-        if (result instanceof Result.Success<TextFileContent> s) {
-            var content = s.value();
-            setCurrentFileContent(content.value());
-        }
-        else if (result instanceof Result.Failure<TextFileContent> f) {
-            f.ifPresent(System.out::println);
+        switch (repository.get(currentFile)) {
+            case Success<TextFileContent> s -> {
+                var content = s.value();
+                setCurrentFileContent(content.value());
+            }
+            case Failure f -> f.ifPresent(System.out::println);
         }
     }
 
@@ -108,11 +107,9 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
             content
         ));
 
-        if (result instanceof Result.Success<Nothing>) {
-            addToChangeList();
-        }
-        else if (result instanceof Result.Failure<Nothing> f) {
-            f.ifPresent(System.out::println);
+        switch (result) {
+            case Success<Nothing> s -> addToChangeList();
+            case Failure f -> f.ifPresent(System.out::println);
         }
     }
 

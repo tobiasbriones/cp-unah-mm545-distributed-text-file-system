@@ -10,7 +10,8 @@ import engineer.mathsoftware.cp.dtfs.io.CommonPath;
 import engineer.mathsoftware.cp.dtfs.io.Directory;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
-import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Failure;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Success;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
@@ -145,12 +146,11 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     private void createNewFile(File.TextFile file) {
-        var result = repository.add(new TextFileContent(file, ""));
-        if (result instanceof Result.Failure<Nothing> f) {
-            f.ifPresent(System.out::println);
-        }
-        else {
-            getOutput().ifPresent(output -> output.onFileCreated(file));
+        switch (repository.add(new TextFileContent(file, ""))) {
+            case Success<Nothing> ignored -> getOutput().ifPresent(
+                output -> output.onFileCreated(file)
+            );
+            case Failure<Nothing> fail -> fail.ifPresent(System.out::println);
         }
     }
 
@@ -165,24 +165,28 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     private void delete(CommonFile commonFile) {
-        if (commonFile instanceof Directory d) {
-            try {
-                AppLocalFiles.deleteDirectory(d);
-                getOutput().ifPresent(output -> output.onFileDeleted(d));
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+        switch (commonFile) {
+            case Directory d -> deleteDirectory(d);
+            case File.TextFile f -> deleteFile(f);
         }
-        else if (commonFile instanceof File.TextFile f) {
-            var result = repository.remove(f);
+    }
 
-            if (result instanceof Result.Failure<Nothing> fail) {
-                fail.ifPresent(System.out::println);
-            }
-            else {
-                getOutput().ifPresent(output -> output.onFileDeleted(f));
-            }
+    private void deleteDirectory(Directory d) {
+        try {
+            AppLocalFiles.deleteDirectory(d);
+            getOutput().ifPresent(output -> output.onFileDeleted(d));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteFile(File.TextFile f) {
+        switch (repository.remove(f)) {
+            case Success<Nothing> ignored -> getOutput().ifPresent(
+                output -> output.onFileDeleted(f)
+            );
+            case Failure<Nothing> fail -> fail.ifPresent(System.out::println);
         }
     }
 

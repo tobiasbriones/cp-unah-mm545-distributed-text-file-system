@@ -72,7 +72,7 @@ final class FilesOutput implements Files.Output {
     }
 
     private String loadFile(File.TextFile file) {
-        return switch(repository.get(file)) {
+        return switch (repository.get(file)) {
             case Success<TextFileContent> s -> s.value().value();
             case Failure ignore -> "";
         };
@@ -80,22 +80,22 @@ final class FilesOutput implements Files.Output {
 
     // ---------- CREATE
     private void createRemoteFileAsync(CommonFile file) {
-        if (file instanceof Directory d) {
-            createRemoteDirectoryAsync(d);
-        }
-        else if (file instanceof File.TextFile f) {
-            createRemoteTextFileAsync(f);
+        switch (file) {
+            case Directory d -> createRemoteDirectoryAsync(d);
+            case File.TextFile f -> createRemoteTextFileAsync(f);
         }
     }
 
     private void createRemoteTextFileAsync(File.TextFile file) {
         var content = new TextFileContent(file, "");
         Consumer<Result<Nothing>> resultConsumer = result -> {
-            if (result instanceof Result.Success<Nothing>) {
-                Platform.runLater(() -> onNewRemoteFileWrote(content));
-            }
-            else {
-                Platform.runLater(() -> onNewRemoteFileWriteError(file));
+            switch (result) {
+                case Success<Nothing> ignored -> Platform.runLater(
+                    () -> onNewRemoteFileWrote(content)
+                );
+                case Failure<Nothing> ignored -> Platform.runLater(
+                    () -> onNewRemoteFileWriteError(file)
+                );
             }
         };
         Runnable runnable = () -> {
@@ -115,11 +115,13 @@ final class FilesOutput implements Files.Output {
 
     private void createRemoteDirectoryAsync(Directory directory) {
         Consumer<Result<Nothing>> resultConsumer = result -> {
-            if (result instanceof Result.Success<Nothing>) {
-                Platform.runLater(() -> onRemoteDirectoryWrote(directory));
-            }
-            else {
-                Platform.runLater(() -> onNewRemoteFileWriteError(directory));
+            switch (result) {
+                case Success<Nothing> ignored -> Platform.runLater(
+                    () -> onRemoteDirectoryWrote(directory)
+                );
+                case Failure<Nothing> ignored -> Platform.runLater(
+                    () -> onNewRemoteFileWriteError(directory)
+                );
             }
         };
         Runnable runnable = () -> {
@@ -173,11 +175,13 @@ final class FilesOutput implements Files.Output {
     // ---------- DELETE
     private void deleteRemoteFileAsync(CommonFile file) {
         Consumer<Result<Nothing>> resultConsumer = result -> {
-            if (result instanceof Result.Success<Nothing>) {
-                Platform.runLater(() -> onRemoteFileDeleted(file));
-            }
-            else {
-                Platform.runLater(() -> onRemoteFileDeleteError(file));
+            switch (result) {
+                case Success<Nothing> ignored -> Platform.runLater(
+                    () -> onRemoteFileDeleted(file)
+                );
+                case Failure<Nothing> ignored -> Platform.runLater(
+                    () -> onRemoteFileDeleteError(file)
+                );
             }
         };
         final Runnable runnable = () -> {
@@ -200,7 +204,8 @@ final class FilesOutput implements Files.Output {
     }
 
     private void onRemoteFileDeleteError(CommonFile file) {
-        infoInput.setError("Fail to delete remote file: " + file.path().value());
+        infoInput.setError("Fail to delete remote file: " + file.path()
+                                                                .value());
     }
 
     record DependencyConfig(
