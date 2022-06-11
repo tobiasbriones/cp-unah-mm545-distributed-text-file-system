@@ -14,9 +14,8 @@ import java.nio.file.Path;
  */
 public final class CommonPaths {
     public static Path toPath(Path root, CommonPath commonPath) {
-        final var sb = new StringBuilder(5);
-
-        for (final String token : commonPath.split()) {
+        var sb = new StringBuilder(5);
+        for (var token : commonPath.split()) {
             sb.append(token);
             sb.append(File.separator);
         }

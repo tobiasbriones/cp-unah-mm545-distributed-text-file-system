@@ -32,8 +32,8 @@ public final class FileSystems {
         Map<File, LastUpdateStatus> recentStatuses,
         Map<File, LastUpdateStatus> localStatuses
     ) {
-        final LastUpdateStatus recent = recentStatuses.get(file);
-        final LastUpdateStatus local = localStatuses.get(file);
+        var recent = recentStatuses.get(file);
+        var local = localStatuses.get(file);
         var isInvalid = true;
 
         if (recent != null && local != null) {

@@ -14,6 +14,8 @@ import engineer.mathsoftware.cp.dtfs.io.Directory;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
 import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Failure;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Success;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import javafx.application.Platform;
@@ -43,8 +45,7 @@ final class FilesOutput implements Files.Output {
 
     @Override
     public void onOpenFile(File.TextFile file) {
-        final String content = loadFile(file);
-
+        var content = loadFile(file);
         editorInput.setWorkingFile(file, content);
         infoInput.end("Open file: " + file.path().value());
     }
@@ -103,7 +104,7 @@ final class FilesOutput implements Files.Output {
         };
         Runnable runnable = () -> {
             try {
-                final Result<Nothing> result = service.writeTextFile(content);
+                var result = service.writeTextFile(content);
                 resultConsumer.accept(result);
             }
             catch (RemoteException e) {

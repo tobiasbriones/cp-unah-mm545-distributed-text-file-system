@@ -16,8 +16,7 @@ import engineer.mathsoftware.cp.dtfs.io.CommonFile;
  * @author Tobias Briones
  * @see FileContent
  */
-public interface FileRepository<F extends CommonFile, C extends FileContent<F
-    , ?>> {
+public interface FileRepository<F extends CommonFile, C extends FileContent<F, ?>> {
     Result<C> get(F file);
 
     Result<Nothing> set(C content);
