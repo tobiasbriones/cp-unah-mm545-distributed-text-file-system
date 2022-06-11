@@ -26,6 +26,13 @@ import java.util.function.Consumer;
  * @author Tobias Briones
  */
 class EditorOutput implements Editor.Output {
+    record DependencyConfig(
+        TextFileRepository repository,
+        Files.Input filesInput,
+        Editor.Input editorInput,
+        Info.Input infoInput
+    ) {}
+
     private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;
@@ -171,8 +178,9 @@ class EditorOutput implements Editor.Output {
     }
 
     private void onFilePullFailed(File.TextFile file, String message) {
-        infoInput.setError("Fail to pull file: " + file.path()
-                                                       .value() + ", " + message);
+        infoInput.setError(
+            "Fail to pull file: " + file.path().value() + ", " + message
+        );
     }
 
     private void updateLocalContent(TextFileContent content) {
@@ -188,11 +196,4 @@ class EditorOutput implements Editor.Output {
             fail.ifPresent(System.out::println);
         }
     }
-
-    record DependencyConfig(
-        TextFileRepository repository,
-        Files.Input filesInput,
-        Editor.Input editorInput,
-        Info.Input infoInput
-    ) {}
 }

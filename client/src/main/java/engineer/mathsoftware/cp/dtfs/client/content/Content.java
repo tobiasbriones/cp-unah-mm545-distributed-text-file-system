@@ -43,13 +43,30 @@ public final class Content implements Initializable {
         void update();
     }
 
+    record ChildrenConfig(
+        Files files,
+        Editor editor
+    ) {
+        ViewConfig newViewConfig() {
+            return new ViewConfig(
+                files.getView(),
+                editor.getView()
+            );
+        }
+    }
+
+    record ViewConfig(
+        Node filesView,
+        Node editorView
+    ) {}
+
     public static Content newInstance(DependencyConfig config) {
         var repository = config.repository();
         var children = new ChildrenConfig(
-            Files.newInstance(
+            new Files(
                 new Files.DependencyConfig(repository)
             ),
-            Editor.newInstance(
+            new Editor(
                 new Editor.DependencyConfig(repository)
             )
         );
@@ -179,21 +196,4 @@ public final class Content implements Initializable {
             e.printStackTrace();
         }
     }
-
-    record ChildrenConfig(
-        Files files,
-        Editor editor
-    ) {
-        ViewConfig newViewConfig() {
-            return new ViewConfig(
-                files.getView(),
-                editor.getView()
-            );
-        }
-    }
-
-    record ViewConfig(
-        Node filesView,
-        Node editorView
-    ) {}
 }

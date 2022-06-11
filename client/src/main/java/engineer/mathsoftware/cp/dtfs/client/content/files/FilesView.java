@@ -24,8 +24,8 @@ import java.util.Optional;
  * @author Tobias Briones
  */
 class FilesView extends VBox implements Files.View {
-    private static final int MIN_WIDTH = 240;
-    private static final int MAX_WIDTH = 360;
+    private static final double MIN_WIDTH = 240.0;
+    private static final double MAX_WIDTH = 360.0;
     private final TextField newFileField;
     private final Button newFileButton;
     private final VBox filesPane;
@@ -191,8 +191,7 @@ class FilesView extends VBox implements Files.View {
                 menu.getItems().addAll(newFileItem, newDirItem);
 
                 newFileItem.setOnAction(event -> controller.onNewFileAction(dir));
-                newDirItem.setOnAction(event -> controller.onNewDirectoryAction(
-                    dir));
+                newDirItem.setOnAction(event -> controller.onNewDirectoryAction(dir));
             }
             menu.getItems().addAll(deleteItem);
 

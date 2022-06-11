@@ -66,14 +66,10 @@ public final class Files implements Initializable {
                                 Controller,
                                 Input {}
 
-    public static Files newInstance(DependencyConfig config) {
-        return new Files(config);
-    }
-
     private final View view;
     private final Presenter presenter;
 
-    private Files(DependencyConfig config) {
+    public Files(DependencyConfig config) {
         view = new FilesView();
         presenter = new FilesPresenter(view, config.repository());
     }

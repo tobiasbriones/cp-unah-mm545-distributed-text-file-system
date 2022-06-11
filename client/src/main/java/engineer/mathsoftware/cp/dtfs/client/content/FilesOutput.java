@@ -25,6 +25,13 @@ import java.rmi.RemoteException;
 import java.util.function.Consumer;
 
 class FilesOutput implements Files.Output {
+    record DependencyConfig(
+        TextFileRepository repository,
+        Files.Input filesInput,
+        Editor.Input editorInput,
+        Info.Input infoInput
+    ) {}
+
     private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;
@@ -204,14 +211,8 @@ class FilesOutput implements Files.Output {
     }
 
     private void onRemoteFileDeleteError(CommonFile file) {
-        infoInput.setError("Fail to delete remote file: " + file.path()
-                                                                .value());
+        infoInput.setError(
+            "Fail to delete remote file: " + file.path().value()
+        );
     }
-
-    record DependencyConfig(
-        TextFileRepository repository,
-        Files.Input filesInput,
-        Editor.Input editorInput,
-        Info.Input infoInput
-    ) {}
 }

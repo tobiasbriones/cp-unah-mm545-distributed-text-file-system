@@ -67,11 +67,12 @@ class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implements A
     @Override
     public void onAbout() {
         var alert = new Alert(Alert.AlertType.INFORMATION);
-
         alert.setHeaderText("About");
         alert.setContentText(
-            "GitHub: https://github"
-            + ".com/tobiasbriones/cp-unah-mm545-distributed-text-file-system");
+            """
+            GitHub: https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system
+            """
+        );
         alert.show();
     }
 }

@@ -34,6 +34,29 @@ class App implements Initializable {
 
     interface View extends MvpView<Void> {}
 
+    record ChildrenConfig(
+        AppMenu menu,
+        Header header,
+        Content content,
+        Info info
+    ) {
+        ViewConfig newViewConfig() {
+            return new ViewConfig(
+                menu.getView(),
+                header.getView(),
+                content.getView(),
+                info.getView()
+            );
+        }
+    }
+
+    record ViewConfig(
+        Node menuView,
+        Node headerView,
+        Node contentView,
+        Node infoView
+    ) {}
+
     static App newInstance() {
         var repository = AppLocalFiles.newTextFileRepository();
         var menu = new AppMenu();
@@ -84,7 +107,7 @@ class App implements Initializable {
         info.init();
     }
 
-    public void start(Stage stage) {
+    void start(Stage stage) {
         var scene = new Scene((Parent) view);
         var title = "JavaRMI Text File System";
 
@@ -172,27 +195,4 @@ class App implements Initializable {
         info.getInput()
             .setError("Failed to connect to service: %s".formatted(FileSystemServices.HOST));
     }
-
-    record ChildrenConfig(
-        AppMenu menu,
-        Header header,
-        Content content,
-        Info info
-    ) {
-        ViewConfig newViewConfig() {
-            return new ViewConfig(
-                menu.getView(),
-                header.getView(),
-                content.getView(),
-                info.getView()
-            );
-        }
-    }
-
-    record ViewConfig(
-        Node menuView,
-        Node headerView,
-        Node contentView,
-        Node infoView
-    ) {}
 }

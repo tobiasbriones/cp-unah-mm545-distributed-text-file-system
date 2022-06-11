@@ -4,11 +4,8 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content;
 
-import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.OnFileUpdateListener;
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
-import engineer.mathsoftware.cp.dtfs.io.File;
-import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystems;
 import javafx.application.Platform;
 
@@ -16,7 +13,6 @@ import java.io.IOException;
 import java.io.Serial;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Map;
 
 import static engineer.mathsoftware.cp.dtfs.FileSystemService.RealTimeFileSystem;
 

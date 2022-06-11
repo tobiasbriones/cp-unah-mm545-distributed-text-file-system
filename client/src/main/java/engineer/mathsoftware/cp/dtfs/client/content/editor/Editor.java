@@ -53,14 +53,10 @@ public final class Editor implements Initializable {
                                 Controller,
                                 Input {}
 
-    public static Editor newInstance(DependencyConfig config) {
-        return new Editor(config);
-    }
-
     private final View view;
     private final Presenter presenter;
 
-    private Editor(DependencyConfig config) {
+    public Editor(DependencyConfig config) {
         view = new EditorView();
         presenter = new EditorPresenter(view, config.repository());
     }
