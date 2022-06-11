@@ -74,13 +74,6 @@ final class FilesView extends VBox implements Files.View {
     }
 
     @Override
-    public void setController(Files.Controller value) {
-        controller = value;
-        newFileButton.setOnMouseClicked(event -> controller.onCreateButtonClick());
-        treeView.setCellFactory(p -> new TreeCellFactory(controller));
-    }
-
-    @Override
     public String getCreateInputText() {
         return newFileField.getText();
     }
@@ -91,12 +84,19 @@ final class FilesView extends VBox implements Files.View {
     }
 
     @Override
+    public void setController(Files.Controller value) {
+        controller = value;
+        newFileButton.setOnMouseClicked(event -> controller.onCreateButtonClick());
+        treeView.setCellFactory(p -> new TreeCellFactory(controller));
+    }
+
+    @Override
     public void setRoot(DirectoryNode root) {
         final var rootItem = new FileItemView(root);
 
         rootItem.setExpanded(true);
         treeView.setRoot(rootItem);
-        final ChangeListener<? super TreeItem<Node<?>>> l =  (
+        final ChangeListener<? super TreeItem<Node<?>>> l = (
             observable, oldValue,
             newValue
         ) -> {
@@ -125,6 +125,15 @@ final class FilesView extends VBox implements Files.View {
             this.controller = controller;
         }
 
+        void setText(CommonFile file) {
+            if (file instanceof File f) {
+                setText(f.fileName().value());
+            }
+            else {
+                setText(file.name());
+            }
+        }
+
         @Override
         public void updateItem(Node<?> item, boolean empty) {
             super.updateItem(item, empty);
@@ -143,12 +152,13 @@ final class FilesView extends VBox implements Files.View {
                 setupIconView(file);
 
                 if (file instanceof File f) {
-                    final boolean isInvalid = controller.getStatus(f).isInvalid();
+                    final boolean isInvalid = controller.getStatus(f)
+                                                        .isInvalid();
                     final boolean isInChangelist = controller.isInChangelist(f);
 
                     if (isInvalid) {
                         if (isInChangelist) {
-                            styles += "-fx-text-fill: #E64A19;"; // red
+                            styles += "-fx-text-fill: #e64a19;"; // red
                         }
                         else {
                             styles += "-fx-text-fill: #757575;"; // grey
@@ -156,14 +166,14 @@ final class FilesView extends VBox implements Files.View {
                     }
                     else {
                         if (isInChangelist) {
-                            styles += "-fx-text-fill: #1976D2;"; // blue
+                            styles += "-fx-text-fill: #1976d2;"; // blue
                         }
                     }
                 }
             }
 
             if (isSelected()) {
-                styles += "-fx-background-color: #64B5F6;";
+                styles += "-fx-background-color: #64b5f6;";
             }
             else {
                 styles += "-fx-background-color: none;";
@@ -171,27 +181,19 @@ final class FilesView extends VBox implements Files.View {
             setStyle(styles);
         }
 
-        void setText(CommonFile file) {
-            if (file instanceof File f) {
-                setText(f.fileName().value());
-            }
-            else {
-                setText(file.name());
-            }
-        }
-
         void setupContextMenu(Node<?> item) {
             final ContextMenu menu = new ContextMenu();
             final var deleteItem = new MenuItem("Delete");
 
-            if(item instanceof DirectoryNode dir) {
+            if (item instanceof DirectoryNode dir) {
                 final var newFileItem = new MenuItem("New file");
                 final var newDirItem = new MenuItem("New directory");
 
                 menu.getItems().addAll(newFileItem, newDirItem);
 
                 newFileItem.setOnAction(event -> controller.onNewFileAction(dir));
-                newDirItem.setOnAction(event -> controller.onNewDirectoryAction(dir));
+                newDirItem.setOnAction(event -> controller.onNewDirectoryAction(
+                    dir));
             }
             menu.getItems().addAll(deleteItem);
 
@@ -200,7 +202,9 @@ final class FilesView extends VBox implements Files.View {
         }
 
         void setupIconView(CommonFile file) {
-            final String iconName = (file instanceof File.TextFile) ? TEXT_FILE_ICON_NAME : FOLDER_ICON_NAME;
+            final String iconName = (file instanceof File.TextFile)
+                                    ? TEXT_FILE_ICON_NAME
+                                    : FOLDER_ICON_NAME;
 
             setupIconView(iconName);
         }
@@ -221,7 +225,8 @@ final class FilesView extends VBox implements Files.View {
                     image = Optional.of(new Image((is)));
                 }
             }
-            catch (IOException ignore) {}
+            catch (IOException ignore) {
+            }
             return image;
         }
     }

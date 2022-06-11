@@ -4,11 +4,11 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content;
 
-import engineer.mathsoftware.cp.dtfs.client.info.Info;
 import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
 import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
 import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
+import engineer.mathsoftware.cp.dtfs.client.info.Info;
 import engineer.mathsoftware.cp.dtfs.io.CommonFile;
 import engineer.mathsoftware.cp.dtfs.io.Directory;
 import engineer.mathsoftware.cp.dtfs.io.File;
@@ -23,25 +23,21 @@ import java.rmi.RemoteException;
 import java.util.function.Consumer;
 
 final class FilesOutput implements Files.Output {
-    record DependencyConfig(
-        TextFileRepository repository,
-        Files.Input filesInput,
-        Editor.Input editorInput,
-        Info.Input infoInput
-    ) {}
-
     private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;
     private final Info.Input infoInput;
     private FileSystemService service;
-
     FilesOutput(DependencyConfig config) {
         this.repository = config.repository();
         this.filesInput = config.filesInput();
         this.editorInput = config.editorInput();
         this.infoInput = config.infoInput();
         this.service = null;
+    }
+
+    void setService(FileSystemService value) {
+        service = value;
     }
 
     @Override
@@ -73,14 +69,11 @@ final class FilesOutput implements Files.Output {
         deleteRemoteFileAsync(file);
     }
 
-    void setService(FileSystemService value) {
-        service = value;
-    }
-
     private String loadFile(File.TextFile file) {
         final Result<TextFileContent> result = repository.get(file);
 
-        // Waiting for switch pattern matching! for proper monadic result design!
+        // Waiting for switch pattern matching! for proper monadic result
+        // design!
         if (result instanceof Result.Success<TextFileContent> s) {
             return s.value().value();
         }
@@ -133,7 +126,8 @@ final class FilesOutput implements Files.Output {
         };
         final Runnable runnable = () -> {
             try {
-                final Result<Nothing> result = service.writeDirectory(directory);
+                final Result<Nothing> result =
+                    service.writeDirectory(directory);
                 resultConsumer.accept(result);
             }
             catch (RemoteException e) {
@@ -208,6 +202,14 @@ final class FilesOutput implements Files.Output {
     }
 
     private void onRemoteFileDeleteError(CommonFile file) {
-        infoInput.setError("Fail to delete remote file: " + file.path().value());
+        infoInput.setError("Fail to delete remote file: " + file.path()
+                                                                .value());
     }
+
+    record DependencyConfig(
+        TextFileRepository repository,
+        Files.Input filesInput,
+        Editor.Input editorInput,
+        Info.Input infoInput
+    ) {}
 }

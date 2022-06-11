@@ -45,19 +45,6 @@ final class AppMenuView extends MenuBar implements AppMenu.View {
     }
 
     @Override
-    public void createView() {
-        createFileMenu();
-        createSessionMenu();
-        createHelpMenu();
-
-        getMenus().addAll(
-            fileMenu,
-            sessionMenu,
-            helpMenu
-        );
-    }
-
-    @Override
     public void bindEvents(AppMenu.Controller controller) {
         fileNewItem.setOnAction(event -> controller.onNewFile());
         fileNewDirectoryItem.setOnAction(event -> controller.onNewDirectory());
@@ -68,6 +55,19 @@ final class AppMenuView extends MenuBar implements AppMenu.View {
         sessionLoginItem.setOnAction(event -> controller.onLogin());
 
         helpAboutItem.setOnAction(event -> controller.onAbout());
+    }
+
+    @Override
+    public void createView() {
+        createFileMenu();
+        createSessionMenu();
+        createHelpMenu();
+
+        getMenus().addAll(
+            fileMenu,
+            sessionMenu,
+            helpMenu
+        );
     }
 
     private void createFileMenu() {

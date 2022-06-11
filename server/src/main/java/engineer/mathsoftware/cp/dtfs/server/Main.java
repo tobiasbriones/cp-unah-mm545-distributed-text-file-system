@@ -18,6 +18,70 @@ public final class Main {
     private static final String REG_SERVER_NAME = "FileSystemService";
     private static final String FS_SERVER_NAME = "RMIServer";
 
+    public static void main(String[] args) {
+        final var config = ServerConfig.from(args);
+        final var main = new Main(config);
+
+        main.start();
+    }
+    private final ServerConfig config;
+    private FileSystemService server;
+    private Main(ServerConfig config) {
+        this.config = config;
+        server = null;
+
+        System.setProperty("java.rmi.server.hostname", config.hostname());
+        try {
+            server = new AppFileSystemService();
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    private void start() {
+        if (config.type().equals(ServerConfig.SERVER_TYPE_REG)) {
+            startRegServer();
+        }
+        else {
+            startFileSystemServer();
+        }
+    }
+
+    private void startRegServer() {
+        try {
+            final Registry registry =
+                LocateRegistry.createRegistry(ServerConfig.PORT);
+
+            System.out.println("Binding registry server at " + config.hostname());
+            registry.rebind(REG_SERVER_NAME, server);
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
+    private void startFileSystemServer() {
+        try {
+            final String registryHostname = config.registryHostname();
+            final Registry registry = LocateRegistry.getRegistry(
+                registryHostname,
+                ServerConfig.PORT
+            );
+            final var service = (RegistryService) registry.lookup(
+                REG_SERVER_NAME);
+
+            System.out.println("Binding file server at " + config.hostname());
+            service.regObject(FS_SERVER_NAME, server);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
     private record ServerConfig(
         String hostname,
         String type,
@@ -46,67 +110,6 @@ public final class Main {
 
         static String getRegistryHostname(String[] args) {
             return args.length > 2 ? args[2] : "";
-        }
-    }
-
-    public static void main(String[] args) {
-        final var config = ServerConfig.from(args);
-        final var main = new Main(config);
-
-        main.start();
-    }
-
-    private final ServerConfig config;
-    private FileSystemService server;
-
-    private Main(ServerConfig config) {
-        this.config = config;
-        server = null;
-
-        System.setProperty("java.rmi.server.hostname", config.hostname());
-        try {
-            server = new AppFileSystemService();
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-    }
-
-    private void start() {
-        if (config.type().equals(ServerConfig.SERVER_TYPE_REG)) {
-            startRegServer();
-        }
-        else {
-            startFileSystemServer();
-        }
-    }
-
-    private void startRegServer() {
-        try {
-            final Registry registry = LocateRegistry.createRegistry(ServerConfig.PORT);
-
-            System.out.println("Binding registry server at " + config.hostname());
-            registry.rebind(REG_SERVER_NAME, server);
-        }
-        catch (RemoteException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-    }
-
-    private void startFileSystemServer() {
-        try {
-            final String registryHostname = config.registryHostname();
-            final Registry registry = LocateRegistry.getRegistry(registryHostname, ServerConfig.PORT);
-            final var service = (RegistryService) registry.lookup(REG_SERVER_NAME);
-
-            System.out.println("Binding file server at " + config.hostname());
-            service.regObject(FS_SERVER_NAME, server);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
         }
     }
 }

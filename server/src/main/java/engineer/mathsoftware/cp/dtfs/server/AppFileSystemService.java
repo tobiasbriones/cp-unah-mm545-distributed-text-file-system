@@ -4,12 +4,12 @@
 
 package engineer.mathsoftware.cp.dtfs.server;
 
-import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
 import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.OnFileUpdateListener;
 import engineer.mathsoftware.cp.dtfs.RegistryService;
-import engineer.mathsoftware.cp.dtfs.io.*;
+import engineer.mathsoftware.cp.dtfs.impl.io.file.text.AppLocalTextFileRepository;
 import engineer.mathsoftware.cp.dtfs.io.File;
+import engineer.mathsoftware.cp.dtfs.io.*;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
 import engineer.mathsoftware.cp.dtfs.io.file.Result;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
@@ -40,38 +40,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     @Serial
     private static final long serialVersionUID = 7826374551124313303L;
     private static final String RELATIVE_ROOT = "fs";
-    static final String ROOT = System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
-
-    private record PathType(Path path, boolean isDirectory) {
-        static PathType of(Path path) {
-            return new PathType(path, Files.isDirectory(path));
-        }
-
-        Optional<CommonPathType> toRelativeCommonPathType(Path rootPath) {
-            final Path relativePath = rootPath.relativize(path);
-            return CommonPath.of(relativePath)
-                             .map(commonPath -> new CommonPathType(path, commonPath, isDirectory));
-        }
-    }
-
-    private record CommonPathType(Path path, CommonPath commonPath, boolean isDirectory) {
-        CommonFile toCommonFile() {
-            return isDirectory ? Directory.of(commonPath) : File.of(commonPath);
-        }
-    }
-
-    private static Path toPath() {
-        return toPath(CommonPath.of());
-    }
-
-    private static Path toPath(CommonPath path) {
-        return Path.of(toLocalFile(path).toURI());
-    }
-
-    private static JavaFile toLocalFile(CommonPath path) {
-        return new JavaFile(ROOT, path.value());
-    }
-
+    static final String ROOT =
+        System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
     private final Path rootPath;
     private final List<OnFileUpdateListener> clients;
 
@@ -81,6 +51,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         clients = new ArrayList<>(10);
 
         System.out.println("Running on: " + ROOT);
+    }
+
+    private static void setChanged(File file) throws IOException {
+        final Map<File, LastUpdateStatus> statuses = loadStatuses();
+        final LastUpdateStatus status = LastUpdateStatus.of(file);
+
+        // TODO files are coming file.txt not like /file.txt hence
+        //  deleteFileStatus won't work!!!
+        statuses.put(file, status);
+        saveStatuses(statuses);
     }
 
     @Override
@@ -94,14 +74,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public Result<TextFileContent> readTextFile(File.TextFile file) throws RemoteException {
+    public Result<TextFileContent> readTextFile(File.TextFile file) throws
+                                                                    RemoteException {
         final var repository = new AppLocalTextFileRepository(rootPath);
         final var result = repository.get(file);
         return mapResult(result);
     }
 
     @Override
-    public Result<Nothing> writeDirectory(Directory directory) throws RemoteException {
+    public Result<Nothing> writeDirectory(Directory directory) throws
+                                                               RemoteException {
         final JavaFile localFile = toLocalFile(directory.path());
         final Path path = localFile.toPath();
 
@@ -119,11 +101,14 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public Result<Nothing> writeTextFile(TextFileContent content) throws RemoteException {
+    public Result<Nothing> writeTextFile(TextFileContent content) throws
+                                                                  RemoteException {
         final File file = content.file();
         final Path path = toLocalFile(file.path()).toPath();
         final var repository = new AppLocalTextFileRepository(rootPath);
-        final var result = Files.exists(path) ? repository.set(content) : repository.add(content);
+        final var result = Files.exists(path)
+                           ? repository.set(content)
+                           : repository.add(content);
         final var clientResult = mapResult(result);
 
         if (clientResult instanceof Result.Success) {
@@ -155,12 +140,14 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
+    public boolean addOnFileUpdateListener(OnFileUpdateListener l) throws
+                                                                   RemoteException {
         return clients.add(l);
     }
 
     @Override
-    public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
+    public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws
+                                                                      RemoteException {
         return clients.remove(l);
     }
 
@@ -216,8 +203,21 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         }
     }
 
+    private static Path toPath() {
+        return toPath(CommonPath.of());
+    }
+
+    private static Path toPath(CommonPath path) {
+        return Path.of(toLocalFile(path).toURI());
+    }
+
+    private static JavaFile toLocalFile(CommonPath path) {
+        return new JavaFile(ROOT, path.value());
+    }
+
     private static <T extends Serializable> Result<T> mapResult(Result<T> result) {
-        final Consumer<Throwable> logFailure = reason -> System.out.println(reason.getMessage()); // Use proper logging
+        final Consumer<Throwable> logFailure = reason -> System.out.println(
+            reason.getMessage()); // Use proper logging
 
         // Switch pattern matching for Java17 ep+
         if (result instanceof Result.Failure<T> f) {
@@ -252,7 +252,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         final List<CommonPathType> children = Arrays.stream(directChildrenList)
                                                     .map(java.io.File::toPath)
                                                     .map(PathType::of)
-                                                    .map(pathType -> pathType.toRelativeCommonPathType(rootPath))
+                                                    .map(pathType -> pathType.toRelativeCommonPathType(
+                                                        rootPath))
                                                     .filter(Optional::isPresent)
                                                     .map(Optional::get)
                                                     .toList();
@@ -272,15 +273,6 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
                 loadNode(directoryChild, childPath, rootPath);
             }
         }
-    }
-
-    private static void setChanged(File file) throws IOException {
-        final Map<File, LastUpdateStatus> statuses = loadStatuses();
-        final LastUpdateStatus status = LastUpdateStatus.of(file);
-
-        // TODO files are coming file.txt not like /file.txt hence deleteFileStatus won't work!!!
-        statuses.put(file, status);
-        saveStatuses(statuses);
     }
 
     private static void deleteFileStatus(File file) throws IOException {
@@ -305,11 +297,41 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         }
     }
 
-    private static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws IOException {
+    private static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws
+                                                                           IOException {
         final Path path = Path.of(ROOT, ".statuses.data");
 
-        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
+        try (
+            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
+                path.toFile()))
+        ) {
             output.writeObject(statuses);
+        }
+    }
+
+    private record PathType(Path path, boolean isDirectory) {
+        Optional<CommonPathType> toRelativeCommonPathType(Path rootPath) {
+            final Path relativePath = rootPath.relativize(path);
+            return CommonPath.of(relativePath)
+                             .map(commonPath -> new CommonPathType(
+                                 path,
+                                 commonPath,
+                                 isDirectory
+                             ));
+        }
+
+        static PathType of(Path path) {
+            return new PathType(path, Files.isDirectory(path));
+        }
+    }
+
+    private record CommonPathType(
+        Path path,
+        CommonPath commonPath,
+        boolean isDirectory
+    ) {
+        CommonFile toCommonFile() {
+            return isDirectory ? Directory.of(commonPath) : File.of(commonPath);
         }
     }
 }

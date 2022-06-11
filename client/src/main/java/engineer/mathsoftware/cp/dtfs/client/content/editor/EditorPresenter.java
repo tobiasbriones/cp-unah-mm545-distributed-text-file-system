@@ -29,6 +29,11 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
         this.currentFile = null;
     }
 
+    private void setCurrentFileContent(String content) {
+        view.setWorkingFile(currentFile.name());
+        view.setContent(content);
+    }
+
     @Override
     public void init() {
         view.createView();
@@ -91,11 +96,6 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
         }
     }
 
-    private void setCurrentFileContent(String content) {
-        view.setWorkingFile(currentFile.name());
-        view.setContent(content);
-    }
-
     private void clear() {
         currentFile = null;
 
@@ -107,12 +107,15 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
         if (currentFile == null) {
             return;
         }
-        final Result<Nothing> result = repository.set(new TextFileContent(currentFile, content));
+        final Result<Nothing> result = repository.set(new TextFileContent(
+            currentFile,
+            content
+        ));
 
         if (result instanceof Result.Success<Nothing>) {
             addToChangeList();
         }
-        else if(result instanceof Result.Failure<Nothing> f) {
+        else if (result instanceof Result.Failure<Nothing> f) {
             f.ifPresent(System.out::println);
         }
     }
@@ -120,7 +123,8 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
     private void addToChangeList() {
         try {
             AppLocalFiles.addToChangeList(currentFile);
-            getOutput().ifPresent(output -> output.onFileAddedToChangelist(currentFile));
+            getOutput().ifPresent(output -> output.onFileAddedToChangelist(
+                currentFile));
         }
         catch (IOException e) {
             e.printStackTrace();

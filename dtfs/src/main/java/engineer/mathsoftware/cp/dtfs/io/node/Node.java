@@ -11,10 +11,6 @@ import engineer.mathsoftware.cp.dtfs.io.*;
  */
 public sealed interface Node<T extends CommonFile> permits DirectoryNode,
                                                            FileNode {
-    T commonFile();
-
-    CommonPath commonPath();
-
     default boolean isDirectory() {
         return commonFile() instanceof Directory;
     }
@@ -30,4 +26,8 @@ public sealed interface Node<T extends CommonFile> permits DirectoryNode,
     default JavaFile toJavaFile() {
         return JavaFile.from(commonFile());
     }
+
+    T commonFile();
+
+    CommonPath commonPath();
 }

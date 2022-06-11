@@ -14,6 +14,9 @@ import java.io.Serial;
  * @author Tobias Briones
  */
 public final class JavaFile extends File {
+    @Serial
+    private static final long serialVersionUID = -38976411105819394L;
+
     public static JavaFile from(CommonFile commonFile) {
         return from(commonFile.path());
     }
@@ -21,9 +24,6 @@ public final class JavaFile extends File {
     public static JavaFile from(CommonPath commonPath) {
         return new JavaFile(commonPath.value());
     }
-
-    @Serial
-    private static final long serialVersionUID = -38976411105819394L;
 
     public JavaFile(String pathname) {
         super(pathname);

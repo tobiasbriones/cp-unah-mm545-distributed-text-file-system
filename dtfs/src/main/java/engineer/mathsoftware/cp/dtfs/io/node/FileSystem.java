@@ -29,16 +29,23 @@ public final class FileSystem implements Serializable {
     @Serial
     private static final long serialVersionUID = -2650303079113294871L;
     private static final int INITIAL_FILES_CAPACITY = 25;
-    private final DirectoryNode root;
-    private final Map<File, Status> statuses;
 
-    public record Status(File file, boolean isInvalid) implements Serializable {}
+    public record Status(
+        File file,
+        boolean isInvalid
+    ) implements Serializable {}
 
-    public record LastUpdateStatus(File file, ZonedDateTime time) implements Serializable {
+    public record LastUpdateStatus(
+        File file,
+        ZonedDateTime time
+    ) implements Serializable {
         public static final ZoneId zoneId = ZoneId.of("US/Eastern");
 
         public static LastUpdateStatus of(File file) {
-            final ZonedDateTime time = ZonedDateTime.ofInstant(Instant.now(), zoneId);
+            final ZonedDateTime time = ZonedDateTime.ofInstant(
+                Instant.now(),
+                zoneId
+            );
             return new LastUpdateStatus(file, time);
         }
 
@@ -46,6 +53,8 @@ public final class FileSystem implements Serializable {
             return time.compareTo(other.time()) > 0;
         }
     }
+    private final DirectoryNode root;
+    private final Map<File, Status> statuses;
 
     public FileSystem(DirectoryNode root) {
         this.root = root;

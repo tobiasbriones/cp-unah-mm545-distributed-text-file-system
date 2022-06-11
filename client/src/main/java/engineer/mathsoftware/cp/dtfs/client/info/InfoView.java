@@ -42,7 +42,7 @@ final class InfoView extends VBox implements Info.View {
 
         errorLabel.managedProperty().bind(errorLabel.visibleProperty());
         errorLabel.setVisible(false);
-        errorLabel.setStyle("-fx-text-fill: #E64A19;");
+        errorLabel.setStyle("-fx-text-fill: #e64a19;");
 
         setPadding(new Insets(4, 16, 16, 16));
         setSpacing(4);

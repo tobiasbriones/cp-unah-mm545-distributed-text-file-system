@@ -49,14 +49,16 @@ final class FileItemView extends TreeItem<Node<?>> {
         return "FileItemView[] " + super.toString();
     }
 
-    private static ObservableList<TreeItem<Node<?>>> loadChildren(TreeItem<? extends Node<?>> item) {
+    private static ObservableList<TreeItem<Node<?>>> loadChildren(TreeItem<?
+        extends Node<?>> item) {
         final Node<?> node = item.getValue();
 
         if (node instanceof DirectoryNode dir) {
             final Collection<Node<?>> childrenNodes = dir.getChildren();
 
             if (!childrenNodes.isEmpty()) {
-                final ObservableList<TreeItem<Node<?>>> children = FXCollections.observableArrayList();
+                final ObservableList<TreeItem<Node<?>>> children =
+                    FXCollections.observableArrayList();
 
                 for (Node<?> child : childrenNodes) {
                     final var itemView = new FileItemView(child);

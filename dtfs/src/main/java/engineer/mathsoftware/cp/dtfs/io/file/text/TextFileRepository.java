@@ -11,4 +11,5 @@ import static engineer.mathsoftware.cp.dtfs.io.File.TextFile;
 /**
  * @author Tobias Briones
  */
-public interface TextFileRepository extends FileRepository<TextFile, TextFileContent> {}
+public interface TextFileRepository extends FileRepository<TextFile,
+    TextFileContent> {}

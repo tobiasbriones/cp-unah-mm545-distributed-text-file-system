@@ -26,7 +26,8 @@ import java.util.Set;
 public final class AppLocalFiles {
     private static final String FS_FILE_NAME = "fs.data";
     private static final String RELATIVE_ROOT = "fs";
-    private static final String ROOT = System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
+    private static final String ROOT =
+        System.getProperty("user.dir") + java.io.File.separator + RELATIVE_ROOT;
 
     public static FileSystem readFs() throws IOException {
         createRootIfNotExists();
@@ -36,7 +37,8 @@ public final class AppLocalFiles {
             return new FileSystem(DirectoryNode.of());
         }
 
-        try (ObjectInput input = new ObjectInputStream(new FileInputStream(file))) {
+        try (ObjectInput input =
+                 new ObjectInputStream(new FileInputStream(file))) {
             return (FileSystem) input.readObject();
         }
         catch (ClassNotFoundException e) {
@@ -49,7 +51,10 @@ public final class AppLocalFiles {
         createRootIfNotExists();
         final var file = new java.io.File(ROOT, FS_FILE_NAME);
 
-        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (
+            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
+                file))
+        ) {
             output.writeObject(system);
         }
     }
@@ -61,7 +66,8 @@ public final class AppLocalFiles {
         saveStatuses(statuses);
     }
 
-    public static Map<File, FileSystem.LastUpdateStatus> readStatuses() throws IOException {
+    public static Map<File, FileSystem.LastUpdateStatus> readStatuses() throws
+                                                                        IOException {
         createRootIfNotExists();
         final Path path = Path.of(ROOT, ".statuses.data");
 
@@ -69,7 +75,8 @@ public final class AppLocalFiles {
             return new HashMap<>(0);
         }
 
-        try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+        try (ObjectInput input =
+                 new ObjectInputStream(new FileInputStream(path.toFile()))) {
             return (Map<File, FileSystem.LastUpdateStatus>) input.readObject();
         }
         catch (ClassNotFoundException e) {
@@ -78,11 +85,15 @@ public final class AppLocalFiles {
         }
     }
 
-    public static void saveStatuses(Map<File, FileSystem.LastUpdateStatus> statuses) throws IOException {
+    public static void saveStatuses(Map<File, FileSystem.LastUpdateStatus> statuses) throws
+                                                                                     IOException {
         createRootIfNotExists();
         final var file = new java.io.File(ROOT, ".statuses.data");
 
-        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (
+            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
+                file))
+        ) {
             output.writeObject(statuses);
         }
     }
@@ -109,7 +120,8 @@ public final class AppLocalFiles {
             return new HashSet<>(0);
         }
 
-        try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+        try (ObjectInput input =
+                 new ObjectInputStream(new FileInputStream(path.toFile()))) {
             return (Set<File>) input.readObject();
         }
         catch (ClassNotFoundException e) {
@@ -122,7 +134,10 @@ public final class AppLocalFiles {
         createRootIfNotExists();
         final var file = new java.io.File(ROOT, ".changelist.data");
 
-        try (ObjectOutput output = new ObjectOutputStream(new FileOutputStream(file))) {
+        try (
+            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
+                file))
+        ) {
             output.writeObject(changelist);
         }
     }
@@ -145,6 +160,8 @@ public final class AppLocalFiles {
         return new AppLocalTextFileRepository(Path.of(ROOT));
     }
 
+    private AppLocalFiles() {}
+
     private static void createRootIfNotExists() throws IOException {
         createDirsIfNotExist(Path.of(ROOT));
     }
@@ -154,6 +171,4 @@ public final class AppLocalFiles {
             Files.createDirectories(path);
         }
     }
-
-    private AppLocalFiles() {}
 }

@@ -4,8 +4,9 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content;
 
-import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystems;
@@ -17,7 +18,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
-import static engineer.mathsoftware.cp.dtfs.FileSystemService.*;
+import static engineer.mathsoftware.cp.dtfs.FileSystemService.RealTimeFileSystem;
 
 /**
  * Receives the file changes from the RMI server broadcast.
@@ -29,13 +30,14 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
     private static final long serialVersionUID = 7206688225773330503L;
     private final Content.OnLocalFsChangeListener l;
 
-    ContentOnFileUpdateListener(Content.OnLocalFsChangeListener l) throws RemoteException {
+    ContentOnFileUpdateListener(Content.OnLocalFsChangeListener l) throws
+                                                                   RemoteException {
         super();
         this.l = l;
     }
 
     @Override
-    public void onFSChanged(RealTimeFileSystem system) throws RemoteException {
+    public void onFSChanged(FileSystemService.RealTimeFileSystem system) throws RemoteException {
         updateLocalFs(system);
         post();
     }
@@ -44,9 +46,10 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
         Platform.runLater(l::update);
     }
 
-    private static void updateLocalFs(RealTimeFileSystem system) {
+    private static void updateLocalFs(FileSystemService.RealTimeFileSystem system) {
         try {
-            final Map<File, FileSystem.LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
+            final Map<File, FileSystem.LastUpdateStatus> statuses =
+                AppLocalFiles.readStatuses();
             final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
             AppLocalFiles.saveFs(fs);

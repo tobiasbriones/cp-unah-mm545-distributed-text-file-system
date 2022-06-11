@@ -57,7 +57,11 @@ final class HeaderView extends VBox implements Header.View {
         hostLabel.setText("-");
 
         statusBox.setSpacing(4);
-        statusBox.getChildren().addAll(statusTitleLabel, statusLabel, hostTitleLabel, hostLabel);
+        statusBox.getChildren().addAll(statusTitleLabel,
+                                       statusLabel,
+                                       hostTitleLabel,
+                                       hostLabel
+        );
 
         setPadding(new Insets(8, 0, 8, 0));
         setSpacing(8);
@@ -95,7 +99,8 @@ final class HeaderView extends VBox implements Header.View {
                 image = Optional.of(new ImageView(new Image((is))));
             }
         }
-        catch (IOException ignore) {}
+        catch (IOException ignore) {
+        }
         return image;
     }
 }

@@ -12,7 +12,7 @@
  */
 
 /**
- * @author Tobias Briones
+ *
  */
 module engineer.mathsoftware.cp.dtfs.impl {
     requires engineer.mathsoftware.cp.dtfs;

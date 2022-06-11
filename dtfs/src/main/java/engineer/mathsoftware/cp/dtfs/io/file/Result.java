@@ -22,12 +22,14 @@ public sealed interface Result<T extends Serializable> extends Serializable {
     }
 
     record Failure<T extends Serializable>(Throwable reason) implements Result<T> {
-        public static<T extends Serializable> Failure<T> of() {
+        public static <T extends Serializable> Failure<T> of() {
             return of(null);
         }
 
-        public static<T extends Serializable> Failure<T> of(Throwable reason) {
-            final Throwable nonNullReason = reason == null ? new RuntimeException("") : reason;
+        public static <T extends Serializable> Failure<T> of(Throwable reason) {
+            final Throwable nonNullReason = reason == null
+                                            ? new RuntimeException("")
+                                            : reason;
             return new Failure<>(nonNullReason);
         }
 

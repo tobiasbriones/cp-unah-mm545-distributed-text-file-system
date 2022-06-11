@@ -16,6 +16,8 @@ import java.util.function.Consumer;
  * @author Tobias Briones
  */
 final class Nodes {
+    private Nodes() {}
+
     static void setParent(Node<Directory> node, DirectoryNode parent) {
         addChild(parent, node);
     }
@@ -32,7 +34,10 @@ final class Nodes {
         list.forEach(child -> addChildUnsafe(node, child));
     }
 
-    static boolean removeChild(DirectoryNode node, Node<? extends CommonFile> child) {
+    static boolean removeChild(
+        DirectoryNode node,
+        Node<? extends CommonFile> child
+    ) {
         if (!node.hasChild(child.commonFile())) {
             return false;
         }
@@ -56,21 +61,10 @@ final class Nodes {
         });
     }
 
-    private static void requireValidChild(DirectoryNode node, Node<?> child) {
-        if (!isValidChild(node, child)) {
-            throw new InvalidChildException(node.commonFile(), child.commonFile());
-        }
-    }
-
-    private static void addChildUnsafe(DirectoryNode node, Node<?> child) {
-        node.addChildUnsafe(child);
-
-        if (child instanceof DirectoryNode dir) {
-            dir.setParentUnsafe(node);
-        }
-    }
-
-    static String getString(Node<? extends CommonFile> node, String indentation) {
+    static String getString(
+        Node<? extends CommonFile> node,
+        String indentation
+    ) {
         final CommonFile file = node.commonFile();
 
         if (node instanceof DirectoryNode dir && dir.hasChildren()) {
@@ -87,6 +81,23 @@ final class Nodes {
         return toString(file, indentation);
     }
 
+    private static void requireValidChild(DirectoryNode node, Node<?> child) {
+        if (!isValidChild(node, child)) {
+            throw new InvalidChildException(
+                node.commonFile(),
+                child.commonFile()
+            );
+        }
+    }
+
+    private static void addChildUnsafe(DirectoryNode node, Node<?> child) {
+        node.addChildUnsafe(child);
+
+        if (child instanceof DirectoryNode dir) {
+            dir.setParentUnsafe(node);
+        }
+    }
+
     private static String toString(CommonFile file, String indentation) {
         return """
                %s%s
@@ -94,10 +105,16 @@ final class Nodes {
     }
 
     private static boolean isValidChild(DirectoryNode node, Node<?> child) {
-        return !node.hasChild(child.commonFile()) && isValidChildPath(node.commonPath(), child.commonPath());
+        return !node.hasChild(child.commonFile()) && isValidChildPath(
+            node.commonPath(),
+            child.commonPath()
+        );
     }
 
-    private static boolean isValidChildPath(CommonPath path, CommonPath childPath) {
+    private static boolean isValidChildPath(
+        CommonPath path,
+        CommonPath childPath
+    ) {
         final String[] tokens = path.split();
         final String[] childTokens = childPath.split();
 
@@ -106,6 +123,4 @@ final class Nodes {
         }
         return childPath.getParent().equals(path);
     }
-
-    private Nodes() {}
 }

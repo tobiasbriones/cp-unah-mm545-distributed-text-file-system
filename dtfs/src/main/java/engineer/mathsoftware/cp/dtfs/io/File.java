@@ -16,25 +16,12 @@ import java.util.regex.Pattern;
  * @author Tobias Briones
  */
 public sealed interface File extends CommonFile {
-    static File of(CommonPath path) {
-        final String[] tokens = path.split();
-        final String fileNameValue = tokens[tokens.length - 1];
-        final Name fileName = new Name(fileNameValue);
-
-        // Check for the File type but only text files are supported right now...
-        return new TextFile(path);
-    }
-
     record TextFile(CommonPath path) implements File {
         public static final String EXTENSION = "txt";
 
         public TextFile(String path) {
             this(new CommonPath(path));
         }
-    }
-
-    default Name fileName() {
-        return Name.from(this);
     }
 
     record Name(String value) {
@@ -51,15 +38,10 @@ public sealed interface File extends CommonFile {
 
         static {
             VALID_NAME_REGEX = "\\w+\\.*-*";
-            NAME_PATTERN = Pattern.compile(VALID_NAME_REGEX, Pattern.CASE_INSENSITIVE);
-        }
-
-        static Name from(CommonFile file) {
-            return new Name(file.name());
-        }
-
-        static boolean isValid(CharSequence value) {
-            return NAME_PATTERN.matcher(value).find();
+            NAME_PATTERN = Pattern.compile(
+                VALID_NAME_REGEX,
+                Pattern.CASE_INSENSITIVE
+            );
         }
 
         public Name {
@@ -76,10 +58,37 @@ public sealed interface File extends CommonFile {
         }
 
         String extension() {
-            final Predicate<String> hasExtension = name -> name.contains(FILE_EXTENSION_DOT);
-            final Function<String, Integer> getIndex = name -> name.lastIndexOf(FILE_EXTENSION_DOT) + 1;
-            final Function<String, String> getSubstring = name -> name.substring(getIndex.apply(name));
-            return Optional.of(value).filter(hasExtension).map(getSubstring).orElse("");
+            final Predicate<String> hasExtension = name -> name.contains(
+                FILE_EXTENSION_DOT);
+            final Function<String, Integer> getIndex = name -> name.lastIndexOf(
+                FILE_EXTENSION_DOT) + 1;
+            final Function<String, String> getSubstring =
+                name -> name.substring(
+                getIndex.apply(name));
+            return Optional.of(value).filter(hasExtension).map(getSubstring)
+                           .orElse("");
         }
+
+        static Name from(CommonFile file) {
+            return new Name(file.name());
+        }
+
+        static boolean isValid(CharSequence value) {
+            return NAME_PATTERN.matcher(value).find();
+        }
+    }
+
+    static File of(CommonPath path) {
+        final String[] tokens = path.split();
+        final String fileNameValue = tokens[tokens.length - 1];
+        final Name fileName = new Name(fileNameValue);
+
+        // Check for the File type but only text files are supported right
+        // now...
+        return new TextFile(path);
+    }
+
+    default Name fileName() {
+        return Name.from(this);
     }
 }

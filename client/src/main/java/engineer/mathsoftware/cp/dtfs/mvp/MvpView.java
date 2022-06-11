@@ -12,7 +12,7 @@ import javafx.scene.Node;
 public interface MvpView<C> {
     Node getView();
 
-    void createView();
-
     default void bindEvents(C controller) {}
+
+    void createView();
 }

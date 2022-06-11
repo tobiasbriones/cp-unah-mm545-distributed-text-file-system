@@ -31,17 +31,20 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-tasks.withType<JavaCompile>().all {
-    options.compilerArgs = listOf("--enable-preview")
-}
+tasks.withType<JavaCompile>()
+    .all {
+        options.compilerArgs = listOf("--enable-preview")
+    }
 
-tasks.withType<JavaExec>().all {
-    jvmArgs("--enable-preview")
-}
+tasks.withType<JavaExec>()
+    .all {
+        jvmArgs("--enable-preview")
+    }
 
-tasks.withType<Test>().all {
-    jvmArgs("--enable-preview")
-}
+tasks.withType<Test>()
+    .all {
+        jvmArgs("--enable-preview")
+    }
 
 tasks.withType<Jar> {
     manifest {

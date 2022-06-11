@@ -5,12 +5,12 @@
 package engineer.mathsoftware.cp.dtfs;
 
 import engineer.mathsoftware.cp.dtfs.io.CommonFile;
+import engineer.mathsoftware.cp.dtfs.io.Directory;
+import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
 import engineer.mathsoftware.cp.dtfs.io.file.Result;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
 import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
-import engineer.mathsoftware.cp.dtfs.io.Directory;
-import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
 
 import java.io.IOException;
@@ -30,15 +30,19 @@ public interface FileSystemService extends Remote {
 
     RealTimeFileSystem getRealTimeFileSystem() throws IOException;
 
-    Result<TextFileContent> readTextFile(File.TextFile file) throws RemoteException;
+    Result<TextFileContent> readTextFile(File.TextFile file) throws
+                                                             RemoteException;
 
     Result<Nothing> writeDirectory(Directory directory) throws RemoteException;
 
-    Result<Nothing> writeTextFile(TextFileContent content) throws RemoteException;
+    Result<Nothing> writeTextFile(TextFileContent content) throws
+                                                           RemoteException;
 
     Result<Nothing> deleteFile(CommonFile file) throws RemoteException;
 
-    boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
+    boolean addOnFileUpdateListener(OnFileUpdateListener l) throws
+                                                            RemoteException;
 
-    boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
+    boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws
+                                                               RemoteException;
 }

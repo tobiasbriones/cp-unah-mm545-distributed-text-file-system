@@ -18,11 +18,14 @@ public final class FileSystems {
         Map<File, FileSystem.LastUpdateStatus> localStatuses
     ) {
         final var fs = new FileSystem(system.root());
-        final Map<File, FileSystem.LastUpdateStatus> statuses = system.statuses();
+        final Map<File, FileSystem.LastUpdateStatus> statuses =
+            system.statuses();
 
         fs.updateStatuses(file -> getStatus(file, statuses, localStatuses));
         return fs;
     }
+
+    private FileSystems() {}
 
     private static FileSystem.Status getStatus(
         File file,
@@ -36,11 +39,10 @@ public final class FileSystems {
         if (recent != null && local != null) {
             isInvalid = recent.isInvalid(local);
         }
-        else if (recent == null) { // The file has never been modified as it's not in the server changed status registry
+        else if (recent == null) { // The file has never been modified as
+            // it's not in the server changed status registry
             isInvalid = false;
         }
         return new FileSystem.Status(file, isInvalid);
     }
-
-    private FileSystems() {}
 }

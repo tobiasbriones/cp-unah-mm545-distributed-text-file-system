@@ -16,13 +16,16 @@ public final class InvalidChildException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 2032717105378391322L;
 
-    private static String getMessage(Directory parent, CommonFile invalidChild) {
+    InvalidChildException(Directory parent, CommonFile invalidChild) {
+        super(getMessage(parent, invalidChild));
+    }
+
+    private static String getMessage(
+        Directory parent,
+        CommonFile invalidChild
+    ) {
         return """
                Invalid child %s for parent %s
                """.formatted(invalidChild, parent);
-    }
-
-    InvalidChildException(Directory parent, CommonFile invalidChild) {
-        super(getMessage(parent, invalidChild));
     }
 }

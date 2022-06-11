@@ -30,7 +30,8 @@ public final class DirectoryNode implements Serializable,
 
     private final Directory directory;
     private final List<Node<? extends CommonFile>> children;
-    private DirectoryNode parent; // this one should be an Optional<Directory> for future versions of Java
+    private DirectoryNode parent; // this one should be an
+    // Optional<Directory> for future versions of Java
 
     public DirectoryNode() {
         this(Directory.of());
@@ -40,26 +41,6 @@ public final class DirectoryNode implements Serializable,
         this.directory = directory;
         children = new ArrayList<>(INITIAL_CHILDREN_CAPACITY);
         parent = null;
-    }
-
-    @Override
-    public Directory commonFile() {
-        return directory;
-    }
-
-    @Override
-    public CommonPath commonPath() {
-        return directory.path();
-    }
-
-    @Override
-    public Iterator<Node<? extends CommonFile>> iterator() {
-        return children.iterator();
-    }
-
-    @Override
-    public String toString() {
-        return directory.path().value();
     }
 
     public boolean isRoot() {
@@ -84,6 +65,30 @@ public final class DirectoryNode implements Serializable,
 
     public Collection<Node<? extends CommonFile>> getChildren() {
         return Collections.unmodifiableList(children);
+    }
+
+    void setParentUnsafe(DirectoryNode node) {
+        parent = node;
+    }
+
+    @Override
+    public Directory commonFile() {
+        return directory;
+    }
+
+    @Override
+    public CommonPath commonPath() {
+        return directory.path();
+    }
+
+    @Override
+    public Iterator<Node<? extends CommonFile>> iterator() {
+        return children.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return directory.path().value();
     }
 
     public boolean hasChildren() {
@@ -127,10 +132,6 @@ public final class DirectoryNode implements Serializable,
     public void traverse(Consumer<? super Node<?>> nodeConsumer) {
         nodeConsumer.accept(this);
         Nodes.traverse(children, nodeConsumer);
-    }
-
-    void setParentUnsafe(DirectoryNode node) {
-        parent = node;
     }
 
     void addChildUnsafe(Node<?> child) {

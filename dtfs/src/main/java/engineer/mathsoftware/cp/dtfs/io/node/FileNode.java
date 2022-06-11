@@ -13,7 +13,8 @@ import java.io.Serializable;
 /**
  * @author Tobias Briones
  */
-public final class FileNode implements Serializable, Node<File> {
+public final class FileNode implements Serializable,
+                                       Node<File> {
     @Serial
     private static final long serialVersionUID = 927919524544928027L;
     private final File file;

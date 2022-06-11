@@ -9,15 +9,17 @@ import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
+import engineer.mathsoftware.cp.dtfs.io.node.Node;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
-import engineer.mathsoftware.cp.dtfs.io.node.Node;
 
 /**
  * @author Tobias Briones
  */
 public final class Files implements Initializable {
+    public record DependencyConfig(TextFileRepository repository) {}
+
     public interface Input {
         void update();
     }
@@ -49,20 +51,20 @@ public final class Files implements Initializable {
     }
 
     interface View extends MvpView<Controller> {
-        void setController(Controller value);
-
         String getCreateInputText();
 
         void setCreateInputText(String text);
+
+        void setController(Controller value);
 
         void setRoot(DirectoryNode root);
 
         void clear();
     }
 
-    interface Presenter extends MvpPresenter<Output>, Controller, Input {}
-
-    public record DependencyConfig(TextFileRepository repository) {}
+    interface Presenter extends MvpPresenter<Output>,
+                                Controller,
+                                Input {}
 
     public static Files newInstance(DependencyConfig config) {
         return new Files(config);

@@ -13,11 +13,11 @@ import engineer.mathsoftware.cp.dtfs.io.CommonFile;
  * @param <F> type of the {@link CommonFile} used by this repository
  * @param <C> type of the {@link CommonFile}'s content
  *
- * @see FileContent
- *
  * @author Tobias Briones
+ * @see FileContent
  */
-public interface FileRepository<F extends CommonFile, C extends FileContent<F, ?>> {
+public interface FileRepository<F extends CommonFile, C extends FileContent<F
+    , ?>> {
     Result<C> get(F file);
 
     Result<Nothing> set(C content);

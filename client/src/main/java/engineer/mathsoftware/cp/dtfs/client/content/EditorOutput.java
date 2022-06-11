@@ -4,11 +4,11 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content;
 
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
 import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
 import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
-import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
 import engineer.mathsoftware.cp.dtfs.io.file.Result;
@@ -24,25 +24,21 @@ import java.util.function.Consumer;
  * @author Tobias Briones
  */
 final class EditorOutput implements Editor.Output {
-    record DependencyConfig(
-        TextFileRepository repository,
-        Files.Input filesInput,
-        Editor.Input editorInput,
-        Info.Input infoInput
-    ) {}
-
     private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;
     private final Info.Input infoInput;
     private FileSystemService service;
-
     EditorOutput(DependencyConfig config) {
         this.repository = config.repository();
         this.filesInput = config.filesInput();
         this.editorInput = config.editorInput();
         this.infoInput = config.infoInput();
         service = null;
+    }
+
+    void setService(FileSystemService value) {
+        service = value;
     }
 
     @Override
@@ -68,10 +64,6 @@ final class EditorOutput implements Editor.Output {
         if (file instanceof File.TextFile f) {
             pullFile(f);
         }
-    }
-
-    void setService(FileSystemService value) {
-        service = value;
     }
 
     // ---------- PUSH
@@ -136,12 +128,16 @@ final class EditorOutput implements Editor.Output {
                 Platform.runLater(() -> onFileContentPulled(s.value()));
             }
             else if (result instanceof Result.Failure<TextFileContent> fail) {
-                fail.ifPresent(throwable -> onFilePullFailed(file, throwable.getMessage()));
+                fail.ifPresent(throwable -> onFilePullFailed(
+                    file,
+                    throwable.getMessage()
+                ));
             }
         };
         final Runnable runnable = () -> {
             try {
-                final Result<TextFileContent> result = service.readTextFile(file);
+                final Result<TextFileContent> result =
+                    service.readTextFile(file);
                 resultConsumer.accept(result);
             }
             catch (RemoteException e) {
@@ -174,11 +170,12 @@ final class EditorOutput implements Editor.Output {
     }
 
     private void onFilePullFailed(File.TextFile file, String message) {
-        infoInput.setError("Fail to pull file: " + file.path().value() + ", " + message);
+        infoInput.setError("Fail to pull file: " + file.path()
+                                                       .value() + ", " + message);
     }
 
     private void updateLocalContent(TextFileContent content) {
-        Result<Nothing> result;
+        final Result<Nothing> result;
 
         if (repository.exists(content.file())) {
             result = repository.set(content);
@@ -190,4 +187,11 @@ final class EditorOutput implements Editor.Output {
             fail.ifPresent(System.out::println);
         }
     }
+
+    record DependencyConfig(
+        TextFileRepository repository,
+        Files.Input filesInput,
+        Editor.Input editorInput,
+        Info.Input infoInput
+    ) {}
 }

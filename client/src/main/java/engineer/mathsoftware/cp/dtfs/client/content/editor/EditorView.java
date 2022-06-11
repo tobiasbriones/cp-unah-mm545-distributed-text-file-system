@@ -42,6 +42,13 @@ final class EditorView extends VBox implements Editor.View {
     }
 
     @Override
+    public void bindEvents(Editor.Controller controller) {
+        saveButton.setOnMouseClicked(event -> controller.onSaveButtonClick());
+        pushButton.setOnMouseClicked(event -> controller.onPushButtonClick());
+        pullButton.setOnMouseClicked(event -> controller.onPullButtonClick());
+    }
+
+    @Override
     public void createView() {
         final var actionPane = new VBox();
         final var servicePane = new HBox();
@@ -77,18 +84,6 @@ final class EditorView extends VBox implements Editor.View {
     }
 
     @Override
-    public void bindEvents(Editor.Controller controller) {
-        saveButton.setOnMouseClicked(event -> controller.onSaveButtonClick());
-        pushButton.setOnMouseClicked(event -> controller.onPushButtonClick());
-        pullButton.setOnMouseClicked(event -> controller.onPullButtonClick());
-    }
-
-    @Override
-    public void setWorkingFile(String fileName) {
-        fileLabel.setText(fileName);
-    }
-
-    @Override
     public String getContent() {
         return contentArea.getText();
     }
@@ -96,5 +91,10 @@ final class EditorView extends VBox implements Editor.View {
     @Override
     public void setContent(String value) {
         contentArea.setText(value);
+    }
+
+    @Override
+    public void setWorkingFile(String fileName) {
+        fileLabel.setText(fileName);
     }
 }

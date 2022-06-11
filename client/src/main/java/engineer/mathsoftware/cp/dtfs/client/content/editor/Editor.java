@@ -44,12 +44,14 @@ public final class Editor implements Initializable {
     interface View extends MvpView<Controller> {
         String getContent();
 
-        void setWorkingFile(String fileName);
-
         void setContent(String value);
+
+        void setWorkingFile(String fileName);
     }
 
-    interface Presenter extends MvpPresenter<Output>, Controller, Input {}
+    interface Presenter extends MvpPresenter<Output>,
+                                Controller,
+                                Input {}
 
     public static Editor newInstance(DependencyConfig config) {
         return new Editor(config);

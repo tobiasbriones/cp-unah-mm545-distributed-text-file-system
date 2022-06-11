@@ -45,7 +45,10 @@ public record CommonPath(String value) implements Serializable {
         SEPARATOR = String.valueOf(SEPARATOR_CHAR);
         ROOT_PATH = "";
         VALID_PATH_REGEX = "^$|\\w+/*\\.*-*";
-        PATH_PATTERN = Pattern.compile(VALID_PATH_REGEX, Pattern.CASE_INSENSITIVE);
+        PATH_PATTERN = Pattern.compile(
+            VALID_PATH_REGEX,
+            Pattern.CASE_INSENSITIVE
+        );
     }
 
     public static CommonPath of() {
@@ -53,14 +56,21 @@ public record CommonPath(String value) implements Serializable {
     }
 
     public static Optional<CommonPath> of(Iterable<? extends Path> pathValue) {
-        final String stringValue = StreamSupport.stream(pathValue.spliterator(), false)
+        final String stringValue = StreamSupport.stream(
+                                                    pathValue.spliterator(),
+                                                    false
+                                                )
                                                 .map(Path::toString)
-                                                .reduce("", (s1, s2) -> s1 + SEPARATOR + s2);
+                                                .reduce(
+                                                    "",
+                                                    (s1, s2) -> s1 + SEPARATOR + s2
+                                                );
         return of(stringValue);
     }
 
     public static Optional<CommonPath> of(String value) {
-        return Optional.of(value).filter(CommonPath::isValid).map(CommonPath::new);
+        return Optional.of(value).filter(CommonPath::isValid)
+                       .map(CommonPath::new);
     }
 
     public static CommonPath of(CommonPath... paths) {
@@ -75,10 +85,6 @@ public record CommonPath(String value) implements Serializable {
             return of();
         }
         return new CommonPath(value);
-    }
-
-    private static boolean isValid(CharSequence value) {
-        return PATH_PATTERN.matcher(value).find();
     }
 
     public CommonPath {
@@ -100,5 +106,9 @@ public record CommonPath(String value) implements Serializable {
 
     public String[] split() {
         return value.split(SEPARATOR);
+    }
+
+    private static boolean isValid(CharSequence value) {
+        return PATH_PATTERN.matcher(value).find();
     }
 }

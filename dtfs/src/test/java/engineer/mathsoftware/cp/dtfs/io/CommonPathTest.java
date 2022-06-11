@@ -18,7 +18,8 @@ class CommonPathTest {
         final var p1 = new CommonPath("root/dir1/dir11");
         final var p2 = new CommonPath("kittens");
         final var p3 = new CommonPath("fluffy/pics");
-        final var expected = new CommonPath("root/dir1/dir11/kittens/fluffy/pics");
+        final var expected = new CommonPath(
+            "root/dir1/dir11/kittens/fluffy/pics");
         final CommonPath actual = CommonPath.of(p1, p2, p3);
 
         assertThat(actual, CoreMatchers.is(expected));

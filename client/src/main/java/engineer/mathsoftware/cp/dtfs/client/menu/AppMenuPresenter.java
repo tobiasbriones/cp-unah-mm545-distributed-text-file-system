@@ -69,7 +69,9 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
         final var alert = new Alert(Alert.AlertType.INFORMATION);
 
         alert.setHeaderText("About");
-        alert.setContentText("GitHub: https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system");
+        alert.setContentText(
+            "GitHub: https://github"
+            + ".com/tobiasbriones/cp-unah-mm545-distributed-text-file-system");
         alert.show();
     }
 }

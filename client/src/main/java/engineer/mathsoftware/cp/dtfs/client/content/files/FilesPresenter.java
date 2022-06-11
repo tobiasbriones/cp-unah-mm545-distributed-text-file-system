@@ -18,8 +18,6 @@ import engineer.mathsoftware.cp.dtfs.io.node.FileNode;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
 import engineer.mathsoftware.cp.dtfs.io.node.Node;
 import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
-
-import engineer.mathsoftware.cp.dtfs.io.File.TextFile;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
@@ -62,7 +60,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
             return;
         }
         if (pathValue.endsWith(".txt")) {
-            createNewFile(new TextFile(path.get()));
+            createNewFile(new File.TextFile(path.get()));
         }
         else {
             createNewDir(new Directory(path.get()));
@@ -74,7 +72,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         getOutput().ifPresent(output -> {
             view.setCreateInputText(file.path().value());
 
-            if (file instanceof TextFile f) {
+            if (file instanceof File.TextFile f) {
                 output.onOpenFile(f);
             }
         });
@@ -87,8 +85,11 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         if (!newFileName.endsWith(".txt") || newFileName.contains(CommonPath.SEPARATOR)) {
             return;
         }
-        final CommonPath path = CommonPath.of(node.commonPath(), new CommonPath(newFileName));
-        final TextFile file = new File.TextFile(path);
+        final CommonPath path = CommonPath.of(
+            node.commonPath(),
+            new CommonPath(newFileName)
+        );
+        final File.TextFile file = new File.TextFile(path);
 
         createNewFile(file);
     }
@@ -96,7 +97,10 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     @Override
     public void onNewDirectoryAction(DirectoryNode node) {
         final String newDirName = showInputDialog("Create new directory");
-        final CommonPath path = CommonPath.of(node.commonPath(), new CommonPath(newDirName));
+        final CommonPath path = CommonPath.of(
+            node.commonPath(),
+            new CommonPath(newDirName)
+        );
         final Directory directory = Directory.of(path);
 
         createNewDir(directory);
@@ -104,7 +108,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public void onDeleteAction(Node<?> node) {
-        if (node instanceof FileNode fn && fn.commonFile() instanceof TextFile f) {
+        if (node instanceof FileNode fn && fn.commonFile() instanceof File.TextFile f) {
             getOutput().ifPresent(output -> output.onCloseFile(f));
         }
         delete(node.commonFile());
@@ -112,7 +116,11 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public FileSystem.Status getStatus(File file) {
-        final Supplier<FileSystem.Status> defaultSupplier = () -> new FileSystem.Status(file, true);
+        final Supplier<FileSystem.Status> defaultSupplier =
+            () -> new FileSystem.Status(
+            file,
+            true
+        );
 
         if (fs == null) {
             return defaultSupplier.get();
@@ -139,7 +147,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
         }
     }
 
-    private void createNewFile(TextFile file) {
+    private void createNewFile(File.TextFile file) {
         final var result = repository.add(new TextFileContent(file, ""));
 
         if (result instanceof Result.Failure<Nothing> f) {
@@ -170,7 +178,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
                 e.printStackTrace();
             }
         }
-        else if (commonFile instanceof TextFile f){
+        else if (commonFile instanceof File.TextFile f) {
             final var result = repository.remove(f);
 
             if (result instanceof Result.Failure<Nothing> fail) {

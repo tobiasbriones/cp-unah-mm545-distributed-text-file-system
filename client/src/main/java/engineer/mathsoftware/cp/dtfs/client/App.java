@@ -4,6 +4,7 @@
 
 package engineer.mathsoftware.cp.dtfs.client;
 
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.client.content.Content;
 import engineer.mathsoftware.cp.dtfs.client.header.Header;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
@@ -12,7 +13,6 @@ import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
-import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -36,42 +36,23 @@ public final class App implements Initializable {
     interface View extends MvpView<Void> {}
 
     public static App newInstance() {
-        final TextFileRepository repository = AppLocalFiles.newTextFileRepository();
+        final TextFileRepository repository =
+            AppLocalFiles.newTextFileRepository();
         final var menu = new AppMenu();
         final var header = new Header();
         final var info = new Info();
         final var childrenConfig = new ChildrenConfig(
             menu,
             header,
-            Content.newInstance(new Content.DependencyConfig(repository, header.getInput(), info.getInput())),
+            Content.newInstance(new Content.DependencyConfig(
+                repository,
+                header.getInput(),
+                info.getInput()
+            )),
             info
         );
         return new App(childrenConfig);
     }
-
-    record ChildrenConfig(
-        AppMenu menu,
-        Header header,
-        Content content,
-        Info info
-    ) {
-        ViewConfig newViewConfig() {
-            return new ViewConfig(
-                menu.getView(),
-                header.getView(),
-                content.getView(),
-                info.getView()
-            );
-        }
-    }
-
-    record ViewConfig(
-        Node menuView,
-        Node headerView,
-        Node contentView,
-        Node infoView
-    ) {}
-
     private final View view;
     private final Presenter presenter;
     private final AppMenu menu;
@@ -80,11 +61,13 @@ public final class App implements Initializable {
     private final Content content;
     private final Info info;
     private FileSystemService service;
-
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
         menu = childrenConfig.menu();
-        menuOutput = new AppMenuOutput(childrenConfig.header().getInput(), this::quit);
+        menuOutput = new AppMenuOutput(
+            childrenConfig.header().getInput(),
+            this::quit
+        );
         header = childrenConfig.header();
         content = childrenConfig.content();
         info = childrenConfig.info();
@@ -120,7 +103,10 @@ public final class App implements Initializable {
 
     private void loadServiceAsync() {
         final Consumer<Optional<FileSystemService>> update = result ->
-            result.ifPresentOrElse(this::onServiceObtained, this::onFailedToObtainService);
+            result.ifPresentOrElse(
+                this::onServiceObtained,
+                this::onFailedToObtainService
+            );
 
         final Runnable run = () -> {
             final var result = obtainService();
@@ -176,7 +162,8 @@ public final class App implements Initializable {
     }
 
     private void setRetrievingServiceStatus() {
-        final var msg = "Retrieving service from %s...".formatted(FileSystemServices.HOST);
+        final var msg = "Retrieving service from %s...".formatted(
+            FileSystemServices.HOST);
 
         header.getInput().setStatus(msg);
         info.getInput().start("Retrieving service");
@@ -185,6 +172,30 @@ public final class App implements Initializable {
     private void setFailedServiceStatus() {
         header.getInput().setStatus("Failed");
         info.getInput().end("");
-        info.getInput().setError("Failed to connect to service: %s".formatted(FileSystemServices.HOST));
+        info.getInput().setError("Failed to connect to service: %s".formatted(
+            FileSystemServices.HOST));
     }
+
+    record ChildrenConfig(
+        AppMenu menu,
+        Header header,
+        Content content,
+        Info info
+    ) {
+        ViewConfig newViewConfig() {
+            return new ViewConfig(
+                menu.getView(),
+                header.getView(),
+                content.getView(),
+                info.getView()
+            );
+        }
+    }
+
+    record ViewConfig(
+        Node menuView,
+        Node headerView,
+        Node contentView,
+        Node infoView
+    ) {}
 }

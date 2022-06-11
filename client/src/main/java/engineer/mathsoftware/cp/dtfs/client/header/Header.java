@@ -23,7 +23,8 @@ public final class Header implements Initializable {
         void setHost(String value);
     }
 
-    interface View extends MvpView<Void>, Input {}
+    interface View extends MvpView<Void>,
+                           Input {}
 
     interface Presenter extends MvpPresenter<Void> {}
 

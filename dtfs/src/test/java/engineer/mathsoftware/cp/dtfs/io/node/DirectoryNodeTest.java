@@ -98,10 +98,16 @@ class DirectoryNodeTest {
         final var c2 = new FileNode(new File.TextFile("/file1.txt"));
 
         node.addChild(c1);
-        assertTrue(node.hasChild(c1.commonFile()), "A directory node is added as child");
+        assertTrue(
+            node.hasChild(c1.commonFile()),
+            "A directory node is added as child"
+        );
 
         node.addChild(c2);
-        assertTrue(node.hasChild(c2.commonFile()), "A file node is added as child");
+        assertTrue(
+            node.hasChild(c2.commonFile()),
+            "A file node is added as child"
+        );
     }
 
     @Test
@@ -133,15 +139,22 @@ class DirectoryNodeTest {
         final var c2 = new FileNode(new File.TextFile("/file1.txt"));
 
         node.addChildren(c1, c2);
-        assertTrue(node.hasChild(c1.commonFile()), "Node has directory child after adding it");
-        assertTrue(node.hasChild(c2.commonFile()), "Node has file child after adding it");
+        assertTrue(
+            node.hasChild(c1.commonFile()),
+            "Node has directory child after adding it"
+        );
+        assertTrue(
+            node.hasChild(c2.commonFile()),
+            "Node has file child after adding it"
+        );
     }
 
     @Test
     @DisplayName("Test method: removeChild")
     void removeChild() {
         final BiFunction<DirectoryNode, DirectoryNode, Boolean> isChildRemoved = (dir, child)
-            -> !dir.hasChild(child.commonFile()) && child.getParent().equals(Optional.empty());
+            -> !dir.hasChild(child.commonFile()) && child.getParent()
+                                                         .equals(Optional.empty());
 
         final var d1 = new DirectoryNode(new Directory("/fs"));
         final var f1 = new FileNode(new File.TextFile("/file1.txt"));
@@ -153,12 +166,21 @@ class DirectoryNodeTest {
         d2.addChild(f2);
 
         assertTrue(node.removeChild(f1), "Claims to had removed file1.txt");
-        assertFalse(node.hasChild(f1.commonFile()), "file1.txt was actually removed");
+        assertFalse(
+            node.hasChild(f1.commonFile()),
+            "file1.txt was actually removed"
+        );
 
         assertTrue(d1.removeChild(d2), "Claims to had removed dir1");
-        assertTrue(isChildRemoved.apply(d1, d2), "dir1 was actually removed from /fs");
+        assertTrue(
+            isChildRemoved.apply(d1, d2),
+            "dir1 was actually removed from /fs"
+        );
 
-        assertTrue(node.hasChild(d1.commonFile()), "Node has its other untouched children");
+        assertTrue(
+            node.hasChild(d1.commonFile()),
+            "Node has its other untouched children"
+        );
     }
 
     @Test
@@ -211,15 +233,18 @@ class DirectoryNodeTest {
         // Two folders
         final var dir1 = new DirectoryNode(new Directory("root/dir1"));
         final var dir2 = new DirectoryNode(new Directory("root/dir2"));
-        final var fileX = new FileNode(new File.TextFile("root/dir1/file-x.txt"));
-        final var fileY = new FileNode(new File.TextFile("root/dir2/file-y.txt"));
+        final var fileX = new FileNode(new File.TextFile("root/dir1/file-x"
+                                                         + ".txt"));
+        final var fileY = new FileNode(new File.TextFile("root/dir2/file-y"
+                                                         + ".txt"));
 
         dir1.addChild(fileX);
         dir2.addChild(fileY);
 
         // Nested folders
         final var dir11 = new DirectoryNode(new Directory("root/dir1/dir11"));
-        final var nestedFile = new FileNode(new File.TextFile("root/dir1/dir11/nested.txt"));
+        final var nestedFile = new FileNode(new File.TextFile(
+            "root/dir1/dir11/nested.txt"));
 
         dir11.addChild(nestedFile);
         dir1.addChild(dir11);
@@ -243,7 +268,10 @@ class DirectoryNodeTest {
         assertTrue(root.hasChild(file2.commonFile()), "Root has file2");
         assertTrue(dir1.hasChild(dir11.commonFile()), "Dir1 has dir11");
         assertTrue(dir1.hasChild(fileX.commonFile()), "Dir1 has file-x.txt");
-        assertTrue(dir11.hasChild(nestedFile.commonFile()), "Dir1 has nested.txt");
+        assertTrue(
+            dir11.hasChild(nestedFile.commonFile()),
+            "Dir1 has nested.txt"
+        );
         assertTrue(dir2.hasChild(fileY.commonFile()), "Dir2 has file-y.txt");
 
         // Test recursive traversal
@@ -262,6 +290,10 @@ class DirectoryNodeTest {
 
         root.traverse(next -> traverseResult.add(next.toString()));
 
-        assertThat("The traversed nodes are expected", traverseResult.toArray(), is(traverseExpected));
+        assertThat(
+            "The traversed nodes are expected",
+            traverseResult.toArray(),
+            is(traverseExpected)
+        );
     }
 }

@@ -45,7 +45,8 @@ public final class AppMenu implements Initializable {
 
     interface View extends MvpView<Controller> {}
 
-    interface Presenter extends MvpPresenter<Output>, Controller {}
+    interface Presenter extends MvpPresenter<Output>,
+                                Controller {}
 
     private final View view;
     private final Presenter presenter;

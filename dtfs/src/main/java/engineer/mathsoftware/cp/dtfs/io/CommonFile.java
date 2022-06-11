@@ -9,11 +9,12 @@ import java.io.Serializable;
 /**
  * @author Tobias Briones
  */
-public sealed interface CommonFile extends Serializable permits Directory, File {
-    CommonPath path();
-
+public sealed interface CommonFile extends Serializable permits Directory,
+                                                                File {
     default String name() {
         final String[] tokens = path().split();
         return tokens[tokens.length - 1];
     }
+
+    CommonPath path();
 }

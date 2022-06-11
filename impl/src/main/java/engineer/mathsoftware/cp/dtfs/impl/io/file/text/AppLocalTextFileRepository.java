@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static engineer.mathsoftware.cp.dtfs.io.file.Nothing.Nothing;
 import static engineer.mathsoftware.cp.dtfs.io.File.TextFile;
+import static engineer.mathsoftware.cp.dtfs.io.file.Nothing.Nothing;
 
 /**
  * @author Tobias Briones
@@ -115,7 +115,8 @@ public class AppLocalTextFileRepository implements TextFileRepository {
         }
     }
 
-    private static void requireFileExists(Path path) throws FileNotFoundException {
+    private static void requireFileExists(Path path) throws
+                                                     FileNotFoundException {
         if (!Files.exists(path)) {
             final var msg = "File %s does not exist".formatted(path);
             throw new FileNotFoundException(msg);

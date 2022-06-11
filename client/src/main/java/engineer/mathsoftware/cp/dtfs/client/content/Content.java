@@ -4,10 +4,14 @@
 
 package engineer.mathsoftware.cp.dtfs.client.content;
 
-import engineer.mathsoftware.cp.dtfs.client.header.Header;
-import engineer.mathsoftware.cp.dtfs.client.FileSystemServices;
-import engineer.mathsoftware.cp.dtfs.client.info.Info;
+import engineer.mathsoftware.cp.dtfs.FileSystemService;
 import engineer.mathsoftware.cp.dtfs.OnFileUpdateListener;
+import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
+import engineer.mathsoftware.cp.dtfs.client.FileSystemServices;
+import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
+import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
+import engineer.mathsoftware.cp.dtfs.client.header.Header;
+import engineer.mathsoftware.cp.dtfs.client.info.Info;
 import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
@@ -15,10 +19,6 @@ import engineer.mathsoftware.cp.dtfs.io.node.FileSystems;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
-import engineer.mathsoftware.cp.dtfs.FileSystemService;
-import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
-import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
-import engineer.mathsoftware.cp.dtfs.client.AppLocalFiles;
 import javafx.application.Platform;
 import javafx.scene.Node;
 
@@ -27,13 +27,17 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 
-import static engineer.mathsoftware.cp.dtfs.FileSystemService.*;
+import static engineer.mathsoftware.cp.dtfs.FileSystemService.RealTimeFileSystem;
 
 /**
  * @author Tobias Briones
  */
 public final class Content implements Initializable {
-    public record DependencyConfig(TextFileRepository repository, Header.Input headerInput, Info.Input infoInput) {}
+    public record DependencyConfig(
+        TextFileRepository repository,
+        Header.Input headerInput,
+        Info.Input infoInput
+    ) {}
 
     interface View extends MvpView<Void> {}
 
@@ -56,24 +60,6 @@ public final class Content implements Initializable {
         );
         return new Content(config, children);
     }
-
-    record ChildrenConfig(
-        Files files,
-        Editor editor
-    ) {
-        ViewConfig newViewConfig() {
-            return new ViewConfig(
-                files.getView(),
-                editor.getView()
-            );
-        }
-    }
-
-    record ViewConfig(
-        Node filesView,
-        Node editorView
-    ) {}
-
     private final View view;
     private final Presenter presenter;
     private final Files files;
@@ -85,7 +71,6 @@ public final class Content implements Initializable {
     private final OnLocalFsChangeListener l;
     private FileSystemService service;
     private OnFileUpdateListener client;
-
     private Content(
         DependencyConfig config,
         ChildrenConfig children
@@ -117,18 +102,18 @@ public final class Content implements Initializable {
         return view.getView();
     }
 
+    public void setService(FileSystemService value) {
+        service = value;
+
+        bindServiceListener();
+    }
+
     @Override
     public void init() {
         setOutputs();
         presenter.init();
         files.init();
         editor.init();
-    }
-
-    public void setService(FileSystemService value) {
-        service = value;
-
-        bindServiceListener();
     }
 
     public void unbind() throws RemoteException {
@@ -188,8 +173,9 @@ public final class Content implements Initializable {
 
     static void updateLocalFs(FileSystemService service) {
         try {
-            final RealTimeFileSystem system = service.getRealTimeFileSystem();
-            final Map<File, FileSystem.LastUpdateStatus> statuses = AppLocalFiles.readStatuses();
+            final FileSystemService.RealTimeFileSystem system = service.getRealTimeFileSystem();
+            final Map<File, FileSystem.LastUpdateStatus> statuses =
+                AppLocalFiles.readStatuses();
             final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
 
             AppLocalFiles.saveFs(fs);
@@ -198,4 +184,21 @@ public final class Content implements Initializable {
             e.printStackTrace();
         }
     }
+
+    record ChildrenConfig(
+        Files files,
+        Editor editor
+    ) {
+        ViewConfig newViewConfig() {
+            return new ViewConfig(
+                files.getView(),
+                editor.getView()
+            );
+        }
+    }
+
+    record ViewConfig(
+        Node filesView,
+        Node editorView
+    ) {}
 }
