@@ -10,8 +10,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
-import java.util.Collection;
-
 /**
  * @author Tobias Briones
  */
@@ -49,20 +47,19 @@ final class FileItemView extends TreeItem<Node<?>> {
         return "FileItemView[] " + super.toString();
     }
 
-    private static ObservableList<TreeItem<Node<?>>> loadChildren(TreeItem<?
-        extends Node<?>> item) {
-        final Node<?> node = item.getValue();
+    private static ObservableList<TreeItem<Node<?>>> loadChildren(
+        TreeItem<? extends Node<?>> item
+    ) {
+        var node = item.getValue();
 
         if (node instanceof DirectoryNode dir) {
-            final Collection<Node<?>> childrenNodes = dir.getChildren();
+            var childrenNodes = dir.getChildren();
 
             if (!childrenNodes.isEmpty()) {
-                final ObservableList<TreeItem<Node<?>>> children =
-                    FXCollections.observableArrayList();
+                var children = FXCollections.<TreeItem<Node<?>>>observableArrayList();
 
-                for (Node<?> child : childrenNodes) {
-                    final var itemView = new FileItemView(child);
-
+                for (var child : childrenNodes) {
+                    var itemView = new FileItemView(child);
                     itemView.setExpanded(true);
                     children.add(itemView);
                 }

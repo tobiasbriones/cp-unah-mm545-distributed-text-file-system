@@ -30,14 +30,13 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
     private static final long serialVersionUID = 7206688225773330503L;
     private final Content.OnLocalFsChangeListener l;
 
-    ContentOnFileUpdateListener(Content.OnLocalFsChangeListener l) throws
-                                                                   RemoteException {
+    ContentOnFileUpdateListener(Content.OnLocalFsChangeListener l) throws RemoteException {
         super();
         this.l = l;
     }
 
     @Override
-    public void onFSChanged(FileSystemService.RealTimeFileSystem system) throws RemoteException {
+    public void onFSChanged(RealTimeFileSystem system) throws RemoteException {
         updateLocalFs(system);
         post();
     }
@@ -46,12 +45,10 @@ final class ContentOnFileUpdateListener extends UnicastRemoteObject implements O
         Platform.runLater(l::update);
     }
 
-    private static void updateLocalFs(FileSystemService.RealTimeFileSystem system) {
+    private static void updateLocalFs(RealTimeFileSystem system) {
         try {
-            final Map<File, FileSystem.LastUpdateStatus> statuses =
-                AppLocalFiles.readStatuses();
-            final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
-
+            var statuses = AppLocalFiles.readStatuses();
+            var fs = FileSystems.buildFileSystem(system, statuses);
             AppLocalFiles.saveFs(fs);
         }
         catch (IOException e) {

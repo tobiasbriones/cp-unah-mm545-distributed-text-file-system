@@ -50,8 +50,8 @@ final class EditorView extends VBox implements Editor.View {
 
     @Override
     public void createView() {
-        final var actionPane = new VBox();
-        final var servicePane = new HBox();
+        var actionPane = new VBox();
+        var servicePane = new HBox();
 
         fileLabel.setPadding(new Insets(0, 0, 8, 0));
         fileLabel.setStyle("-fx-font-weight: bold;-fx-font-size:16px;");

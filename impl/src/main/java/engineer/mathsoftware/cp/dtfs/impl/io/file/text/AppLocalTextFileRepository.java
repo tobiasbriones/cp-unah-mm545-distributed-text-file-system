@@ -29,12 +29,12 @@ public class AppLocalTextFileRepository implements TextFileRepository {
 
     @Override
     public Result<TextFileContent> get(TextFile file) {
-        final Path path = CommonPaths.toPath(root, file.path());
+        var path = CommonPaths.toPath(root, file.path());
 
         try {
             createRootIfNotExists();
             requireFileExists(path);
-            final String value = Files.readString(path);
+            var value = Files.readString(path);
             return Result.Success.of(new TextFileContent(file, value));
         }
         catch (IOException e) {
@@ -44,8 +44,8 @@ public class AppLocalTextFileRepository implements TextFileRepository {
 
     @Override
     public Result<Nothing> set(TextFileContent content) {
-        final TextFile file = content.file();
-        final Path path = CommonPaths.toPath(root, file.path());
+        var file = content.file();
+        var path = CommonPaths.toPath(root, file.path());
 
         try {
             createRootIfNotExists();
@@ -60,8 +60,8 @@ public class AppLocalTextFileRepository implements TextFileRepository {
 
     @Override
     public Result<Nothing> add(TextFileContent content) {
-        final TextFile file = content.file();
-        final Path path = CommonPaths.toPath(root, file.path());
+        var file = content.file();
+        var path = CommonPaths.toPath(root, file.path());
 
         try {
             createRootIfNotExists();
@@ -77,7 +77,7 @@ public class AppLocalTextFileRepository implements TextFileRepository {
 
     @Override
     public Result<Nothing> remove(TextFile file) {
-        final Path path = CommonPaths.toPath(root, file.path());
+        var path = CommonPaths.toPath(root, file.path());
 
         try {
             createRootIfNotExists();
@@ -92,7 +92,7 @@ public class AppLocalTextFileRepository implements TextFileRepository {
 
     @Override
     public boolean exists(TextFile file) {
-        final Path path = CommonPaths.toPath(root, file.path());
+        var path = CommonPaths.toPath(root, file.path());
         return Files.exists(path);
     }
 
@@ -102,8 +102,7 @@ public class AppLocalTextFileRepository implements TextFileRepository {
 
     private static void createFileIfNotExists(Path path) throws IOException {
         if (!Files.exists(path) || Files.isDirectory(path)) {
-            final Path parent = path.getParent();
-
+            var parent = path.getParent();
             createDirsIfNotExists(parent);
             Files.createFile(path);
         }
@@ -115,17 +114,16 @@ public class AppLocalTextFileRepository implements TextFileRepository {
         }
     }
 
-    private static void requireFileExists(Path path) throws
-                                                     FileNotFoundException {
+    private static void requireFileExists(Path path) throws FileNotFoundException {
         if (!Files.exists(path)) {
-            final var msg = "File %s does not exist".formatted(path);
+            var msg = "File %s does not exist".formatted(path);
             throw new FileNotFoundException(msg);
         }
     }
 
     private static void requireFileNotExists(Path path) throws IOException {
         if (Files.exists(path)) {
-            final var msg = "File %s already exist".formatted(path);
+            var msg = "File %s already exist".formatted(path);
             throw new IOException(msg);
         }
     }

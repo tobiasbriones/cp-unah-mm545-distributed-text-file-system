@@ -22,7 +22,6 @@ import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -53,8 +52,8 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public void onCreateButtonClick() {
-        final String pathValue = view.getCreateInputText();
-        final Optional<CommonPath> path = CommonPath.of(pathValue);
+        var pathValue = view.getCreateInputText();
+        var path = CommonPath.of(pathValue);
 
         if (path.isEmpty()) {
             return;
@@ -80,29 +79,27 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public void onNewFileAction(DirectoryNode node) {
-        final String newFileName = showInputDialog("Create new file");
+        var newFileName = showInputDialog("Create new file");
 
         if (!newFileName.endsWith(".txt") || newFileName.contains(CommonPath.SEPARATOR)) {
             return;
         }
-        final CommonPath path = CommonPath.of(
+        var path = CommonPath.of(
             node.commonPath(),
             new CommonPath(newFileName)
         );
-        final File.TextFile file = new File.TextFile(path);
-
+        var file = new File.TextFile(path);
         createNewFile(file);
     }
 
     @Override
     public void onNewDirectoryAction(DirectoryNode node) {
-        final String newDirName = showInputDialog("Create new directory");
-        final CommonPath path = CommonPath.of(
+        var newDirName = showInputDialog("Create new directory");
+        var path = CommonPath.of(
             node.commonPath(),
             new CommonPath(newDirName)
         );
-        final Directory directory = Directory.of(path);
-
+        var directory = Directory.of(path);
         createNewDir(directory);
     }
 
@@ -116,11 +113,11 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
 
     @Override
     public FileSystem.Status getStatus(File file) {
-        final Supplier<FileSystem.Status> defaultSupplier =
+        Supplier<FileSystem.Status> defaultSupplier =
             () -> new FileSystem.Status(
-            file,
-            true
-        );
+                file,
+                true
+            );
 
         if (fs == null) {
             return defaultSupplier.get();
@@ -148,8 +145,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     private void createNewFile(File.TextFile file) {
-        final var result = repository.add(new TextFileContent(file, ""));
-
+        var result = repository.add(new TextFileContent(file, ""));
         if (result instanceof Result.Failure<Nothing> f) {
             f.ifPresent(System.out::println);
         }
@@ -179,7 +175,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
             }
         }
         else if (commonFile instanceof File.TextFile f) {
-            final var result = repository.remove(f);
+            var result = repository.remove(f);
 
             if (result instanceof Result.Failure<Nothing> fail) {
                 fail.ifPresent(System.out::println);
@@ -191,8 +187,7 @@ final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements
     }
 
     private static String showInputDialog(String msg) {
-        final var dialog = new TextInputDialog("");
-
+        var dialog = new TextInputDialog("");
         dialog.setHeaderText(msg);
         dialog.showAndWait();
         return dialog.getEditor().getText();

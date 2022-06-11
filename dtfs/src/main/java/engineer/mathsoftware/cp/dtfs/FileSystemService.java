@@ -30,19 +30,15 @@ public interface FileSystemService extends Remote {
 
     RealTimeFileSystem getRealTimeFileSystem() throws IOException;
 
-    Result<TextFileContent> readTextFile(File.TextFile file) throws
-                                                             RemoteException;
+    Result<TextFileContent> readTextFile(File.TextFile file) throws RemoteException;
 
     Result<Nothing> writeDirectory(Directory directory) throws RemoteException;
 
-    Result<Nothing> writeTextFile(TextFileContent content) throws
-                                                           RemoteException;
+    Result<Nothing> writeTextFile(TextFileContent content) throws RemoteException;
 
     Result<Nothing> deleteFile(CommonFile file) throws RemoteException;
 
-    boolean addOnFileUpdateListener(OnFileUpdateListener l) throws
-                                                            RemoteException;
+    boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 
-    boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws
-                                                               RemoteException;
+    boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException;
 }

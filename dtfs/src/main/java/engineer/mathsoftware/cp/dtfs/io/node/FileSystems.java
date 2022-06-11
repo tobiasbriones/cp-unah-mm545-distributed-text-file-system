@@ -9,31 +9,31 @@ import engineer.mathsoftware.cp.dtfs.io.File;
 
 import java.util.Map;
 
+import static engineer.mathsoftware.cp.dtfs.io.node.FileSystem.*;
+
 /**
  * @author Tobias Briones
  */
 public final class FileSystems {
     public static FileSystem buildFileSystem(
         FileSystemService.RealTimeFileSystem system,
-        Map<File, FileSystem.LastUpdateStatus> localStatuses
+        Map<File, LastUpdateStatus> localStatuses
     ) {
-        final var fs = new FileSystem(system.root());
-        final Map<File, FileSystem.LastUpdateStatus> statuses =
-            system.statuses();
-
+        var fs = new FileSystem(system.root());
+        var statuses = system.statuses();
         fs.updateStatuses(file -> getStatus(file, statuses, localStatuses));
         return fs;
     }
 
     private FileSystems() {}
 
-    private static FileSystem.Status getStatus(
+    private static Status getStatus(
         File file,
-        Map<File, FileSystem.LastUpdateStatus> recentStatuses,
-        Map<File, FileSystem.LastUpdateStatus> localStatuses
+        Map<File, LastUpdateStatus> recentStatuses,
+        Map<File, LastUpdateStatus> localStatuses
     ) {
-        final FileSystem.LastUpdateStatus recent = recentStatuses.get(file);
-        final FileSystem.LastUpdateStatus local = localStatuses.get(file);
+        final LastUpdateStatus recent = recentStatuses.get(file);
+        final LastUpdateStatus local = localStatuses.get(file);
         var isInvalid = true;
 
         if (recent != null && local != null) {
@@ -43,6 +43,6 @@ public final class FileSystems {
             // it's not in the server changed status registry
             isInvalid = false;
         }
-        return new FileSystem.Status(file, isInvalid);
+        return new Status(file, isInvalid);
     }
 }

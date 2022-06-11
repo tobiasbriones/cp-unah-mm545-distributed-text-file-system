@@ -28,6 +28,7 @@ final class FilesOutput implements Files.Output {
     private final Editor.Input editorInput;
     private final Info.Input infoInput;
     private FileSystemService service;
+
     FilesOutput(DependencyConfig config) {
         this.repository = config.repository();
         this.filesInput = config.filesInput();
@@ -70,7 +71,7 @@ final class FilesOutput implements Files.Output {
     }
 
     private String loadFile(File.TextFile file) {
-        final Result<TextFileContent> result = repository.get(file);
+        var result = repository.get(file);
 
         // Waiting for switch pattern matching! for proper monadic result
         // design!
@@ -91,8 +92,8 @@ final class FilesOutput implements Files.Output {
     }
 
     private void createRemoteTextFileAsync(File.TextFile file) {
-        final var content = new TextFileContent(file, "");
-        final Consumer<Result<Nothing>> resultConsumer = result -> {
+        var content = new TextFileContent(file, "");
+        Consumer<Result<Nothing>> resultConsumer = result -> {
             if (result instanceof Result.Success<Nothing>) {
                 Platform.runLater(() -> onNewRemoteFileWrote(content));
             }
@@ -100,7 +101,7 @@ final class FilesOutput implements Files.Output {
                 Platform.runLater(() -> onNewRemoteFileWriteError(file));
             }
         };
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             try {
                 final Result<Nothing> result = service.writeTextFile(content);
                 resultConsumer.accept(result);
@@ -110,13 +111,13 @@ final class FilesOutput implements Files.Output {
                 resultConsumer.accept(Result.Failure.of(e));
             }
         };
-        final var thread = new Thread(runnable);
+        var thread = new Thread(runnable);
 
         thread.start();
     }
 
     private void createRemoteDirectoryAsync(Directory directory) {
-        final Consumer<Result<Nothing>> resultConsumer = result -> {
+        Consumer<Result<Nothing>> resultConsumer = result -> {
             if (result instanceof Result.Success<Nothing>) {
                 Platform.runLater(() -> onRemoteDirectoryWrote(directory));
             }
@@ -124,7 +125,7 @@ final class FilesOutput implements Files.Output {
                 Platform.runLater(() -> onNewRemoteFileWriteError(directory));
             }
         };
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             try {
                 final Result<Nothing> result =
                     service.writeDirectory(directory);
@@ -135,7 +136,7 @@ final class FilesOutput implements Files.Output {
                 resultConsumer.accept(Result.Failure.of(e));
             }
         };
-        final var thread = new Thread(runnable);
+        var thread = new Thread(runnable);
 
         thread.start();
     }
@@ -158,7 +159,7 @@ final class FilesOutput implements Files.Output {
     }
 
     private void onFileObtained(TextFileContent content) throws IOException {
-        final File.TextFile file = content.file();
+        var file = content.file();
 
         if (repository.exists(file)) {
             repository.set(content);
@@ -174,7 +175,7 @@ final class FilesOutput implements Files.Output {
 
     // ---------- DELETE
     private void deleteRemoteFileAsync(CommonFile file) {
-        final Consumer<Result<Nothing>> resultConsumer = result -> {
+        Consumer<Result<Nothing>> resultConsumer = result -> {
             if (result instanceof Result.Success<Nothing>) {
                 Platform.runLater(() -> onRemoteFileDeleted(file));
             }
@@ -184,7 +185,7 @@ final class FilesOutput implements Files.Output {
         };
         final Runnable runnable = () -> {
             try {
-                final Result<Nothing> result = service.deleteFile(file);
+                var result = service.deleteFile(file);
                 resultConsumer.accept(result);
             }
             catch (RemoteException e) {
@@ -192,7 +193,7 @@ final class FilesOutput implements Files.Output {
                 resultConsumer.accept(Result.Failure.of(e));
             }
         };
-        final var thread = new Thread(runnable);
+        var thread = new Thread(runnable);
 
         thread.start();
     }
@@ -202,8 +203,7 @@ final class FilesOutput implements Files.Output {
     }
 
     private void onRemoteFileDeleteError(CommonFile file) {
-        infoInput.setError("Fail to delete remote file: " + file.path()
-                                                                .value());
+        infoInput.setError("Fail to delete remote file: " + file.path().value());
     }
 
     record DependencyConfig(

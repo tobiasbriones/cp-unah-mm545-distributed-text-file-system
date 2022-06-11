@@ -42,7 +42,7 @@ public final class FileSystem implements Serializable {
         public static final ZoneId zoneId = ZoneId.of("US/Eastern");
 
         public static LastUpdateStatus of(File file) {
-            final ZonedDateTime time = ZonedDateTime.ofInstant(
+            var time = ZonedDateTime.ofInstant(
                 Instant.now(),
                 zoneId
             );
@@ -53,6 +53,7 @@ public final class FileSystem implements Serializable {
             return time.compareTo(other.time()) > 0;
         }
     }
+
     private final DirectoryNode root;
     private final Map<File, Status> statuses;
 
@@ -72,8 +73,7 @@ public final class FileSystem implements Serializable {
     public void updateStatuses(Function<? super File, Status> mapper) {
         root.traverse(node -> {
             if (node instanceof FileNode fileNode) {
-                final Status status = mapper.apply(fileNode.commonFile());
-
+                var status = mapper.apply(fileNode.commonFile());
                 updateStatus(status);
             }
         });

@@ -12,7 +12,7 @@ import java.io.Serializable;
 public sealed interface CommonFile extends Serializable permits Directory,
                                                                 File {
     default String name() {
-        final String[] tokens = path().split();
+        var tokens = path().split();
         return tokens[tokens.length - 1];
     }
 

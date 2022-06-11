@@ -12,9 +12,7 @@ import engineer.mathsoftware.cp.dtfs.client.content.editor.Editor;
 import engineer.mathsoftware.cp.dtfs.client.content.files.Files;
 import engineer.mathsoftware.cp.dtfs.client.header.Header;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
-import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
-import engineer.mathsoftware.cp.dtfs.io.node.FileSystem;
 import engineer.mathsoftware.cp.dtfs.io.node.FileSystems;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
@@ -25,9 +23,6 @@ import javafx.scene.Node;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Map;
-
-import static engineer.mathsoftware.cp.dtfs.FileSystemService.RealTimeFileSystem;
 
 /**
  * @author Tobias Briones
@@ -49,8 +44,8 @@ public final class Content implements Initializable {
     }
 
     public static Content newInstance(DependencyConfig config) {
-        final TextFileRepository repository = config.repository();
-        final var children = new ChildrenConfig(
+        var repository = config.repository();
+        var children = new ChildrenConfig(
             Files.newInstance(
                 new Files.DependencyConfig(repository)
             ),
@@ -60,6 +55,7 @@ public final class Content implements Initializable {
         );
         return new Content(config, children);
     }
+
     private final View view;
     private final Presenter presenter;
     private final Files files;
@@ -71,6 +67,7 @@ public final class Content implements Initializable {
     private final OnLocalFsChangeListener l;
     private FileSystemService service;
     private OnFileUpdateListener client;
+
     private Content(
         DependencyConfig config,
         ChildrenConfig children
@@ -139,7 +136,7 @@ public final class Content implements Initializable {
     }
 
     private void bindServiceListener() {
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             try {
                 client = new ContentOnFileUpdateListener(l);
 
@@ -151,7 +148,7 @@ public final class Content implements Initializable {
                 Platform.runLater(this::onServiceBindError);
             }
         };
-        final var thread = new Thread(runnable);
+        var thread = new Thread(runnable);
 
         infoInput.start("Binding service listener");
         thread.start();
@@ -173,11 +170,9 @@ public final class Content implements Initializable {
 
     static void updateLocalFs(FileSystemService service) {
         try {
-            final FileSystemService.RealTimeFileSystem system = service.getRealTimeFileSystem();
-            final Map<File, FileSystem.LastUpdateStatus> statuses =
-                AppLocalFiles.readStatuses();
-            final FileSystem fs = FileSystems.buildFileSystem(system, statuses);
-
+            var system = service.getRealTimeFileSystem();
+            var statuses = AppLocalFiles.readStatuses();
+            var fs = FileSystems.buildFileSystem(system, statuses);
             AppLocalFiles.saveFs(fs);
         }
         catch (IOException e) {

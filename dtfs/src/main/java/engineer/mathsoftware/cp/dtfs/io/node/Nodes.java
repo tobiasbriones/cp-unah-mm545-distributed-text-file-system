@@ -28,8 +28,7 @@ final class Nodes {
     }
 
     static void addChildren(DirectoryNode node, Node<?>... children) {
-        final List<Node<? extends CommonFile>> list = Arrays.asList(children);
-
+        var list = Arrays.asList(children);
         list.forEach(child -> requireValidChild(node, child));
         list.forEach(child -> addChildUnsafe(node, child));
     }
@@ -41,7 +40,6 @@ final class Nodes {
         if (!node.hasChild(child.commonFile())) {
             return false;
         }
-
         if (child instanceof DirectoryNode dir) {
             dir.setParentUnsafe(null);
         }
@@ -54,7 +52,6 @@ final class Nodes {
     ) {
         children.forEach(child -> {
             nodeConsumer.accept(child);
-
             if (child instanceof DirectoryNode dir) {
                 traverse(dir.getChildren(), nodeConsumer);
             }
@@ -65,15 +62,14 @@ final class Nodes {
         Node<? extends CommonFile> node,
         String indentation
     ) {
-        final CommonFile file = node.commonFile();
+        var file = node.commonFile();
 
         if (node instanceof DirectoryNode dir && dir.hasChildren()) {
-            final var sb = new StringBuilder(10);
+            var sb = new StringBuilder(10);
 
             sb.append(toString(file, indentation));
-            for (final var child : dir) {
-                final String str = getString(child, indentation + "  ");
-
+            for (var child : dir) {
+                var str = getString(child, indentation + "  ");
                 sb.append(str);
             }
             return sb.toString();
@@ -92,7 +88,6 @@ final class Nodes {
 
     private static void addChildUnsafe(DirectoryNode node, Node<?> child) {
         node.addChildUnsafe(child);
-
         if (child instanceof DirectoryNode dir) {
             dir.setParentUnsafe(node);
         }
@@ -115,9 +110,8 @@ final class Nodes {
         CommonPath path,
         CommonPath childPath
     ) {
-        final String[] tokens = path.split();
-        final String[] childTokens = childPath.split();
-
+        var tokens = path.split();
+        var childTokens = childPath.split();
         if (tokens.length != childTokens.length - 1) {
             return false;
         }

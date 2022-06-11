@@ -9,7 +9,6 @@ import engineer.mathsoftware.cp.dtfs.RegistryService;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 /**
  * @author Tobias Briones
@@ -19,13 +18,14 @@ public final class Main {
     private static final String FS_SERVER_NAME = "RMIServer";
 
     public static void main(String[] args) {
-        final var config = ServerConfig.from(args);
-        final var main = new Main(config);
-
+        var config = ServerConfig.from(args);
+        var main = new Main(config);
         main.start();
     }
+
     private final ServerConfig config;
     private FileSystemService server;
+
     private Main(ServerConfig config) {
         this.config = config;
         server = null;
@@ -51,8 +51,7 @@ public final class Main {
 
     private void startRegServer() {
         try {
-            final Registry registry =
-                LocateRegistry.createRegistry(ServerConfig.PORT);
+            var registry = LocateRegistry.createRegistry(ServerConfig.PORT);
 
             System.out.println("Binding registry server at " + config.hostname());
             registry.rebind(REG_SERVER_NAME, server);
@@ -65,13 +64,12 @@ public final class Main {
 
     private void startFileSystemServer() {
         try {
-            final String registryHostname = config.registryHostname();
-            final Registry registry = LocateRegistry.getRegistry(
+            var registryHostname = config.registryHostname();
+            var registry = LocateRegistry.getRegistry(
                 registryHostname,
                 ServerConfig.PORT
             );
-            final var service = (RegistryService) registry.lookup(
-                REG_SERVER_NAME);
+            var service = (RegistryService) registry.lookup(REG_SERVER_NAME);
 
             System.out.println("Binding file server at " + config.hostname());
             service.regObject(FS_SERVER_NAME, server);

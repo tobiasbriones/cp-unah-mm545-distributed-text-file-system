@@ -48,7 +48,7 @@ final class FilesView extends VBox implements Files.View {
 
     @Override
     public void createView() {
-        final var newFilePane = new VBox();
+        var newFilePane = new VBox();
 
         newFileField.setPromptText("Create a new file or directory");
         newFileButton.setText("Create");
@@ -92,11 +92,11 @@ final class FilesView extends VBox implements Files.View {
 
     @Override
     public void setRoot(DirectoryNode root) {
-        final var rootItem = new FileItemView(root);
+        var rootItem = new FileItemView(root);
 
         rootItem.setExpanded(true);
         treeView.setRoot(rootItem);
-        final ChangeListener<? super TreeItem<Node<?>>> l = (
+        ChangeListener<? super TreeItem<Node<?>>> l = (
             observable, oldValue,
             newValue
         ) -> {
@@ -145,16 +145,15 @@ final class FilesView extends VBox implements Files.View {
                 setGraphic(null);
             }
             else {
-                final CommonFile file = item.commonFile();
+                var file = item.commonFile();
 
                 setText(file);
                 setupContextMenu(item);
                 setupIconView(file);
 
                 if (file instanceof File f) {
-                    final boolean isInvalid = controller.getStatus(f)
-                                                        .isInvalid();
-                    final boolean isInChangelist = controller.isInChangelist(f);
+                    var isInvalid = controller.getStatus(f).isInvalid();
+                    var isInChangelist = controller.isInChangelist(f);
 
                     if (isInvalid) {
                         if (isInChangelist) {
@@ -182,12 +181,12 @@ final class FilesView extends VBox implements Files.View {
         }
 
         void setupContextMenu(Node<?> item) {
-            final ContextMenu menu = new ContextMenu();
-            final var deleteItem = new MenuItem("Delete");
+            var menu = new ContextMenu();
+            var deleteItem = new MenuItem("Delete");
 
             if (item instanceof DirectoryNode dir) {
-                final var newFileItem = new MenuItem("New file");
-                final var newDirItem = new MenuItem("New directory");
+                var newFileItem = new MenuItem("New file");
+                var newDirItem = new MenuItem("New directory");
 
                 menu.getItems().addAll(newFileItem, newDirItem);
 
@@ -202,31 +201,30 @@ final class FilesView extends VBox implements Files.View {
         }
 
         void setupIconView(CommonFile file) {
-            final String iconName = (file instanceof File.TextFile)
-                                    ? TEXT_FILE_ICON_NAME
-                                    : FOLDER_ICON_NAME;
+            var iconName = (file instanceof File.TextFile)
+                           ? TEXT_FILE_ICON_NAME
+                           : FOLDER_ICON_NAME;
 
             setupIconView(iconName);
         }
 
         void setupIconView(String value) {
-            final var iconView = new ImageView();
+            var iconView = new ImageView();
 
             loadIcon(value).ifPresent(iconView::setImage);
             setGraphic(iconView);
         }
 
         Optional<Image> loadIcon(String iconName) {
-            Optional<Image> image = Optional.empty();
-            final var path = "/" + iconName;
+            var image = Optional.<Image>empty();
+            var path = "/" + iconName;
 
-            try (InputStream is = getClass().getResourceAsStream(path)) {
+            try (var is = getClass().getResourceAsStream(path)) {
                 if (is != null) {
                     image = Optional.of(new Image((is)));
                 }
             }
-            catch (IOException ignore) {
-            }
+            catch (IOException ignore) {}
             return image;
         }
     }

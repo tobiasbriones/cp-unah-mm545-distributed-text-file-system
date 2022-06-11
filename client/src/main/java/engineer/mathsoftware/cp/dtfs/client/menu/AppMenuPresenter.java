@@ -50,12 +50,12 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
         if (getOutput().isEmpty()) {
             return;
         }
-        final var dialog = new TextInputDialog("main");
+        var dialog = new TextInputDialog("main");
 
         dialog.setHeaderText("Login as");
         dialog.showAndWait();
 
-        final var clientName = dialog.getEditor().getText();
+        var clientName = dialog.getEditor().getText();
         getOutput().ifPresent(output -> output.onLogin(clientName));
     }
 
@@ -66,7 +66,7 @@ final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implem
 
     @Override
     public void onAbout() {
-        final var alert = new Alert(Alert.AlertType.INFORMATION);
+        var alert = new Alert(Alert.AlertType.INFORMATION);
 
         alert.setHeaderText("About");
         alert.setContentText(

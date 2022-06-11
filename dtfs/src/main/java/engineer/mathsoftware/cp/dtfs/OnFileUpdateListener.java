@@ -13,6 +13,5 @@ import java.rmi.RemoteException;
 @FunctionalInterface
 public interface OnFileUpdateListener extends Remote {
     // Pass the full system to make it easier to implement
-    void onFSChanged(FileSystemService.RealTimeFileSystem system) throws
-                                                                  RemoteException;
+    void onFSChanged(FileSystemService.RealTimeFileSystem system) throws RemoteException;
 }

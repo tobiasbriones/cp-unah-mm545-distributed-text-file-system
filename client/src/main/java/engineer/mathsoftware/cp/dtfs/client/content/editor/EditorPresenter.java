@@ -59,15 +59,13 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
 
     @Override
     public void onSaveButtonClick() {
-        final String content = view.getContent();
-
+        var content = view.getContent();
         saveContent(content);
     }
 
     @Override
     public void setWorkingFile(File.TextFile file, String content) {
         currentFile = file;
-
         setCurrentFileContent(content);
     }
 
@@ -84,11 +82,10 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
             clear();
             return;
         }
-        final Result<TextFileContent> result = repository.get(currentFile);
+        var result = repository.get(currentFile);
 
         if (result instanceof Result.Success<TextFileContent> s) {
-            final TextFileContent content = s.value();
-
+            var content = s.value();
             setCurrentFileContent(content.value());
         }
         else if (result instanceof Result.Failure<TextFileContent> f) {
@@ -98,7 +95,6 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
 
     private void clear() {
         currentFile = null;
-
         view.setWorkingFile("");
         view.setContent("");
     }
@@ -107,7 +103,7 @@ final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implemen
         if (currentFile == null) {
             return;
         }
-        final Result<Nothing> result = repository.set(new TextFileContent(
+        var result = repository.set(new TextFileContent(
             currentFile,
             content
         ));

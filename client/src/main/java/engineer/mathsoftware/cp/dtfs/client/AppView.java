@@ -33,7 +33,7 @@ final class AppView extends VBox implements App.View {
 
     @Override
     public void createView() {
-        final var container = new VBox();
+        var container = new VBox();
 
         container.setPadding(new Insets(PADDING));
         container.getChildren().addAll(

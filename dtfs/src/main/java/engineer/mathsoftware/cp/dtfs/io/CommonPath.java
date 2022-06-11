@@ -56,15 +56,12 @@ public record CommonPath(String value) implements Serializable {
     }
 
     public static Optional<CommonPath> of(Iterable<? extends Path> pathValue) {
-        final String stringValue = StreamSupport.stream(
-                                                    pathValue.spliterator(),
-                                                    false
-                                                )
-                                                .map(Path::toString)
-                                                .reduce(
-                                                    "",
-                                                    (s1, s2) -> s1 + SEPARATOR + s2
-                                                );
+        var stringValue = StreamSupport.stream(pathValue.spliterator(), false)
+                                       .map(Path::toString)
+                                       .reduce(
+                                           "",
+                                           (s1, s2) -> s1 + SEPARATOR + s2
+                                       );
         return of(stringValue);
     }
 
@@ -74,12 +71,12 @@ public record CommonPath(String value) implements Serializable {
     }
 
     public static CommonPath of(CommonPath... paths) {
-        final String value = Arrays.stream(paths)
-                                   .map(CommonPath::split)
-                                   .map(Arrays::asList)
-                                   .flatMap(Collection::stream)
-                                   .reduce("", (s1, s2) -> s1 + SEPARATOR + s2)
-                                   .substring(1);
+        var value = Arrays.stream(paths)
+                          .map(CommonPath::split)
+                          .map(Arrays::asList)
+                          .flatMap(Collection::stream)
+                          .reduce("", (s1, s2) -> s1 + SEPARATOR + s2)
+                          .substring(1);
 
         if (value.equals(SEPARATOR) || value.startsWith(SEPARATOR + SEPARATOR)) {
             return of();
@@ -94,8 +91,8 @@ public record CommonPath(String value) implements Serializable {
     }
 
     public CommonPath getParent() {
-        final Predicate<String> hasParent = path -> path.contains(SEPARATOR);
-        final Function<String, String> parentSubstring = path ->
+        Predicate<String> hasParent = path -> path.contains(SEPARATOR);
+        Function<String, String> parentSubstring = path ->
             path.substring(0, path.lastIndexOf(SEPARATOR_CHAR));
         return Optional.of(value)
                        .filter(hasParent)

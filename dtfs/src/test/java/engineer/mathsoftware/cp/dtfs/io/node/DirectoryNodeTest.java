@@ -46,7 +46,7 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Test accessor method: getParent")
     void getParent() {
-        final var dirNode = new DirectoryNode(new Directory("fs"));
+        var dirNode = new DirectoryNode(new Directory("fs"));
 
         assertThat(
             "The default node's parent is empty",
@@ -64,7 +64,7 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Test mutator method: setParent")
     void setParent() {
-        final var dirNode = new DirectoryNode(new Directory("/fs"));
+        var dirNode = new DirectoryNode(new Directory("/fs"));
 
         dirNode.setParent(node);
 
@@ -94,8 +94,8 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Test method: addChild")
     void addChild() {
-        final var c1 = new DirectoryNode(new Directory("/fs"));
-        final var c2 = new FileNode(new File.TextFile("/file1.txt"));
+        var c1 = new DirectoryNode(new Directory("/fs"));
+        var c2 = new FileNode(new File.TextFile("/file1.txt"));
 
         node.addChild(c1);
         assertTrue(
@@ -113,9 +113,9 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Test method: addChildren")
     void addChildren() {
-        final var c1 = new DirectoryNode(new Directory("/fs"));
-        final var c2 = new FileNode(new File.TextFile("/file1.txt"));
-        final var c3 = new FileNode(new File.TextFile("/file2.txt"));
+        var c1 = new DirectoryNode(new Directory("/fs"));
+        var c2 = new FileNode(new File.TextFile("/file1.txt"));
+        var c3 = new FileNode(new File.TextFile("/file2.txt"));
 
         node.addChildren(c1, c2, c3);
 
@@ -135,8 +135,8 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Test accessor method: hasChild")
     void hasChild() {
-        final var c1 = new DirectoryNode(new Directory("/fs"));
-        final var c2 = new FileNode(new File.TextFile("/file1.txt"));
+        var c1 = new DirectoryNode(new Directory("/fs"));
+        var c2 = new FileNode(new File.TextFile("/file1.txt"));
 
         node.addChildren(c1, c2);
         assertTrue(
@@ -152,14 +152,15 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Test method: removeChild")
     void removeChild() {
-        final BiFunction<DirectoryNode, DirectoryNode, Boolean> isChildRemoved = (dir, child)
+        BiFunction<DirectoryNode, DirectoryNode, Boolean> isChildRemoved =
+            (dir, child)
             -> !dir.hasChild(child.commonFile()) && child.getParent()
                                                          .equals(Optional.empty());
 
-        final var d1 = new DirectoryNode(new Directory("/fs"));
-        final var f1 = new FileNode(new File.TextFile("/file1.txt"));
-        final var d2 = new DirectoryNode(new Directory("/fs/dir1"));
-        final var f2 = new FileNode(new File.TextFile("/fs/dir1/file2.txt"));
+        var d1 = new DirectoryNode(new Directory("/fs"));
+        var f1 = new FileNode(new File.TextFile("/file1.txt"));
+        var d2 = new DirectoryNode(new Directory("/fs/dir1"));
+        var f2 = new FileNode(new File.TextFile("/fs/dir1/file2.txt"));
 
         node.addChildren(d1, f1);
         d1.addChild(d2);
@@ -186,8 +187,8 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Setup circular parents and expect them to be rejected")
     void testCircularParent() {
-        final var c1 = new DirectoryNode(new Directory("/fs"));
-        final var c2 = new DirectoryNode(new Directory("/fs/dir1"));
+        var c1 = new DirectoryNode(new Directory("/fs"));
+        var c2 = new DirectoryNode(new Directory("/fs/dir1"));
 
         // Build /fs/dir1
         c1.setParent(node);
@@ -201,8 +202,8 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Setup invalid children and expect them to be rejected")
     void testInvalidChild() {
-        final var c1 = new DirectoryNode(new Directory("/fs"));
-        final var c2 = new DirectoryNode(new Directory("/fs/dir1"));
+        var c1 = new DirectoryNode(new Directory("/fs"));
+        var c2 = new DirectoryNode(new Directory("/fs/dir1"));
 
         // Build /fs/dir1
         node.addChild(c1);
@@ -216,42 +217,39 @@ class DirectoryNodeTest {
     @Test
     @DisplayName("Build a simple file tree")
     void testSampleFs() {
-        final DirectoryNode root = new DirectoryNode(new Directory("root"));
-        final String expectedString = "root";
-        final String recursiveExpected = """
-                                         root
-                                           dir1
-                                             file-x.txt
-                                             dir11
-                                               nested.txt
-                                           dir2
-                                             file-y.txt
-                                           file1.txt
-                                           file2.txt
-                                         """;
+        DirectoryNode root = new DirectoryNode(new Directory("root"));
+        String expectedString = "root";
+        String recursiveExpected = """
+                                   root
+                                     dir1
+                                       file-x.txt
+                                       dir11
+                                         nested.txt
+                                     dir2
+                                       file-y.txt
+                                     file1.txt
+                                     file2.txt
+                                   """;
 
         // Two folders
-        final var dir1 = new DirectoryNode(new Directory("root/dir1"));
-        final var dir2 = new DirectoryNode(new Directory("root/dir2"));
-        final var fileX = new FileNode(new File.TextFile("root/dir1/file-x"
-                                                         + ".txt"));
-        final var fileY = new FileNode(new File.TextFile("root/dir2/file-y"
-                                                         + ".txt"));
+        var dir1 = new DirectoryNode(new Directory("root/dir1"));
+        var dir2 = new DirectoryNode(new Directory("root/dir2"));
+        var fileX = new FileNode(new File.TextFile("root/dir1/file-x.txt"));
+        var fileY = new FileNode(new File.TextFile("root/dir2/file-y.txt"));
 
         dir1.addChild(fileX);
         dir2.addChild(fileY);
 
         // Nested folders
-        final var dir11 = new DirectoryNode(new Directory("root/dir1/dir11"));
-        final var nestedFile = new FileNode(new File.TextFile(
-            "root/dir1/dir11/nested.txt"));
+        var dir11 = new DirectoryNode(new Directory("root/dir1/dir11"));
+        var nestedFile = new FileNode(new File.TextFile("root/dir1/dir11/nested.txt"));
 
         dir11.addChild(nestedFile);
         dir1.addChild(dir11);
 
         // Root files
-        final var file1 = new FileNode(new File.TextFile("root/file1.txt"));
-        final var file2 = new FileNode(new File.TextFile("root/file2.txt"));
+        var file1 = new FileNode(new File.TextFile("root/file1.txt"));
+        var file2 = new FileNode(new File.TextFile("root/file2.txt"));
 
         root.addChildren(dir1, dir2, file1, file2);
 
@@ -275,7 +273,7 @@ class DirectoryNodeTest {
         assertTrue(dir2.hasChild(fileY.commonFile()), "Dir2 has file-y.txt");
 
         // Test recursive traversal
-        final String[] traverseExpected = {
+        String[] traverseExpected = {
             "root",
             "root/dir1",
             "root/dir1/file-x.txt",
@@ -286,7 +284,7 @@ class DirectoryNodeTest {
             "root/file1.txt",
             "root/file2.txt"
         };
-        final var traverseResult = new ArrayList<>(traverseExpected.length);
+        var traverseResult = new ArrayList<>(traverseExpected.length);
 
         root.traverse(next -> traverseResult.add(next.toString()));
 

@@ -4,7 +4,6 @@
 
 package engineer.mathsoftware.cp.dtfs.io;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -15,19 +14,17 @@ class CommonPathTest {
 
     @Test
     void testVarargsConstructor() {
-        final var p1 = new CommonPath("root/dir1/dir11");
-        final var p2 = new CommonPath("kittens");
-        final var p3 = new CommonPath("fluffy/pics");
-        final var expected = new CommonPath(
-            "root/dir1/dir11/kittens/fluffy/pics");
-        final CommonPath actual = CommonPath.of(p1, p2, p3);
-
-        assertThat(actual, CoreMatchers.is(expected));
+        var p1 = new CommonPath("root/dir1/dir11");
+        var p2 = new CommonPath("kittens");
+        var p3 = new CommonPath("fluffy/pics");
+        var expected = new CommonPath("root/dir1/dir11/kittens/fluffy/pics");
+        CommonPath actual = CommonPath.of(p1, p2, p3);
+        assertThat(actual, is(expected));
     }
 
     @Test
     void testVarargsConstructorEmpties() {
-        final CommonPath empty = CommonPath.of();
+        CommonPath empty = CommonPath.of();
 
         assertThat(
             CommonPath.of(empty),

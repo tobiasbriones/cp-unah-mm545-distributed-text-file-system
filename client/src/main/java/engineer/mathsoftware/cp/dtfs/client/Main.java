@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 public final class Main extends Application {
     public static void main(String[] args) {
         if (args.length > 0) {
-            final var hostname = args[0];
+            var hostname = args[0];
 
             System.setProperty("java.rmi.server.hostname", hostname);
         }

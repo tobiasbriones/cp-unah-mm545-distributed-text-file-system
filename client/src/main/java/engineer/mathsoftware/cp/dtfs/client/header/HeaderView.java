@@ -13,7 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Optional;
 
 /**
@@ -38,11 +37,11 @@ final class HeaderView extends VBox implements Header.View {
 
     @Override
     public void createView() {
-        final var userBox = new HBox();
-        final var userTitleLabel = new Label();
-        final var statusBox = new HBox();
-        final var statusTitleLabel = new Label();
-        final var hostTitleLabel = new Label();
+        var userBox = new HBox();
+        var userTitleLabel = new Label();
+        var statusBox = new HBox();
+        var statusTitleLabel = new Label();
+        var hostTitleLabel = new Label();
 
         userTitleLabel.setText("User: ");
         userTitleLabel.setStyle("-fx-font-weight: bold;");
@@ -57,10 +56,11 @@ final class HeaderView extends VBox implements Header.View {
         hostLabel.setText("-");
 
         statusBox.setSpacing(4);
-        statusBox.getChildren().addAll(statusTitleLabel,
-                                       statusLabel,
-                                       hostTitleLabel,
-                                       hostLabel
+        statusBox.getChildren().addAll(
+            statusTitleLabel,
+            statusLabel,
+            hostTitleLabel,
+            hostLabel
         );
 
         setPadding(new Insets(8, 0, 8, 0));
@@ -91,16 +91,15 @@ final class HeaderView extends VBox implements Header.View {
     }
 
     private Optional<ImageView> loadIcon(String iconName) {
-        Optional<ImageView> image = Optional.empty();
-        final var path = "/" + iconName;
+        var image = Optional.<ImageView> empty();
+        var path = "/" + iconName;
 
-        try (InputStream is = getClass().getResourceAsStream(path)) {
+        try (var is = getClass().getResourceAsStream(path)) {
             if (is != null) {
                 image = Optional.of(new ImageView(new Image((is))));
             }
         }
-        catch (IOException ignore) {
-        }
+        catch (IOException ignore) {}
         return image;
     }
 }

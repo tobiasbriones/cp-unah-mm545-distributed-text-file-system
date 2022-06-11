@@ -53,12 +53,12 @@ class AppFileSystemServiceTest {
      * @param root root file for the FS
      */
     private static void setUpDefaultFs(java.io.File root) {
-        final var dir1 = new java.io.File(root, DIR_1_NAME);
-        final var file1 = new java.io.File(root, TEXT_FILE_1_NAME);
-        final var file2 = new java.io.File(dir1, TEXT_FILE_2_NAME);
+        var dir1 = new java.io.File(root, DIR_1_NAME);
+        var file1 = new java.io.File(root, TEXT_FILE_1_NAME);
+        var file2 = new java.io.File(dir1, TEXT_FILE_2_NAME);
 
         if (!dir1.mkdir()) {
-            final var msg = "Fail to create test directory: " + dir1;
+            var msg = "Fail to create test directory: " + dir1;
             throw new RuntimeException(msg);
         }
 
@@ -67,7 +67,7 @@ class AppFileSystemServiceTest {
             Files.writeString(file2.toPath(), TEXT_FILE_2_CONTENT);
         }
         catch (IOException e) {
-            final var msg = "Fail to setup default FS: " + e;
+            var msg = "Fail to setup default FS: " + e;
             throw new RuntimeException(msg);
         }
     }
@@ -75,7 +75,7 @@ class AppFileSystemServiceTest {
     @BeforeEach
     void setUp() throws RemoteException {
         service = new AppFileSystemService();
-        final var root = new java.io.File(AppFileSystemService.ROOT);
+        var root = new java.io.File(AppFileSystemService.ROOT);
 
         prepareFsRoot(root);
         setUpDefaultFs(root);
@@ -84,22 +84,20 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Read the default file system")
     void readFs() throws IOException {
-        final FileSystemService.RealTimeFileSystem rtfs =
-            service.getRealTimeFileSystem();
-        final FileSystem fs = FileSystems.buildFileSystem(
+        FileSystemService.RealTimeFileSystem rtfs = service.getRealTimeFileSystem();
+        FileSystem fs = FileSystems.buildFileSystem(
             rtfs,
             new HashMap<>(0)
         );
 
         assertNotNull(fs, "Expects the file system to not be null");
 
-        final DirectoryNode actual = fs.getRoot();
-        final var root = new DirectoryNode(Directory.of());
-        final var dir1 = new DirectoryNode(new Directory("/" + DIR_1_NAME));
-        final var file11 = new FileNode(new File.TextFile("/" + DIR_1_NAME +
-                                                          "/" + TEXT_FILE_1_NAME));
-        final var file1 =
-            new FileNode(new File.TextFile("/" + TEXT_FILE_1_NAME));
+        DirectoryNode actual = fs.getRoot();
+        var root = new DirectoryNode(Directory.of());
+        var dir1 = new DirectoryNode(new Directory("/" + DIR_1_NAME));
+        var file11 = new FileNode(new File.TextFile("/" + DIR_1_NAME +
+                                                    "/" + TEXT_FILE_1_NAME));
+        var file1 = new FileNode(new File.TextFile("/" + TEXT_FILE_1_NAME));
 
         root.addChildren(dir1, file1);
         dir1.addChild(file11);
@@ -112,13 +110,12 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Read a specific text file")
     void readFile() throws IOException {
-        final var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
-        final Result<TextFileContent> contentResult =
-            service.readTextFile(file);
+        var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
+        Result<TextFileContent> contentResult = service.readTextFile(file);
 
         assertThat(contentResult instanceof Result.Success, is(true));
 
-        final TextFileContent actual = contentResult.value();
+        TextFileContent actual = contentResult.value();
 
         assertThat(actual.value(), is(TEXT_FILE_1_CONTENT));
     }
@@ -126,7 +123,7 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Create a new directory")
     void writeDir() throws IOException {
-        final var dir = new Directory("/new-dir");
+        var dir = new Directory("/new-dir");
 
         service.writeDirectory(dir);
 
@@ -139,17 +136,16 @@ class AppFileSystemServiceTest {
     @Test
     @DisplayName("Write to a specific text file")
     void writeFile() throws IOException {
-        final var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
-        final var contentValue = "New file content";
-        final var content = new TextFileContent(file, contentValue);
+        var file = new File.TextFile("/" + TEXT_FILE_1_NAME);
+        var contentValue = "New file content";
+        var content = new TextFileContent(file, contentValue);
 
         service.writeTextFile(content);
-        final Result<TextFileContent> newContentResult = service.readTextFile(
-            file);
+        Result<TextFileContent> newContentResult = service.readTextFile(file);
 
         assertThat(newContentResult instanceof Result.Success, is(true));
 
-        final TextFileContent actual = newContentResult.value();
+        TextFileContent actual = newContentResult.value();
 
         assertThat(actual, is(content));
     }
@@ -162,14 +158,13 @@ class AppFileSystemServiceTest {
                       .forEach(java.io.File::delete);
             }
             catch (IOException e) {
-                final var msg = "Fail to delete root directory before running"
+                var msg = "Fail to delete root directory before running"
                                 + " tests: " + e;
                 throw new RuntimeException(msg);
             }
         }
         if (!root.mkdir()) {
-            final var msg = "Fail to setup tests: Couldn't make the root "
-                            + "directory";
+            var msg = "Fail to setup tests: Couldn't make the root directory";
             throw new RuntimeException(msg);
         }
     }

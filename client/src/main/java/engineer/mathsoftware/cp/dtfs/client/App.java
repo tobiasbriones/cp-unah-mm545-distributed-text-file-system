@@ -9,7 +9,6 @@ import engineer.mathsoftware.cp.dtfs.client.content.Content;
 import engineer.mathsoftware.cp.dtfs.client.header.Header;
 import engineer.mathsoftware.cp.dtfs.client.info.Info;
 import engineer.mathsoftware.cp.dtfs.client.menu.AppMenu;
-import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileRepository;
 import engineer.mathsoftware.cp.dtfs.mvp.Initializable;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpPresenter;
 import engineer.mathsoftware.cp.dtfs.mvp.MvpView;
@@ -36,12 +35,11 @@ public final class App implements Initializable {
     interface View extends MvpView<Void> {}
 
     public static App newInstance() {
-        final TextFileRepository repository =
-            AppLocalFiles.newTextFileRepository();
-        final var menu = new AppMenu();
-        final var header = new Header();
-        final var info = new Info();
-        final var childrenConfig = new ChildrenConfig(
+        var repository = AppLocalFiles.newTextFileRepository();
+        var menu = new AppMenu();
+        var header = new Header();
+        var info = new Info();
+        var childrenConfig = new ChildrenConfig(
             menu,
             header,
             Content.newInstance(new Content.DependencyConfig(
@@ -53,6 +51,7 @@ public final class App implements Initializable {
         );
         return new App(childrenConfig);
     }
+
     private final View view;
     private final Presenter presenter;
     private final AppMenu menu;
@@ -61,6 +60,7 @@ public final class App implements Initializable {
     private final Content content;
     private final Info info;
     private FileSystemService service;
+
     private App(ChildrenConfig childrenConfig) {
         view = new AppView(childrenConfig.newViewConfig());
         menu = childrenConfig.menu();
@@ -85,8 +85,8 @@ public final class App implements Initializable {
     }
 
     public void start(Stage stage) {
-        final var scene = new Scene((Parent) view);
-        final var title = "JavaRMI Text File System";
+        var scene = new Scene((Parent) view);
+        var title = "JavaRMI Text File System";
 
         menu.setOutput(menuOutput);
         init();
@@ -102,18 +102,17 @@ public final class App implements Initializable {
     }
 
     private void loadServiceAsync() {
-        final Consumer<Optional<FileSystemService>> update = result ->
+        Consumer<Optional<FileSystemService>> update = result ->
             result.ifPresentOrElse(
                 this::onServiceObtained,
                 this::onFailedToObtainService
             );
 
-        final Runnable run = () -> {
-            final var result = obtainService();
-
+        Runnable run = () -> {
+            var result = obtainService();
             Platform.runLater(() -> update.accept(result));
         };
-        final var thread = new Thread(run);
+        var thread = new Thread(run);
 
         setRetrievingServiceStatus();
         thread.start();
@@ -162,9 +161,7 @@ public final class App implements Initializable {
     }
 
     private void setRetrievingServiceStatus() {
-        final var msg = "Retrieving service from %s...".formatted(
-            FileSystemServices.HOST);
-
+        var msg = "Retrieving service from %s...".formatted(FileSystemServices.HOST);
         header.getInput().setStatus(msg);
         info.getInput().start("Retrieving service");
     }
@@ -172,8 +169,8 @@ public final class App implements Initializable {
     private void setFailedServiceStatus() {
         header.getInput().setStatus("Failed");
         info.getInput().end("");
-        info.getInput().setError("Failed to connect to service: %s".formatted(
-            FileSystemServices.HOST));
+        info.getInput()
+            .setError("Failed to connect to service: %s".formatted(FileSystemServices.HOST));
     }
 
     record ChildrenConfig(

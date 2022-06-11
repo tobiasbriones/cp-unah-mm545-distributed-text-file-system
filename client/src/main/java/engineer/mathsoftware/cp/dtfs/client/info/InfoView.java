@@ -34,7 +34,7 @@ final class InfoView extends VBox implements Info.View {
 
     @Override
     public void createView() {
-        final var loadingBox = new HBox();
+        var loadingBox = new HBox();
 
         loadingBox.setAlignment(Pos.CENTER_LEFT);
         loadingBox.setSpacing(16);

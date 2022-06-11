@@ -29,6 +29,7 @@ final class EditorOutput implements Editor.Output {
     private final Editor.Input editorInput;
     private final Info.Input infoInput;
     private FileSystemService service;
+
     EditorOutput(DependencyConfig config) {
         this.repository = config.repository();
         this.filesInput = config.filesInput();
@@ -68,7 +69,7 @@ final class EditorOutput implements Editor.Output {
 
     // ---------- PUSH
     private void pushFile(File.TextFile f) {
-        final Result<TextFileContent> result = repository.get(f);
+        var result = repository.get(f);
 
         if (result instanceof Result.Success<TextFileContent> s) {
             pushFileContentAsync(s.value());
@@ -79,7 +80,7 @@ final class EditorOutput implements Editor.Output {
     }
 
     private void pushFileContentAsync(TextFileContent content) {
-        final Consumer<Result<Nothing>> resultConsumer = result -> {
+        Consumer<Result<Nothing>> resultConsumer = result -> {
             if (result instanceof Result.Success<Nothing>) {
                 Platform.runLater(() -> onFilePushed(content.file()));
             }
@@ -87,9 +88,9 @@ final class EditorOutput implements Editor.Output {
                 Platform.runLater(() -> onFilePushFailed(content.file()));
             }
         };
-        final Runnable runnable = () -> {
+        Runnable runnable = () -> {
             try {
-                final Result<Nothing> result = service.writeTextFile(content);
+                var result = service.writeTextFile(content);
                 resultConsumer.accept(result);
             }
             catch (RemoteException e) {
@@ -97,7 +98,7 @@ final class EditorOutput implements Editor.Output {
                 resultConsumer.accept(Result.Failure.of(e));
             }
         };
-        final var thread = new Thread(runnable);
+        var thread = new Thread(runnable);
 
         infoInput.start("Pushing file: " + content.file().path().value());
         thread.start();
@@ -123,7 +124,7 @@ final class EditorOutput implements Editor.Output {
 
     // ---------- PULL
     private void pullFile(File.TextFile file) {
-        final Consumer<Result<TextFileContent>> resultConsumer = result -> {
+        Consumer<Result<TextFileContent>> resultConsumer = result -> {
             if (result instanceof Result.Success<TextFileContent> s) {
                 Platform.runLater(() -> onFileContentPulled(s.value()));
             }
@@ -136,8 +137,7 @@ final class EditorOutput implements Editor.Output {
         };
         final Runnable runnable = () -> {
             try {
-                final Result<TextFileContent> result =
-                    service.readTextFile(file);
+                var result = service.readTextFile(file);
                 resultConsumer.accept(result);
             }
             catch (RemoteException e) {
@@ -145,14 +145,14 @@ final class EditorOutput implements Editor.Output {
                 resultConsumer.accept(Result.Failure.of(e));
             }
         };
-        final var thread = new Thread(runnable);
+        var thread = new Thread(runnable);
 
         infoInput.start("Pulling file: " + file.path().value());
         thread.start();
     }
 
     private void onFileContentPulled(TextFileContent content) {
-        final File file = content.file();
+        var file = content.file();
 
         updateLocalContent(content);
         infoInput.end("");
@@ -175,7 +175,7 @@ final class EditorOutput implements Editor.Output {
     }
 
     private void updateLocalContent(TextFileContent content) {
-        final Result<Nothing> result;
+        Result<Nothing> result;
 
         if (repository.exists(content.file())) {
             result = repository.set(content);

@@ -46,26 +46,24 @@ public sealed interface File extends CommonFile {
 
         public Name {
             if (!isValid(value)) {
-                final var msg = "Invalid file name: " + value;
+                var msg = "Invalid file name: " + value;
                 throw new RuntimeException(msg);
             }
         }
 
         String base() {
-            final int length = value.length();
-            final String extension = extension();
+            var length = value.length();
+            var extension = extension();
             return value.substring(0, length - extension.length() - 1);
         }
 
         String extension() {
-            final Predicate<String> hasExtension = name -> name.contains(
-                FILE_EXTENSION_DOT);
-            final Function<String, Integer> getIndex = name -> name.lastIndexOf(
-                FILE_EXTENSION_DOT) + 1;
-            final Function<String, String> getSubstring =
-                name -> name.substring(
-                getIndex.apply(name));
-            return Optional.of(value).filter(hasExtension).map(getSubstring)
+            Predicate<String> hasExtension = name -> name.contains(FILE_EXTENSION_DOT);
+            Function<String, Integer> getIndex = name -> name.lastIndexOf(FILE_EXTENSION_DOT) + 1;
+            Function<String, String> getSubstring = name -> name.substring(getIndex.apply(name));
+            return Optional.of(value)
+                           .filter(hasExtension)
+                           .map(getSubstring)
                            .orElse("");
         }
 
@@ -79,9 +77,9 @@ public sealed interface File extends CommonFile {
     }
 
     static File of(CommonPath path) {
-        final String[] tokens = path.split();
-        final String fileNameValue = tokens[tokens.length - 1];
-        final Name fileName = new Name(fileNameValue);
+        var tokens = path.split();
+        var fileNameValue = tokens[tokens.length - 1];
+        var fileName = new Name(fileNameValue);
 
         // Check for the File type but only text files are supported right
         // now...

@@ -24,7 +24,6 @@ import java.rmi.ConnectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.function.Consumer;
@@ -54,8 +53,8 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static void setChanged(File file) throws IOException {
-        final Map<File, LastUpdateStatus> statuses = loadStatuses();
-        final LastUpdateStatus status = LastUpdateStatus.of(file);
+        var statuses = loadStatuses();
+        var status = LastUpdateStatus.of(file);
 
         // TODO files are coming file.txt not like /file.txt hence
         //  deleteFileStatus won't work!!!
@@ -74,18 +73,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public Result<TextFileContent> readTextFile(File.TextFile file) throws
-                                                                    RemoteException {
-        final var repository = new AppLocalTextFileRepository(rootPath);
-        final var result = repository.get(file);
+    public Result<TextFileContent> readTextFile(File.TextFile file) throws RemoteException {
+        var repository = new AppLocalTextFileRepository(rootPath);
+        var result = repository.get(file);
         return mapResult(result);
     }
 
     @Override
-    public Result<Nothing> writeDirectory(Directory directory) throws
-                                                               RemoteException {
-        final JavaFile localFile = toLocalFile(directory.path());
-        final Path path = localFile.toPath();
+    public Result<Nothing> writeDirectory(Directory directory) throws RemoteException {
+        var localFile = toLocalFile(directory.path());
+        var path = localFile.toPath();
 
         try {
             if (!Files.exists(path)) {
@@ -101,15 +98,14 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public Result<Nothing> writeTextFile(TextFileContent content) throws
-                                                                  RemoteException {
-        final File file = content.file();
-        final Path path = toLocalFile(file.path()).toPath();
-        final var repository = new AppLocalTextFileRepository(rootPath);
-        final var result = Files.exists(path)
-                           ? repository.set(content)
-                           : repository.add(content);
-        final var clientResult = mapResult(result);
+    public Result<Nothing> writeTextFile(TextFileContent content) throws RemoteException {
+        var file = content.file();
+        var path = toLocalFile(file.path()).toPath();
+        var repository = new AppLocalTextFileRepository(rootPath);
+        var result = Files.exists(path)
+                     ? repository.set(content)
+                     : repository.add(content);
+        var clientResult = mapResult(result);
 
         if (clientResult instanceof Result.Success) {
             onFileWrote(file);
@@ -119,7 +115,7 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
 
     @Override
     public Result<Nothing> deleteFile(CommonFile file) throws RemoteException {
-        final Path path = toLocalFile(file.path()).toPath();
+        var path = toLocalFile(file.path()).toPath();
 
         if (!Files.exists(path)) {
             return Result.Failure.of(new IOException("File doesn't exist"));
@@ -140,22 +136,19 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     @Override
-    public boolean addOnFileUpdateListener(OnFileUpdateListener l) throws
-                                                                   RemoteException {
+    public boolean addOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
         return clients.add(l);
     }
 
     @Override
-    public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws
-                                                                      RemoteException {
+    public boolean removeOnFileUpdateListener(OnFileUpdateListener l) throws RemoteException {
         return clients.remove(l);
     }
 
     @Override
     public boolean regObject(String name, Remote obj) {
         try {
-            final Registry registry = LocateRegistry.getRegistry();
-
+            var registry = LocateRegistry.getRegistry();
             registry.bind(name, obj);
         }
         catch (Exception e) {
@@ -183,10 +176,10 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private void broadcastFSChange() throws IOException {
-        final RealTimeFileSystem fs = loadRealTimeFileSystem();
-        final Collection<OnFileUpdateListener> remove = new ArrayList<>(0);
+        var fs = loadRealTimeFileSystem();
+        var remove = new ArrayList<OnFileUpdateListener>(0);
 
-        for (final var client : clients) {
+        for (var client : clients) {
             try {
                 client.onFSChanged(fs);
             }
@@ -216,7 +209,7 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static <T extends Serializable> Result<T> mapResult(Result<T> result) {
-        final Consumer<Throwable> logFailure = reason -> System.out.println(
+        Consumer<Throwable> logFailure = reason -> System.out.println(
             reason.getMessage()); // Use proper logging
 
         // Switch pattern matching for Java17 ep+
@@ -234,41 +227,38 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static DirectoryNode loadRoot() {
-        final Path rootPath = toPath();
-        final DirectoryNode node = DirectoryNode.of();
-
+        var rootPath = toPath();
+        var node = DirectoryNode.of();
         loadNode(node, rootPath, rootPath);
         return node;
     }
 
     private static void loadNode(DirectoryNode node, Path path, Path rootPath) {
-        final FilenameFilter filter = (dir, name) -> !name.endsWith(".data");
-        final var directChildrenList = path.toFile().listFiles(filter);
+        FilenameFilter filter = (dir, name) -> !name.endsWith(".data");
+        var directChildrenList = path.toFile().listFiles(filter);
 
         if (directChildrenList == null) {
             return;
         }
 
-        final List<CommonPathType> children = Arrays.stream(directChildrenList)
-                                                    .map(java.io.File::toPath)
-                                                    .map(PathType::of)
-                                                    .map(pathType -> pathType.toRelativeCommonPathType(
-                                                        rootPath))
-                                                    .filter(Optional::isPresent)
-                                                    .map(Optional::get)
-                                                    .toList();
+        var children = Arrays.stream(directChildrenList)
+                             .map(java.io.File::toPath)
+                             .map(PathType::of)
+                             .map(pathType -> pathType.toRelativeCommonPathType(rootPath))
+                             .filter(Optional::isPresent)
+                             .map(Optional::get)
+                             .toList();
 
-        for (final CommonPathType child : children) {
-            final CommonFile commonFile = child.toCommonFile();
-            final Path childPath = child.path();
+        for (var child : children) {
+            var commonFile = child.toCommonFile();
+            var childPath = child.path();
 
             // Can use switch pattern matching for Java17 ep +
             if (commonFile instanceof File f) {
                 node.addChild(new FileNode(f));
             }
             else if (commonFile instanceof Directory d) {
-                final var directoryChild = new DirectoryNode(d);
-
+                var directoryChild = new DirectoryNode(d);
                 node.addChild(directoryChild);
                 loadNode(directoryChild, childPath, rootPath);
             }
@@ -276,19 +266,18 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static void deleteFileStatus(File file) throws IOException {
-        final Map<File, LastUpdateStatus> statuses = loadStatuses();
-
+        var statuses = loadStatuses();
         statuses.remove(file);
         saveStatuses(statuses);
     }
 
     private static Map<File, LastUpdateStatus> loadStatuses() {
-        final Path path = Path.of(ROOT, ".statuses.data");
+        var path = Path.of(ROOT, ".statuses.data");
 
         if (!Files.exists(path)) {
             return new HashMap<>(0);
         }
-        try (ObjectInput input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
+        try (var input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
             return (Map<File, LastUpdateStatus>) input.readObject();
         }
         catch (Exception e) {
@@ -297,21 +286,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         }
     }
 
-    private static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws
-                                                                           IOException {
-        final Path path = Path.of(ROOT, ".statuses.data");
-
-        try (
-            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
-                path.toFile()))
-        ) {
+    private static void saveStatuses(Map<File, LastUpdateStatus> statuses) throws IOException {
+        var path = Path.of(ROOT, ".statuses.data");
+        try (var output = new ObjectOutputStream(new FileOutputStream(path.toFile()))) {
             output.writeObject(statuses);
         }
     }
 
     private record PathType(Path path, boolean isDirectory) {
         Optional<CommonPathType> toRelativeCommonPathType(Path rootPath) {
-            final Path relativePath = rootPath.relativize(path);
+            var relativePath = rootPath.relativize(path);
             return CommonPath.of(relativePath)
                              .map(commonPath -> new CommonPathType(
                                  path,

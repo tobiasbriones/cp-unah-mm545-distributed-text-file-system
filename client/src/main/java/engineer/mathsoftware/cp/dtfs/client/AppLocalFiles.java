@@ -31,14 +31,13 @@ public final class AppLocalFiles {
 
     public static FileSystem readFs() throws IOException {
         createRootIfNotExists();
-        final var file = new java.io.File(ROOT, FS_FILE_NAME);
+         var file = new java.io.File(ROOT, FS_FILE_NAME);
 
         if (!file.exists()) {
             return new FileSystem(DirectoryNode.of());
         }
 
-        try (ObjectInput input =
-                 new ObjectInputStream(new FileInputStream(file))) {
+        try (var input = new ObjectInputStream(new FileInputStream(file))) {
             return (FileSystem) input.readObject();
         }
         catch (ClassNotFoundException e) {
@@ -49,34 +48,28 @@ public final class AppLocalFiles {
 
     public static void saveFs(FileSystem system) throws IOException {
         createRootIfNotExists();
-        final var file = new java.io.File(ROOT, FS_FILE_NAME);
+         var file = new java.io.File(ROOT, FS_FILE_NAME);
 
-        try (
-            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
-                file))
-        ) {
+        try (var output = new ObjectOutputStream(new FileOutputStream(file))) {
             output.writeObject(system);
         }
     }
 
     public static void setDownloaded(File file) throws IOException {
-        final Map<File, FileSystem.LastUpdateStatus> statuses = readStatuses();
-
+        var statuses = readStatuses();
         statuses.put(file, FileSystem.LastUpdateStatus.of(file));
         saveStatuses(statuses);
     }
 
-    public static Map<File, FileSystem.LastUpdateStatus> readStatuses() throws
-                                                                        IOException {
+    public static Map<File, FileSystem.LastUpdateStatus> readStatuses() throws IOException {
         createRootIfNotExists();
-        final Path path = Path.of(ROOT, ".statuses.data");
+        var path = Path.of(ROOT, ".statuses.data");
 
         if (!Files.exists(path)) {
             return new HashMap<>(0);
         }
 
-        try (ObjectInput input =
-                 new ObjectInputStream(new FileInputStream(path.toFile()))) {
+        try (var input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
             return (Map<File, FileSystem.LastUpdateStatus>) input.readObject();
         }
         catch (ClassNotFoundException e) {
@@ -85,43 +78,38 @@ public final class AppLocalFiles {
         }
     }
 
-    public static void saveStatuses(Map<File, FileSystem.LastUpdateStatus> statuses) throws
-                                                                                     IOException {
+    public static void saveStatuses(
+        Map<File, FileSystem.LastUpdateStatus> statuses
+    ) throws IOException {
         createRootIfNotExists();
-        final var file = new java.io.File(ROOT, ".statuses.data");
+         var file = new java.io.File(ROOT, ".statuses.data");
 
-        try (
-            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
-                file))
-        ) {
+        try (var output = new ObjectOutputStream(new FileOutputStream(file))) {
             output.writeObject(statuses);
         }
     }
 
     public static void addToChangeList(File file) throws IOException {
-        final Set<File> changelist = readChangelist();
-
+        var changelist = readChangelist();
         changelist.add(file);
         saveChanglist(changelist);
     }
 
     public static void removeFromChangeList(File file) throws IOException {
-        final Set<File> changelist = readChangelist();
-
+        var changelist = readChangelist();
         changelist.remove(file);
         saveChanglist(changelist);
     }
 
     public static Set<File> readChangelist() throws IOException {
         createRootIfNotExists();
-        final Path path = Path.of(ROOT, ".changelist.data");
+        var path = Path.of(ROOT, ".changelist.data");
 
         if (!Files.exists(path)) {
             return new HashSet<>(0);
         }
 
-        try (ObjectInput input =
-                 new ObjectInputStream(new FileInputStream(path.toFile()))) {
+        try (var input = new ObjectInputStream(new FileInputStream(path.toFile()))) {
             return (Set<File>) input.readObject();
         }
         catch (ClassNotFoundException e) {
@@ -132,27 +120,22 @@ public final class AppLocalFiles {
 
     public static void saveChanglist(Set<File> changelist) throws IOException {
         createRootIfNotExists();
-        final var file = new java.io.File(ROOT, ".changelist.data");
+         var file = new java.io.File(ROOT, ".changelist.data");
 
-        try (
-            ObjectOutput output = new ObjectOutputStream(new FileOutputStream(
-                file))
-        ) {
+        try (var output = new ObjectOutputStream(new FileOutputStream(file))) {
             output.writeObject(changelist);
         }
     }
 
     public static void createDirectory(Directory directory) throws IOException {
         createRootIfNotExists();
-        final Path path = CommonPaths.toPath(Path.of(ROOT), directory.path());
-
+        var path = CommonPaths.toPath(Path.of(ROOT), directory.path());
         Files.createDirectories(path);
     }
 
     public static void deleteDirectory(Directory directory) throws IOException {
         createRootIfNotExists();
-        final Path path = CommonPaths.toPath(Path.of(ROOT), directory.path());
-
+        var path = CommonPaths.toPath(Path.of(ROOT), directory.path());
         Files.delete(path);
     }
 

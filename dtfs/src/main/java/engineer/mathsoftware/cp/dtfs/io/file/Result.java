@@ -27,9 +27,9 @@ public sealed interface Result<T extends Serializable> extends Serializable {
         }
 
         public static <T extends Serializable> Failure<T> of(Throwable reason) {
-            final Throwable nonNullReason = reason == null
-                                            ? new RuntimeException("")
-                                            : reason;
+            var nonNullReason = reason == null
+                                ? new RuntimeException("")
+                                : reason;
             return new Failure<>(nonNullReason);
         }
 

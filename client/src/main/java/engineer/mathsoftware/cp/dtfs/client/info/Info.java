@@ -21,8 +21,7 @@ public final class Info implements Initializable {
         void end(String value);
     }
 
-    interface View extends MvpView<Void>,
-                           Input {}
+    interface View extends MvpView<Void>, Input {}
 
     interface Presenter extends MvpPresenter<Void> {}
 
