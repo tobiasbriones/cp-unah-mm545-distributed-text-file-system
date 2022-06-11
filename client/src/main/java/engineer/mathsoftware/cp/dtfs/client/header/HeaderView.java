@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * @author Tobias Briones
  */
-final class HeaderView extends VBox implements Header.View {
+class HeaderView extends VBox implements Header.View {
     private final Label userLabel;
     private final Label statusLabel;
     private final Label hostLabel;

@@ -13,7 +13,7 @@ import javafx.scene.control.TreeItem;
 /**
  * @author Tobias Briones
  */
-final class FileItemView extends TreeItem<Node<?>> {
+class FileItemView extends TreeItem<Node<?>> {
     private boolean didLoadChildrenAlready;
     private boolean isFirstTimeLeaf;
     private boolean isLeaf;

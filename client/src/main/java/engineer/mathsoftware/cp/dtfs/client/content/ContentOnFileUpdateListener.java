@@ -25,7 +25,7 @@ import static engineer.mathsoftware.cp.dtfs.FileSystemService.RealTimeFileSystem
  *
  * @author Tobias Briones
  */
-final class ContentOnFileUpdateListener extends UnicastRemoteObject implements OnFileUpdateListener {
+class ContentOnFileUpdateListener extends UnicastRemoteObject implements OnFileUpdateListener {
     @Serial
     private static final long serialVersionUID = 7206688225773330503L;
     private final Content.OnLocalFsChangeListener l;

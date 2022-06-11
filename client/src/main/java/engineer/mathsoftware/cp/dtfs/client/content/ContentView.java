@@ -11,7 +11,7 @@ import javafx.scene.layout.Priority;
 /**
  * @author Tobias Briones
  */
-final class ContentView extends HBox implements Content.View {
+class ContentView extends HBox implements Content.View {
     private static final int SPACING = 16;
     private final Node filesView;
     private final Node editorView;

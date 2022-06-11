@@ -10,7 +10,7 @@ import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 /**
  * @author Tobias Briones
  */
-final class AppPresenter extends AbstractMvpPresenter<Void> implements App.Presenter {
+class AppPresenter extends AbstractMvpPresenter<Void> implements App.Presenter {
     private final App.View view;
     private final Header.Input headerInput;
 

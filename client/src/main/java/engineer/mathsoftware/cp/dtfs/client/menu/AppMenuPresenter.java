@@ -11,7 +11,7 @@ import javafx.scene.control.TextInputDialog;
 /**
  * @author Tobias Briones
  */
-final class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implements AppMenu.Presenter {
+class AppMenuPresenter extends AbstractMvpPresenter<AppMenu.Output> implements AppMenu.Presenter {
     private final AppMenu.View view;
 
     AppMenuPresenter(AppMenu.View view) {

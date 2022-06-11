@@ -9,7 +9,7 @@ import engineer.mathsoftware.cp.dtfs.mvp.AbstractMvpPresenter;
 /**
  * @author Tobias Briones
  */
-final class HeaderPresenter extends AbstractMvpPresenter<Void> implements Header.Presenter {
+class HeaderPresenter extends AbstractMvpPresenter<Void> implements Header.Presenter {
     private final Header.View view;
 
     HeaderPresenter(Header.View view) {

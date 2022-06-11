@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 /**
  * @author Tobias Briones
  */
-final class InfoView extends VBox implements Info.View {
+class InfoView extends VBox implements Info.View {
     private final ProgressIndicator indicator;
     private final Label label;
     private final Label errorLabel;

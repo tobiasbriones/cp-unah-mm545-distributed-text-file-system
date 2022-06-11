@@ -13,7 +13,7 @@ import java.io.File;
 /**
  * @author Tobias Briones
  */
-final class AppMenuOutput implements AppMenu.Output {
+class AppMenuOutput implements AppMenu.Output {
     @FunctionalInterface
     interface Quit {
         void apply();

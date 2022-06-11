@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.function.Consumer;
 
-final class FilesOutput implements Files.Output {
+class FilesOutput implements Files.Output {
     private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;

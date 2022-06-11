@@ -19,7 +19,7 @@ import javafx.scene.layout.VBox;
 /**
  * @author Tobias Briones
  */
-final class EditorView extends VBox implements Editor.View {
+class EditorView extends VBox implements Editor.View {
     private static final int SAVE_BUTTON_WIDTH = 240;
     private final Label fileLabel;
     private final TextArea contentArea;

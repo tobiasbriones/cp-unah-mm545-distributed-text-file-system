@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * @author Tobias Briones
  */
-final class FilesView extends VBox implements Files.View {
+class FilesView extends VBox implements Files.View {
     private static final int MIN_WIDTH = 240;
     private static final int MAX_WIDTH = 360;
     private final TextField newFileField;

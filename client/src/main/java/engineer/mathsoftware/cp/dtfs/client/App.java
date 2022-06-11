@@ -26,7 +26,7 @@ import java.util.function.Consumer;
 /**
  * @author Tobias Briones
  */
-public final class App implements Initializable {
+class App implements Initializable {
     private static final double MIN_WIDTH = 480.0d;
     private static final double MIN_HEIGHT = 600.0d;
 

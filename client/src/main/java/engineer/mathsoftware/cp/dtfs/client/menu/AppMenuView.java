@@ -13,7 +13,7 @@ import javafx.scene.control.SeparatorMenuItem;
 /**
  * @author Tobias Briones
  */
-final class AppMenuView extends MenuBar implements AppMenu.View {
+class AppMenuView extends MenuBar implements AppMenu.View {
     private final Menu fileMenu;
     private final MenuItem fileNewItem;
     private final MenuItem fileNewDirectoryItem;

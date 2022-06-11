@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 /**
  * @author Tobias Briones
  */
-final class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements Files.Presenter {
+class FilesPresenter extends AbstractMvpPresenter<Files.Output> implements Files.Presenter {
     private final Files.View view;
     private final TextFileRepository repository;
     private Set<File> changelist;

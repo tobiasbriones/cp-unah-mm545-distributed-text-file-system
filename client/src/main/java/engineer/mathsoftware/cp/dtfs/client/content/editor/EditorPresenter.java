@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * @author Tobias Briones
  */
-final class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implements Editor.Presenter {
+class EditorPresenter extends AbstractMvpPresenter<Editor.Output> implements Editor.Presenter {
     private final Editor.View view;
     private final TextFileRepository repository;
     private File.TextFile currentFile;

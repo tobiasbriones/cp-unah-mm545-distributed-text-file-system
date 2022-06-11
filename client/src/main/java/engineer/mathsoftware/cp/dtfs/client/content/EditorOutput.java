@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 /**
  * @author Tobias Briones
  */
-final class EditorOutput implements Editor.Output {
+class EditorOutput implements Editor.Output {
     private final TextFileRepository repository;
     private final Files.Input filesInput;
     private final Editor.Input editorInput;
