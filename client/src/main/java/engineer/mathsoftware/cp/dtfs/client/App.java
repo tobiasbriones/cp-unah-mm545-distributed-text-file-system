@@ -34,7 +34,7 @@ public final class App implements Initializable {
 
     interface View extends MvpView<Void> {}
 
-    public static App newInstance() {
+    static App newInstance() {
         var repository = AppLocalFiles.newTextFileRepository();
         var menu = new AppMenu();
         var header = new Header();

@@ -19,8 +19,8 @@ public final class FileSystemServices {
     private static final String SERVICE_NAME = "RMIServer"; // Registry
     // server name
 
-    public static FileSystemService obtainService() throws RemoteException,
-                                                           NotBoundException {
+    static FileSystemService obtainService() throws RemoteException,
+                                                    NotBoundException {
         return (FileSystemService) LocateRegistry.getRegistry(HOST, PORT)
                                                  .lookup(SERVICE_NAME);
     }
