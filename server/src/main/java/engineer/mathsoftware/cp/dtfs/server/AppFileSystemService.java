@@ -12,6 +12,8 @@ import engineer.mathsoftware.cp.dtfs.io.File;
 import engineer.mathsoftware.cp.dtfs.io.*;
 import engineer.mathsoftware.cp.dtfs.io.file.Nothing;
 import engineer.mathsoftware.cp.dtfs.io.file.Result;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Failure;
+import engineer.mathsoftware.cp.dtfs.io.file.Result.Success;
 import engineer.mathsoftware.cp.dtfs.io.file.text.TextFileContent;
 import engineer.mathsoftware.cp.dtfs.io.node.DirectoryNode;
 import engineer.mathsoftware.cp.dtfs.io.node.FileNode;
@@ -27,6 +29,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static engineer.mathsoftware.cp.dtfs.io.file.Nothing.Nothing;
 import static engineer.mathsoftware.cp.dtfs.io.node.FileSystem.LastUpdateStatus;
@@ -88,13 +91,13 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
             if (!Files.exists(path)) {
                 Files.createDirectories(path);
                 broadcastFSChange();
-                return Result.Success.of(Nothing);
+                return Success.of(Nothing);
             }
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-        return Result.Failure.of();
+        return Failure.of();
     }
 
     @Override
@@ -107,7 +110,7 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
                      : repository.add(content);
         var clientResult = mapResult(result);
 
-        if (clientResult instanceof Result.Success) {
+        if (clientResult instanceof Success) {
             onFileWrote(file);
         }
         return clientResult;
@@ -118,7 +121,7 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         var path = toLocalFile(file.path()).toPath();
 
         if (!Files.exists(path)) {
-            return Result.Failure.of(new IOException("File doesn't exist"));
+            return Failure.of(new IOException("File doesn't exist"));
         }
 
         try {
@@ -126,13 +129,13 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
             onFileDeleted(file);
         }
         catch (DirectoryNotEmptyException e) {
-            return Result.Failure.of(new IOException("Directory not empty"));
+            return Failure.of(new IOException("Directory not empty"));
         }
         catch (IOException e) {
             e.printStackTrace();
-            return Result.Failure.of();
+            return Failure.of();
         }
-        return Result.Success.of(Nothing);
+        return Success.of(Nothing);
     }
 
     @Override
@@ -209,15 +212,16 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
     }
 
     private static <T extends Serializable> Result<T> mapResult(Result<T> result) {
-        Consumer<Throwable> logFailure = reason -> System.out.println(
-            reason.getMessage()); // Use proper logging
-
-        // Switch pattern matching for Java17 ep+
-        if (result instanceof Result.Failure<T> f) {
+        // Use proper logging
+        Consumer<Throwable> logFailure = reason -> System.out.println(reason.getMessage());
+        Function<Failure<T>, Failure<T>> fail = (f) -> {
             f.ifPresent(logFailure);
-            return Result.Failure.of();
-        }
-        return result;
+            return Failure.of();
+        };
+        return switch (result) {
+            case Success<T> ignored -> result;
+            case Failure<T> f -> fail.apply(f);
+        };
     }
 
     private static RealTimeFileSystem loadRealTimeFileSystem() {
@@ -252,15 +256,13 @@ public final class AppFileSystemService extends UnicastRemoteObject implements F
         for (var child : children) {
             var commonFile = child.toCommonFile();
             var childPath = child.path();
-
-            // Can use switch pattern matching for Java17 ep +
-            if (commonFile instanceof File f) {
-                node.addChild(new FileNode(f));
-            }
-            else if (commonFile instanceof Directory d) {
-                var directoryChild = new DirectoryNode(d);
-                node.addChild(directoryChild);
-                loadNode(directoryChild, childPath, rootPath);
+            switch (commonFile) {
+                case File f -> node.addChild(new FileNode(f));
+                case Directory d -> {
+                    var directoryChild = new DirectoryNode(d);
+                    node.addChild(directoryChild);
+                    loadNode(directoryChild, childPath, rootPath);
+                }
             }
         }
     }

@@ -72,14 +72,10 @@ final class FilesOutput implements Files.Output {
     }
 
     private String loadFile(File.TextFile file) {
-        var result = repository.get(file);
-
-        // Waiting for switch pattern matching! for proper monadic result
-        // design!
-        if (result instanceof Result.Success<TextFileContent> s) {
-            return s.value().value();
-        }
-        return "";
+        return switch(repository.get(file)) {
+            case Success<TextFileContent> s -> s.value().value();
+            case Failure ignore -> "";
+        };
     }
 
     // ---------- CREATE
