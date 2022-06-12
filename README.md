@@ -14,6 +14,10 @@ Implementation of a server/client application in Java RMI and JavaFX to manage
 concurrent connections for managing a file system that accepts operations on
 users' text files.
 
+The project name is shorted as **DTFS (Distributed Text File System)** so it 
+can be used into the source code, for example: domain module `dtfs`, main 
+package `engineer.mathsoftware.cp.dtfs`, etc.
+
 The original course project required a much simpler implementation, and the main
 objective was to apply DevOps skills. Needless to say, as I often do, I have
 added a huge amount of extra value to this project to make it worth it. My
