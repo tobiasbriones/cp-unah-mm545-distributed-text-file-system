@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2021 Tobias Briones. All rights reserved. -->
+<!-- Copyright (c) 2021-2022 Tobias Briones. All rights reserved. -->
 <!-- SPDX-License-Identifier: BSD-3-Clause -->
 <!-- This file is part of https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system -->
 
@@ -14,6 +14,10 @@ Implementation of a server/client application in Java RMI and JavaFX to manage
 concurrent connections for managing a file system that accepts operations on
 users' text files.
 
+The project name is shorted as **DTFS (Distributed Text File System)** so it 
+can be used into the source code, for example: domain module `dtfs`, main 
+package `engineer.mathsoftware.cp.dtfs`, etc.
+
 The original course project required a much simpler implementation, and the main
 objective was to apply DevOps skills. Needless to say, as I often do, I have
 added a huge amount of extra value to this project to make it worth it. My
@@ -27,7 +31,7 @@ good use cases of the main underlying technologies: Java and JavaFX.
 - Anything that works for the client.
 - Linux containers.
 
-## Getting Started
+## Get Started
 
 This system can be deployed in several ways. According to the course topics, you
 should use linux containers for the server applications. For this server, there
@@ -48,16 +52,22 @@ One way to deploy all the system is as a standalone fashion. This way you need
 tons of RAM to run many VMs, JVMs, Linux Containers and other open applications
 as depicted by the following diagram:
 
-![All-In-One Deployment](./docs/img/deployment.svg)
+![All-In-One Deployment](docs/img/deployment.svg)
 
 In that case, I would even suggest trying to use GraalVM to avoid that crazy
 amount of JVMs. That is something I haven't tested yet and the project at this
 stage is quite unstable. GraalVM also doesn't play well with the latest non-LTS
 Java versions and just properly deploying JavaFX is a bit of a mess by itself
 these days mostly if you use the latest versions of tools prior waiting for
-issue fixes. So let's keep that game for later with Java 17 LTS since I am also
+issue fixes. 
+
+So let's keep that game for later with Java 17 LTS since I am also
 using `JDK 16` + `--enable-preview` as a good mathematician to take advantage of
 the new data oriented and FP features for the *model* (or domain) layer.
+
+Now I've moved the project forward to Java 17 (still with preview features) 
+so I expect that the ultimate version of this project will run with Java 21 
+LTS or later. 
 
 For this version of the software, you need to do some manual configs regarding
 IP addresses or hostnames. This is because the RMI technology requires knowing
@@ -91,21 +101,21 @@ performance optimizations will be scheduled for later releases too.
 
 ## Deployment
 
-Go to the [deployment](./docs/index.md) documentation.
+Go to the [deployment](docs/deployment) documentation.
 
 ## Screenshots
 
 **LXC and Registry Container**
-![Registry](./docs/img/lxc-list-and-registry-screenshot.png)
+![Registry](docs/img/lxc-list-and-registry-screenshot.png)
 
 **LXC and FS container**
-![FS](./docs/img/lxc-list-and-fs-screenshot.png)
+![FS](docs/img/lxc-list-and-fs-screenshot.png)
 
 **Client running and FS Server files**
-![Client](./docs/img/client-and-fs-files-screenshot.png)
+![Client](docs/img/client-and-fs-files-screenshot.png)
 
 **Demo Animation**
-![Demo Animation](./docs/img/demo.gif)
+![Demo Animation](docs/img/demo.gif)
 
 ## Contact
 
@@ -124,14 +134,14 @@ Implementation of a server/client application in Java RMI and JavaFX to manage
 concurrent connections for managing a file system that accepts operations on
 users' text files.
 
-Copyright © 2021 Tobias Briones. All rights reserved.
+Copyright © 2021-2022 Tobias Briones. All rights reserved.
 
 ### License
 
 This project implementation is licensed under
-the [BSD 3-Clause LICENSE](./LICENSE).
+the [BSD 3-Clause License](LICENSE).
 
 ---
 
 This project's original specification is provided "AS IS"
-at [./docs/course](./docs/course).
+at [./docs/course](docs/course).
