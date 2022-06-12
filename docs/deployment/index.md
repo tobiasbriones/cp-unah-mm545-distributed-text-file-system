@@ -4,8 +4,15 @@
 
 # Deployment
 
-The next section will tell you about some important information to understand
+This section will tell you about some important information to understand
 before making a deployment for a more serious production environment.
+
+It's recommended to follow the deployment in your local VM to learn Linux
+Containers and test the file system.
+
+In the contrary, it's recommended to read this well because the underlying RMI
+technology is too old and can't be deployed to the cloud easily. I'd be good
+to know if someone is able to do it.
 
 ## Introduction
 
@@ -23,25 +30,25 @@ same LAN. Some machines will be desktop computers running the clients, others
 will provide the registry container (private IP), and the fs container for the
 registry container to use.
 
-### Requirements
+## Requirements
 
-#### AIO deploy
+### AIO deploy
 
 For the "All-In-One" deployment model which is just a testing/development
-environment, the requirements are as follows:
+environment (recommended for this project), the requirements are as follows:
 
 **Minimum requirements**
 
-- Intel® Core™ i3-6100 / Intel® Core™ i5-2400
-- 8 GB of system memory
-- 35 GB of available storage
+- Intel® Core™ i3-6100/i5-2400.
+- 8 GB of system memory.
+- 35 GB of available storage.
 
 **Recommended requirements**
 
-- Intel® Core™ i5-4590 / Intel® Core™ i7-2600
-- 12 GB of system memory
-- 50 GB of available SSD storage
-- Nvidia GT-730 / 256 MB of dedicated VRAM
+- Intel® Core™ i5-4590/i7-2600.
+- 12 GB of system memory.
+- 50 GB of available SSD storage.
+- Nvidia GT-730 / 256 MB of dedicated vRAM.
 
 Additionally, a broadband internet connection is required to install all the
 tools.
@@ -50,27 +57,33 @@ Some of these requirements are for the Ubuntu VM installation and accelerated
 graphics boots to make
 the VM run smoother.
 
-#### Cloud deployment
+### Cloud Deployment
 
 For a cloud deployment the requirements are simple:
 
 - An Ubuntu VM with at least 1 vCPU, 2 GB RAM, 8 GB storage.
 - A desktop computer to run the JavaFX clients.
 
-It doesn't hurt to pick a better one. An Azure B2s / B2ms size is plenty enough
+It doesn't hurt to pick a better one. An Azure B2s/B2ms size is plenty enough
 for testing.
 
-**Important:** If you plan to set up a cloud deployment over a WAN or the
-Internet then you must have a good background in networking since this is a
-really tough/impossible endeavor. I have tried for many days to achieve this
-goal, but it is not feasible to fulfill. I don't plan on doing so,
-because the underlying technology is archaic (RMI), and I'm a Software Engineer
-and not a DevOps. The problem is likely due to the system using callbacks, and
-the client has to be a server too to export its object, then firewall and
-inbound rules have to be configured for each client machine, the IPs and ports
-are another mess, and a machine might just be able to run only one client at a
-time. Then, just make an "AIO"-fashioned deploy where all the machines run on
-the same LAN if you don't have a larger infrastructure running on the same LAN.
+#### Important
+
+If you plan to set up a cloud deployment over a WAN or the Internet then you
+must have a good background in networking since this is a really
+tough/impossible endeavor.
+
+I have tried for many days to achieve this goal, but it is not feasible to
+fulfill. I don't plan on doing so, because the underlying technology is
+archaic (RMI), and I'm a Software Engineer and not a DevOps.
+
+The problem is likely due to the system using callbacks, and the client has to
+be a server too to export its object, then firewall and inbound rules have to be
+configured for each client machine, the IPs and ports are another mess, and a
+machine might just be able to run only one client at a time. Then, just make
+an "AIO"-fashioned deployment where all the machines run on the same LAN if you
+don't have a larger infrastructure running on the same LAN.
+
 More on this:
 
 - [How to send a message from Server to Client using Java RMI?](https://stackoverflow.com/questions/29284276/how-to-send-a-message-from-server-to-client-using-java-rmi)
@@ -91,7 +104,7 @@ app then the server won't be able to respond to that client, or it might take a
 huge amount of time to respond. Fortunately, everything is set up already, and
 the config process just requires a bit of work.
 
-### Server applications
+### Server Applications
 
 On server machine (assumed to be Ubuntu 20.x x64), install LXC, configure LXD
 and create two containers: `registry` and `fs`; for the registry server and the
@@ -118,7 +131,7 @@ required:
 
 Then check with `lxc list` that you have created two new linux containers.
 
-#### Common set up
+#### Common Set Up
 
 Next, run the following commands on both containers `registry` and `fs` to
 install common tools that are suggested to deploy the applications:
@@ -156,7 +169,7 @@ Clone the project repository into a directory of choice:
 
 Now the common configuration has finished for both containers.
 
-#### Registry container
+#### Registry Container
 
 Install the proxy device into the registry container to accept communication to
 the outside:
@@ -178,7 +191,7 @@ assuming you are into the project root directory:
 Thus, the server should be running as an RMI registry server and listening to
 incoming clients.
 
-#### FileSystem container
+#### FileSystem Container
 
 Enter into the fs container and run the server as a file-system server:
 
@@ -206,7 +219,7 @@ container.
 - [Storage issues](../troubleshooting/storage/index.md): Container out of
   space, "no space left on device" when running an app.
 
-### Desktop client
+### Desktop Client
 
 Finally, to deploy the client into a desktop machine: clone the repository,
 install SDKMAN, Gradle and a version of JDK with FX mods (Zulu FX or Liberica).
@@ -240,7 +253,7 @@ Now edit the source file:
 
 `cd client`
 
-`sudo nano src/main/java/com/github/tobiasbriones/cp/rmifilesystem/client/FileSystemServices.java`
+`sudo nano src/main/java/engineer/mathsoftware/cp/dtfs/client/FileSystemServices.java`
 
 Then set the `HOST` constant of that file to the public IP address or hostname
 of your VM.
@@ -262,14 +275,6 @@ machine where the client will run:
 In [this article](../troubleshooting/binary-incompatibility), I talk about an
 experience I had with the famous binary compatibility.
 
-#### Issues
-
-One of the main issue of `v0.1.0` is the local FS update regarding deleting
-files. When a user deletes a file form the system, it's physically deleted from
-the user machine but not physically deleted from the other client machines. This
-feature will be implemented in a further project version. Significant
-performance optimizations will be scheduled for later releases too.
-
 ### Bibliography
 
 - Linux Containers. (2021). Linuxcontainers.Org. https://linuxcontainers.org/
@@ -278,6 +283,5 @@ performance optimizations will be scheduled for later releases too.
   Sdkman.Io. https://sdkman.io/
 
 - Xenitellis, S. (2021, February 8). How to use the LXD Proxy Device to map
-  ports between the host
-  and the containers.
+  ports between the host and the containers.
   Blog.Simos.Info. https://blog.simos.info/how-to-use-the-lxd-proxy-device-to-map-ports-between-the-host-and-the-containers/
