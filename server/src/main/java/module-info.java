@@ -14,10 +14,10 @@
 /**
  * @author Tobias Briones
  */
-module com.github.tobiasbriones.cp.rmifilesystem.server {
+module engineer.mathsoftware.cp.dtfs.server {
     requires java.rmi;
-    requires com.github.tobiasbriones.cp.rmifilesystem.model;
-    requires com.github.tobiasbriones.cp.rmifilesystem.impl;
+    requires engineer.mathsoftware.cp.dtfs;
+    requires engineer.mathsoftware.cp.dtfs.impl;
 
-    exports com.github.tobiasbriones.cp.rmifilesystem.server;
+    exports engineer.mathsoftware.cp.dtfs.server;
 }

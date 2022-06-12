@@ -13,6 +13,6 @@
 
 rootProject.name = "impl"
 
-include("model")
+include("dtfs")
 
-project(":model").projectDir = file("../model")
+project(":dtfs").projectDir = file("../dtfs")

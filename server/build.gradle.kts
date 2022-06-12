@@ -1,15 +1,6 @@
-/*
- * Copyright (c) 2021 Tobias Briones. All rights reserved.
- *
- * SPDX-License-Identifier: BSD-3-Clause
- *
- * This file is part of Course Project at UNAH-MM545: Distributed Text File
- * System.
- *
- * This source code is licensed under the BSD-3-Clause License found in the
- * LICENSE file in the root directory of this source tree or at
- * https://opensource.org/licenses/BSD-3-Clause.
- */
+// Copyright (c) 2021 Tobias Briones. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+// This file is part of https://github.com/tobiasbriones/cp-unah-mm545-distributed-text-file-system
 
 version = "0.1.0"
 
@@ -19,8 +10,8 @@ plugins {
 }
 
 application {
-    mainModule.set("com.github.tobiasbriones.cp.rmifilesystem.server")
-    mainClass.set("com.github.tobiasbriones.cp.rmifilesystem.server.Main")
+    mainModule.set("engineer.mathsoftware.cp.dtfs.server")
+    mainClass.set("engineer.mathsoftware.cp.dtfs.server.Main")
 }
 
 repositories {
@@ -32,7 +23,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     implementation("org.hamcrest:hamcrest:2.2")
-    implementation(project(":model"))
+    implementation(project(":dtfs"))
     implementation(project(":impl"))
 }
 
@@ -40,20 +31,23 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-tasks.withType<JavaCompile>().all {
-    options.compilerArgs = listOf("--enable-preview")
-}
+tasks.withType<JavaCompile>()
+    .all {
+        options.compilerArgs = listOf("--enable-preview")
+    }
 
-tasks.withType<JavaExec>().all {
-    jvmArgs("--enable-preview")
-}
+tasks.withType<JavaExec>()
+    .all {
+        jvmArgs("--enable-preview")
+    }
 
-tasks.withType<Test>().all {
-    jvmArgs("--enable-preview")
-}
+tasks.withType<Test>()
+    .all {
+        jvmArgs("--enable-preview")
+    }
 
 tasks.withType<Jar> {
     manifest {
-        attributes("Main-Class" to "com.github.tobiasbriones.cp.rmifilesystem.server.Main")
+        attributes("Main-Class" to "engineer.mathsoftware.cp.dtfs.server.Main")
     }
 }
