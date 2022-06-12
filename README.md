@@ -48,7 +48,7 @@ One way to deploy all the system is as a standalone fashion. This way you need
 tons of RAM to run many VMs, JVMs, Linux Containers and other open applications
 as depicted by the following diagram:
 
-![All-In-One Deployment](./docs/img/deployment.svg)
+![All-In-One Deployment](docs/img/deployment.svg)
 
 In that case, I would even suggest trying to use GraalVM to avoid that crazy
 amount of JVMs. That is something I haven't tested yet and the project at this
@@ -91,21 +91,21 @@ performance optimizations will be scheduled for later releases too.
 
 ## Deployment
 
-Go to the [deployment](./docs/index.md) documentation.
+Go to the [deployment](docs/index.md) documentation.
 
 ## Screenshots
 
 **LXC and Registry Container**
-![Registry](./docs/img/lxc-list-and-registry-screenshot.png)
+![Registry](docs/img/lxc-list-and-registry-screenshot.png)
 
 **LXC and FS container**
-![FS](./docs/img/lxc-list-and-fs-screenshot.png)
+![FS](docs/img/lxc-list-and-fs-screenshot.png)
 
 **Client running and FS Server files**
-![Client](./docs/img/client-and-fs-files-screenshot.png)
+![Client](docs/img/client-and-fs-files-screenshot.png)
 
 **Demo Animation**
-![Demo Animation](./docs/img/demo.gif)
+![Demo Animation](docs/img/demo.gif)
 
 ## Contact
 
@@ -129,9 +129,9 @@ Copyright © 2021 Tobias Briones. All rights reserved.
 ### License
 
 This project implementation is licensed under
-the [BSD 3-Clause LICENSE](./LICENSE).
+the [BSD 3-Clause LICENSE](LICENSE).
 
 ---
 
 This project's original specification is provided "AS IS"
-at [./docs/course](./docs/course).
+at [./docs/course](docs/course).

@@ -24,7 +24,7 @@ fresh and new again. This is not a viable option for production systems!. When I
 ran the client app after that commit I got an expected error:
 
 **StreamCorruptedException**
-![StreamCorruptedException](./binary-incompatibility.png)
+![StreamCorruptedException](binary-incompatibility.png)
 
 Due to opening an invalid version of the binary serialized object `fs.data`
 representing the past "io." version of the FileSystem class.
