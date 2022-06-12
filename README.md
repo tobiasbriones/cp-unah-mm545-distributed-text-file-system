@@ -27,7 +27,7 @@ good use cases of the main underlying technologies: Java and JavaFX.
 - Anything that works for the client.
 - Linux containers.
 
-## Getting Started
+## Get Started
 
 This system can be deployed in several ways. According to the course topics, you
 should use linux containers for the server applications. For this server, there
@@ -55,9 +55,15 @@ amount of JVMs. That is something I haven't tested yet and the project at this
 stage is quite unstable. GraalVM also doesn't play well with the latest non-LTS
 Java versions and just properly deploying JavaFX is a bit of a mess by itself
 these days mostly if you use the latest versions of tools prior waiting for
-issue fixes. So let's keep that game for later with Java 17 LTS since I am also
+issue fixes. 
+
+So let's keep that game for later with Java 17 LTS since I am also
 using `JDK 16` + `--enable-preview` as a good mathematician to take advantage of
 the new data oriented and FP features for the *model* (or domain) layer.
+
+Now I've moved the project forward to Java 17 (still with preview features) 
+so I expect that the ultimate version of this project will run with Java 21 
+LTS or later. 
 
 For this version of the software, you need to do some manual configs regarding
 IP addresses or hostnames. This is because the RMI technology requires knowing
@@ -91,7 +97,7 @@ performance optimizations will be scheduled for later releases too.
 
 ## Deployment
 
-Go to the [deployment](docs/index.md) documentation.
+Go to the [deployment](docs/deployment) documentation.
 
 ## Screenshots
 
@@ -124,12 +130,12 @@ Implementation of a server/client application in Java RMI and JavaFX to manage
 concurrent connections for managing a file system that accepts operations on
 users' text files.
 
-Copyright © 2021 Tobias Briones. All rights reserved.
+Copyright © 2021-2022 Tobias Briones. All rights reserved.
 
 ### License
 
 This project implementation is licensed under
-the [BSD 3-Clause LICENSE](LICENSE).
+the [BSD 3-Clause License](LICENSE).
 
 ---
 
